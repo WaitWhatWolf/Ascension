@@ -9,10 +9,10 @@ namespace WarWolfWorks_Mod.Internal
     /// <summary>
     /// Used for multi-sprite animating.
     /// </summary>
-    public sealed class Animation : IResetable
+    public sealed class Animation : IResetable, IUpdatable
     {
         private KeyValuePair<TimeSpan, string>[] Keys;
-        private Stopwatch Timer;
+        private TimeSpan Timer;
 
         private int CurrentIndex = 0;
 
@@ -51,7 +51,7 @@ namespace WarWolfWorks_Mod.Internal
                 Start:
                     for(int i = CurrentIndex + 1; i < Keys.Length; i++)
                     {
-                        if (Timer.Elapsed > Keys[i].Key)
+                        if (Timer > Keys[i].Key)
                             CurrentIndex = i;
                     }
 
@@ -75,7 +75,7 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public void Start()
         {
-            Timer.Start();
+            Timer = TimeSpan.Zero;
         }
 
         /// <summary>
@@ -83,8 +83,16 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public void Reset()
         {
-            Timer.Reset();
+            Timer = TimeSpan.Zero;
             CurrentIndex = 0;
+        }
+
+        /// <summary>
+        /// Called every in-game frame through <see cref="WWWPlayer"/>.
+        /// </summary>
+        public void Update()
+        {
+            Timer = Timer.Add(Utilities.TimespanCounterUF);
         }
 
         /// <summary>
@@ -92,7 +100,7 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public Animation(params KeyValuePair<TimeSpan,string>[] keys)
         {
-            Timer = new Stopwatch();
+            Timer = TimeSpan.Zero;
             Keys = keys;
         }
 
@@ -102,9 +110,23 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="dup"></param>
         public Animation(Animation dup)
         {
-            Timer = new Stopwatch();
+            Timer = TimeSpan.Zero;
             Keys = dup.Keys;
         }
+
+        /// <summary>
+        /// Returns an Animation with default values.
+        /// </summary>
+        public static Animation Default => new Animation(new KeyValuePair<TimeSpan, string>(TimeSpan.Zero, "DefaultTexture"));
+
+        /// <summary>
+        /// Returns an Animation with default values without triggering <see cref="AnimationKeyNullException"/>.
+        /// </summary>
+        public static Animation DefaultSafe => new Animation
+            (
+            new KeyValuePair<TimeSpan, string>(TimeSpan.Zero, @"\WarWolfWorks_Mod\Images\DefaultTexture"),
+            new KeyValuePair<TimeSpan, string>(TimeSpan.MaxValue, @"\WarWolfWorks_Mod\Images\DefaultTexture")
+            );
 
         /// <summary>
         /// Returns the Texture name to be played/displayed.

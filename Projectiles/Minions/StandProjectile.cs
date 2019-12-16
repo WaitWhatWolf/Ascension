@@ -1,27 +1,28 @@
-﻿using WarWolfWorks_Mod.Internal;
+﻿using WarWolfWorks_Mod.Interfaces;
+using WarWolfWorks_Mod.Internal;
 
 namespace WarWolfWorks_Mod.Projectiles.Minions
 {
     /// <summary>
     /// In-Game <see cref="Stand"/>; Inherits from <see cref="Terraria.Projectile"/>.
     /// </summary>
-    public sealed class StandProjectile : Minion
+    public sealed class StandProjectile : Minion, IUpdatable
     {
         /// <summary>
-        /// Calls <see cref="StandAbility.OnUpdate"/> every frame, while checking <see cref="StandAbility.Activates"/> for <see cref="StandAbility.OnActivate"/>.
+        /// Called every in-game frame through <see cref="WWWPlayer"/>.
         /// </summary>
-        protected override void ActAI()
+        public void Update()
         {
-            if (!CheckActive())
-                return;
-
-            foreach(StandAbility sa in WWWOwner.Stand.Abilities)
+            foreach (StandAbility sa in WWWOwner.Stand.Abilities)
             {
-                sa.OnUpdate();
-                if (sa.Activates())
-                    sa.OnActivate();
+                sa.Update();
             }
         }
+
+        /// <summary>
+        /// Pointer to <see cref="StandProjectile.Update"/>.
+        /// </summary>
+        protected override void ActAI() => Update();
 
         /// <summary>
         /// Returns the owner's <see cref="Stand.Active"/>.

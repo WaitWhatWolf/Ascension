@@ -17,11 +17,11 @@ namespace WarWolfWorks_Mod.Internal
         /// <summary>
         /// Invoked when <see cref="StopTime(StandType)"/> is called.
         /// </summary>
-        public event Action<WWWMOD, StandType> OnTimeStopped;
+        public event Action<StandType> OnTimeStopped;
         /// <summary>
         /// Invoked when <see cref="ResumeTime(StandType)"/> is called.
         /// </summary>
-        public event Action<WWWMOD, StandType> OnTimeResumed;
+        public event Action<StandType> OnTimeResumed;
         
         /// <summary>
         /// Time at which <see cref="StopTime"/> was called.
@@ -34,7 +34,7 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="perpetrator"></param>
         public void StopTime(StandType perpetrator)
         {
-            OnTimeStopped?.Invoke(this, perpetrator);
+            OnTimeStopped?.Invoke(perpetrator);
             TimeIsStopped = true;
             StoppedTime = Main.time;
         }
@@ -45,7 +45,7 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="perpetrator"></param>
         public void ResumeTime(StandType perpetrator)
         {
-            OnTimeResumed?.Invoke(this, perpetrator);
+            OnTimeResumed?.Invoke(perpetrator);
             TimeIsStopped = false;
             StoppedTime = 0;
         }

@@ -38,7 +38,7 @@ namespace WarWolfWorks_Mod.Internal
         /// <summary>
         /// Called every in-game frame, while setting all variables and values to make this ability function.
         /// </summary>
-        public override void OnUpdate()
+        protected override void OnUpdate()
         {
             Closest = NPCUtils.SearchForTarget(Owner.player.position, NPCUtils.TargetSearchFlag.NPCs).NearestNPC;
             Destination = Closest != null 

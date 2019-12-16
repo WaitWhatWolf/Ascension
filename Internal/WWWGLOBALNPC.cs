@@ -57,7 +57,7 @@ namespace WarWolfWorks_Mod.Internal
             if(WWWMOD.TimeIsStopped) DamageToDealAfterTime += damage;
         }
 
-        private void StopTime(WWWMOD from, StandType to)
+        private void StopTime(StandType to)
         {
             ThisNPC.VanillaNPC.AddBuff(GetDebuffType(to), int.MaxValue);
             PreviousStepSpeed = ThisNPC.VanillaNPC.stepSpeed;
@@ -68,7 +68,7 @@ namespace WarWolfWorks_Mod.Internal
             ThisNPC.VanillaNPC.color = new Color(Main.rand.NextFloat(0f, 1f), Main.rand.NextFloat(0f, 1f), Main.rand.NextFloat(0f, 1f), .9f);
         }
 
-        private void ResumeTime(WWWMOD from, StandType to)
+        private void ResumeTime(StandType to)
         {
             ThisNPC.VanillaNPC.DelBuff(GetDebuffType(to));
             ThisNPC.VanillaNPC.StrikeNPCNoInteraction((int)DamageToDealAfterTime, 20, 0, true, true, true);

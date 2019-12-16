@@ -1,11 +1,12 @@
 ﻿using System;
+using WarWolfWorks_Mod.Interfaces;
 
 namespace WarWolfWorks_Mod.Internal
 {
     /// <summary>
     /// Core class for all abilities of a <see cref="Stand"/>.
     /// </summary>
-    public abstract class StandAbility
+    public abstract class StandAbility : IUpdatable
     {
         /// <summary>
         /// The modplayer who owns this <see cref="StandAbility"/>'s <see cref="Stand"/>.
@@ -47,10 +48,17 @@ namespace WarWolfWorks_Mod.Internal
         /// <summary>
         /// Called every in-game frame.
         /// </summary>
-        public virtual void OnUpdate()
+        public void Update()
         {
             Countdown = Countdown.Add(Utilities.TimespanCounterUF);
+            if (Activates()) OnActivate();
+            OnUpdate();
         }
+
+        /// <summary>
+        /// Called after <see cref="Update"/>, which adds to Countdown.
+        /// </summary>
+        protected virtual void OnUpdate() { }
 
         /// <summary>
         /// Initiates this class with an owner.
