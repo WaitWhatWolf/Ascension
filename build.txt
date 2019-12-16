@@ -1,0 +1,6 @@
+author = WarWolfWorks
+version = 0.0.1
+displayName = WarWolfWorks Mod
+hideCode = false
+hideResources = false
+includeSource = true
