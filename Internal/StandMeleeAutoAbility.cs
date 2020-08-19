@@ -2,6 +2,7 @@
 using System;
 using Terraria;
 using Terraria.Utilities;
+using static WarWolfWorks_Mod.Internal.Constants;
 
 namespace WarWolfWorks_Mod.Internal
 {
@@ -27,7 +28,9 @@ namespace WarWolfWorks_Mod.Internal
             STAND_MELEE_RANGE = 1f;
 
         private Animation AttackAnimation, IdleAnimation;
-        
+
+        public override string Texture => TN_STAND_SP_AB_MAIN;
+
         private Animation GetQueuedAnimation()
         {
             if (ClosestWithinRange)

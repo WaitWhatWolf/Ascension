@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 using WarWolfWorks_Mod.Buffs;
 using WarWolfWorks_Mod.Internal.Debugging.Exceptions;
 using WarWolfWorks_Mod.Projectiles.Minions;
+using WarWolfWorks_Mod.UI;
 
 namespace WarWolfWorks_Mod.Internal
 {
@@ -13,6 +14,11 @@ namespace WarWolfWorks_Mod.Internal
     /// </summary>
     public sealed partial class Stand
     {
+        /// <summary>
+        /// The stand's UI display.
+        /// </summary>
+        public StandUI UI { get; private set; }
+
         /// <summary>
         /// Name of the stand.
         /// </summary>
@@ -65,6 +71,7 @@ namespace WarWolfWorks_Mod.Internal
             if (Owner)
                 throw new SingleCallException(to);
             Owner = to;
+
         }
 
         /// <summary>
@@ -109,6 +116,19 @@ namespace WarWolfWorks_Mod.Internal
             int toSet = GetStandDebuffID(ID);
             if (toSet != -1)
                 player.AddBuff(toSet, int.MaxValue, false);
+        }
+
+        public void SetUI()
+        {
+            UI = new StandUI();
+            UI.LoadInterface(Owner);
+
+            UI.ActivateMenu(Owner);
+        }
+
+        ~Stand()
+        {
+            UI.DeactivateMenu();
         }
 
         /// <summary>

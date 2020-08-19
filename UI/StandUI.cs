@@ -1,5 +1,9 @@
-﻿using Terraria.GameContent.UI.Elements;
+﻿using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+using Terraria;
 
 namespace WarWolfWorks_Mod.UI
 {
@@ -18,16 +22,48 @@ namespace WarWolfWorks_Mod.UI
         protected override StyleDimension DimensionWidth => new StyleDimension(544, 0f); //544 = 136 * 4
 
         private UIImage[] AbilityImages;
+        private Texture2D[] AbilityTextures;
+
+        protected override void OnActiveDrawSelf(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < AbilityImages.Length; i++)
+            {
+                Rectangle rectangle = new Rectangle((int)AbilityImages[i].Left.Pixels, (int)AbilityImages[i].Top.Pixels,
+                    (int)AbilityImages[i].Width.Pixels, (int)AbilityImages[i].Height.Pixels);
+                spriteBatch.Draw(AbilityTextures[i], rectangle, Color.White);
+                Main.NewText(rectangle.ToString(), 175, 75, 255);
+            }
+        }
 
         public override void OnInitialize()
         {
+            AT_Init();
+            
+        }
+
+        private async void AT_Init()
+        {
+            while(!Perpetrator)
+            {
+                await Task.Delay(25);
+            }
+
             AbilityImages = new UIImage[Perpetrator.Stand.Abilities.Length];
-            for(int i = 0; i < AbilityImages.Length; i++)
+            AbilityTextures = new Texture2D[Perpetrator.Stand.Abilities.Length];
+            for (int i = 0; i < AbilityImages.Length; i++)
             {
                 string txtName = Perpetrator.Stand.Abilities[i].Texture;
                 if (string.IsNullOrEmpty(txtName))
                     continue;
-                AbilityImages[i] = new UIImage(Perpetrator.mod.GetTexture(txtName));
+
+                AbilityTextures[i] = Perpetrator.mod.GetTexture(txtName);
+                AbilityImages[i] = new UIImage(AbilityTextures[i]);
+                AbilityImages[i].Width.Set(AbilityTextures[i].Width, 0);
+                AbilityImages[i].Height.Set(AbilityTextures[i].Height, 0);
+                AbilityImages[i].Top.Set(136, 0);
+                AbilityImages[i].Left.Set(544 + (AbilityTextures[i].Width * i), 0);
+                
+                //Append(AbilityImages[i]);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using WarWolfWorks_Mod.Interfaces;
 
 namespace WarWolfWorks_Mod.Internal
@@ -33,6 +34,8 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public bool CooldownUp => Countdown >= Cooldown;
 
+        public abstract string Texture { get; }
+
         /// <summary>
         /// Retuns true if this ability is activated.
         /// </summary>
@@ -50,7 +53,7 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public void Update()
         {
-            Countdown = Countdown.Add(Utilities.TimespanCounterUF);
+            Countdown = Countdown.Add(Hooks.TimespanCounterUF);
             if (Activates()) OnActivate();
             OnUpdate();
         }

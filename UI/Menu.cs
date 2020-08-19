@@ -88,6 +88,11 @@ namespace WarWolfWorks_Mod.UI
         /// </summary>
         public virtual void OnWorldLoaded(WWWPlayer from)
         {
+            LoadInterface(from);
+        }
+
+        public void LoadInterface(WWWPlayer from)
+        {
             if (!Main.dedServ)
             {
                 MenuInterface = new UserInterface();
@@ -131,7 +136,8 @@ namespace WarWolfWorks_Mod.UI
         {
             if (Active)
             {
-                Vector2 mousePos = Vector2.Zero;//Utilities.MousePos;
+                base.DrawSelf(spriteBatch);
+                Vector2 mousePos = Hooks.MousePos;
                 Perpetrator.player.mouseInterface = ContainsPoint(mousePos);
                 if (Dragged)
                 {
@@ -141,8 +147,13 @@ namespace WarWolfWorks_Mod.UI
                     Recalculate();
                     RecalculateChildren();
                 }
+
+                OnActiveDrawSelf(spriteBatch);
             }
+                Main.NewText($"yeeeeeeeeeeeeeee", 175, 75, 255);
         }
+
+        protected virtual void OnActiveDrawSelf(SpriteBatch spriteBatch) { }
 
         /// <summary>
         /// Activates this menu, making it draw on the screen.
@@ -154,6 +165,7 @@ namespace WarWolfWorks_Mod.UI
 
             SetPerpetrator(perpetrator);
             MenuInterface.SetState(this);
+            Activate();
             Active = true;
         }
 
@@ -166,6 +178,7 @@ namespace WarWolfWorks_Mod.UI
                 return;
 
             RemovePerpetrator();
+            Deactivate();
             MenuInterface.SetState(null);
             Active = false;
         }
