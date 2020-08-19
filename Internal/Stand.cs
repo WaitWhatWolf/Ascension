@@ -81,13 +81,13 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="id"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public static Stand GetStandByID(StandType id, WWWPlayer to)
+        public static Stand GetStandByID(StandType id)
         {
             switch (id)
             {
                 default: return null;
-                case StandType.STAR_PLATINUM: return StarPlatinum(to);
-                case StandType.THE_WORLD: return TheWorld(to);
+                case StandType.STAR_PLATINUM: return StarPlatinum();
+                case StandType.THE_WORLD: return TheWorld();
             }
         }
 

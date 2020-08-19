@@ -22,24 +22,12 @@ namespace WarWolfWorks_Mod.Projectiles.Minions
         }
 
         /// <summary>
-        /// Player owner of this <see cref="Minion"/>.
-        /// </summary>
-        protected Terraria.Player Owner;
-        /// <summary>
-        /// WWWPlayer owner of this <see cref="Minion"/>.
-        /// </summary>
-        protected WWWPlayer WWWOwner;
-
-        /// <summary>
         /// Initiates this <see cref="Minion"/>.
         /// </summary>
         /// <param name="player"></param>
-        public virtual void OnWorldLoaded(WWWPlayer player)
+        public virtual void OnWorldLoaded()
         {
-            //Attempts to set the non-modded owner.
-            Owner = projectile.owner != -1 ? projectile.owner == 255 ? Terraria.Main.LocalPlayer : Terraria.Main.player[projectile.owner] : null;
-            //If non-modded owner was successfully set, modded owner will be set as well.
-            if (Owner != null) WWWOwner = Owner.GetModPlayer<WWWPlayer>();
+
         }
 
         /// <summary>

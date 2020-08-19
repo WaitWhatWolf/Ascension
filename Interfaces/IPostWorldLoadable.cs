@@ -11,6 +11,6 @@ namespace WarWolfWorks_Mod.Interfaces
         /// Called when the player is first loaded into a world.
         /// </summary>
         /// <param name="for"></param>
-        void OnWorldLoaded(WWWPlayer @for);
+        void OnWorldLoaded();
     }
 }

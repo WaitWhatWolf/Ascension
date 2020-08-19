@@ -1,9 +1,12 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
-using WarWolfWorks_Mod.Items;
 using WarWolfWorks_Mod.UI;
 
 namespace WarWolfWorks_Mod.Internal
@@ -37,13 +40,25 @@ namespace WarWolfWorks_Mod.Internal
         public StandMenu StandMenu { get; private set; }
         public UserInterface StandUI { get; private set; }
 
+        public override string Name => nameof(WarWolfWorks_Mod);
+
         public WWWMOD()
         {
             Instance = this;
         }
 
+        public void DebugInfo(string info)
+        {
+            using (StreamWriter sw = new StreamWriter("C:\\Users\\WhiteWarriorWolf\\Desktop\\GameDevelopment\\Non-Compiled\\Info.txt"))
+            {
+                sw.WriteLine(info);
+            }
+        }
+
         public override void LoadResources()
         {
+            base.LoadResources();
+
             if (!Main.dedServ)
             {
                 R_Load_StandMenu();
@@ -83,8 +98,8 @@ namespace WarWolfWorks_Mod.Internal
 
         public override void UpdateUI(GameTime gameTime)
         {
-            //if (StandUI != null)
-            //    StandUI.Update(gameTime);
+            if (StandUI != null)
+                StandUI.Update(gameTime);
         }
     }
 }

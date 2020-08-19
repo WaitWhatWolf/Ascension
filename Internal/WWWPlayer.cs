@@ -66,9 +66,9 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="player"></param>
         public override void OnEnterWorld(Player player)
         {
-            if (!Stand && false == true)
+            if (!Stand)
             {
-                Stand = Stand.GetStandByID(LoadedStandID, this);
+                Stand = Stand.GetStandByID(LoadedStandID);
                 if (Stand)
                 {
                     Stand.DefineStand(player);
@@ -76,7 +76,7 @@ namespace WarWolfWorks_Mod.Internal
             }
 
             foreach (IPostWorldLoadable ipwl in PostWorldLoadables)
-                ipwl.OnWorldLoaded(this);
+                ipwl.OnWorldLoaded();
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace WarWolfWorks_Mod.Internal
                 toUse = (StandType)r.Next(1, (int)StandType.THE_WORLD);
             }
 
-            Stand = Stand.GetStandByID(toUse, this);
+            Stand = Stand.GetStandByID(toUse);
             Stand.DefineStand(player);
             string standUse = Stand ? Stand.Name : "nothing.";
             Main.NewText($"{player.name} has manifested {standUse}!", 175, 75, 255);
@@ -123,10 +123,10 @@ namespace WarWolfWorks_Mod.Internal
                 updatable.Update();
         }
 
-        /*public WWWPlayer()
+        public WWWPlayer()
         {
             Instance = this;
-        }*/
+        }
 
         /// <summary>
         /// Implicit operator which allows use of !player instead of player == null, and vice-versa.

@@ -67,9 +67,8 @@ namespace WarWolfWorks_Mod.Internal
         /// Initiates this class with an owner.
         /// </summary>
         /// <param name="owner"></param>
-        public StandAbility(WWWPlayer owner)
+        public StandAbility()
         {
-            Owner = owner;
             Countdown = TimeSpan.Zero;
         }
     }

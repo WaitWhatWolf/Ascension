@@ -13,7 +13,7 @@ namespace WarWolfWorks_Mod.Projectiles.Minions
         /// </summary>
         public void Update()
         {
-            foreach (StandAbility sa in WWWOwner.Stand.Abilities)
+            foreach (StandAbility sa in WWWPlayer.Instance.Stand.Abilities)
             {
                 sa.Update();
             }
@@ -28,6 +28,6 @@ namespace WarWolfWorks_Mod.Projectiles.Minions
         /// Returns the owner's <see cref="Stand.Active"/>.
         /// </summary>
         /// <returns></returns>
-        protected override bool CheckActive() => WWWOwner.Stand.Active;
+        protected override bool CheckActive() => WWWPlayer.Instance.Stand.Active;
     }
 }

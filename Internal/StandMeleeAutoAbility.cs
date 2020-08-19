@@ -64,7 +64,7 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="cooldown">Attack speed of the stand.</param>
         /// <param name="idletxt">Animation to play when the stand is not attacking.</param>
         /// <param name="atktxt">Animation to play the the stand is attacking.</param>
-        public StandMeleeAutoAbility(WWWPlayer player, TimeSpan cooldown, Animation idletxt, Animation atktxt) : base(player)
+        public StandMeleeAutoAbility(TimeSpan cooldown, Animation idletxt, Animation atktxt) : base()
         {
             Cooldown = cooldown;
             IdleAnimation = idletxt;

@@ -10,7 +10,7 @@ namespace WarWolfWorks_Mod.Internal
         /// Initiates this class with the <see cref="StandAbility"/> constructor.
         /// </summary>
         /// <param name="owner"></param>
-        public AutoAbility(WWWPlayer owner) : base(owner)
+        public AutoAbility() : base()
         {
         }
 

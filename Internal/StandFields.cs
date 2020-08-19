@@ -12,7 +12,7 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         /// <param name="owner"></param>
         /// <returns></returns>
-        public static Stand StarPlatinum(WWWPlayer owner)
+        public static Stand StarPlatinum()
         {
             Stand toReturn = new Stand()
             {
@@ -21,7 +21,6 @@ namespace WarWolfWorks_Mod.Internal
                 Abilities = new StandAbility[]
                 {
                     new StandMeleeAutoAbility(
-                        owner,
                         TimeSpan.FromSeconds(0.1f),
                         ANIM_STARPLATINUM_IDLE,
                         ANIM_STARPLATINUM_ATK)
@@ -37,7 +36,7 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         /// <param name="owner"></param>
         /// <returns></returns>
-        public static Stand TheWorld(WWWPlayer owner)
+        public static Stand TheWorld()
         {
             Stand toReturn = new Stand()
             {
@@ -45,7 +44,7 @@ namespace WarWolfWorks_Mod.Internal
                 Debuff = new TheWorldDebuff(),
                 Abilities = new StandAbility[]
                 {
-                    new StandMeleeAutoAbility(owner, TimeSpan.FromSeconds(0.1f), ANIM_THEWORLD_IDLE, ANIM_THEWORLD_ATK)
+                    new StandMeleeAutoAbility(TimeSpan.FromSeconds(0.1f), ANIM_THEWORLD_IDLE, ANIM_THEWORLD_ATK)
                 },
                 ID = StandType.THE_WORLD
             };

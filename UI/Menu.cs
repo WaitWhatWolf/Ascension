@@ -144,7 +144,7 @@ namespace WarWolfWorks_Mod.UI
             Active = false;
         }
 
-        public virtual void OnWorldLoaded(WWWPlayer @for)
+        public virtual void OnWorldLoaded()
         {
 
         }

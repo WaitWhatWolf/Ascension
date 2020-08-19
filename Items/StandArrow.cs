@@ -25,7 +25,7 @@ namespace WarWolfWorks_Mod.Items
 
         public override bool CanRightClick() => true;
 
-        private (string name, StandType stand)[] StandIndexing = new (string name, StandType index)[]
+        private readonly (string name, StandType stand)[] StandIndexing = new (string name, StandType index)[]
         {
             ("JOTARO", StandType.STAR_PLATINUM),
             ("DIO", StandType.THE_WORLD),
