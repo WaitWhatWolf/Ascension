@@ -22,6 +22,15 @@ namespace Enemy
 
         }
 
+        public override string Texture
+        {
+            get { return "WarWolfWorks_Mod/Images/StandingSamurai"; }
+        }
+
+        public override string[] AltTextures
+        {
+            get { return new[] { "WarWolfWorks_Mod/Images/StandingSamurai/StandingSamurai_Alt_1" }; }
+        }
         public override void SetDefaults()
         {
             //Enemy Hitbox Width and Height
