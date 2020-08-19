@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Terraria.UI;
 using WarWolfWorks_Mod.Interfaces;
 using WarWolfWorks_Mod.Internal;
 
 namespace WarWolfWorks_Mod.UI
 {
-    /// <summary>
-    /// Core class for all UI of the WarWolfWorks mod.
-    /// </summary>
     public abstract class Menu : UIState, IPostWorldLoadable
     {
         #region Static
@@ -18,7 +18,7 @@ namespace WarWolfWorks_Mod.UI
         /// All menus currently initiated.
         /// </summary>
         internal static List<Menu> AllMenus { get; } = new List<Menu>();
-        
+
         /// <summary>
         /// Returns the first menu found of the given generic type.
         /// </summary>
@@ -33,10 +33,10 @@ namespace WarWolfWorks_Mod.UI
         /// Activates the first menu found of the given generic type.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public static void ActivateMenu<T>(WWWPlayer perpetrator) where T : Menu
+        public static void ActivateMenu<T>() where T : Menu
         {
             T toUse = GetMenu<T>();
-            toUse.ActivateMenu(perpetrator);
+            toUse.ActivateMenu();
         }
 
         /// <summary>
@@ -54,12 +54,7 @@ namespace WarWolfWorks_Mod.UI
         /// Returns the active state of this menu.
         /// </summary>
         public bool Active { get; private set; }
-
-        /// <summary>
-        /// Modplayer which activated this menu.
-        /// </summary>
-        public WWWPlayer Perpetrator { get; private set; }
-
+        
         /// <summary>
         /// Returns true if this menu is currently dragged with the mouse.
         /// </summary>
@@ -67,39 +62,10 @@ namespace WarWolfWorks_Mod.UI
 
         private Vector2 Offset;
 
-        /// <summary>
-        /// The width of this menu.
-        /// </summary>
-        protected virtual StyleDimension DimensionWidth => StyleDimension.Fill;
-        /// <summary>
-        /// The height of this menu.
-        /// </summary>
-        protected virtual StyleDimension DimensionHeight => StyleDimension.Fill;
-
-        private void SetPerpetrator(WWWPlayer perpetrator)
-        {
-            Perpetrator = perpetrator;
-        }
-
-        private void RemovePerpetrator() => Perpetrator = null;
-
-        /// <summary>
-        /// Called right after the world is loaded through <see cref="WarWolfWorks_Mod.Internal.WWWPlayer"/>.
-        /// </summary>
-        public virtual void OnWorldLoaded(WWWPlayer from)
-        {
-            LoadInterface(from);
-        }
-
-        public void LoadInterface(WWWPlayer from)
-        {
-            if (!Main.dedServ)
-            {
-                MenuInterface = new UserInterface();
-                Activate();
-                ActivateMenu(from);
-            }
-        }
+        protected virtual float DimensionWidth => 1920;
+        protected virtual float DimensionHeight => 1080;
+        protected virtual float DimensionTop => 0;
+        protected virtual float DimensionLeft => 0;
 
         /// <summary>
         /// Adds an automatic handling of menu dragging.
@@ -138,7 +104,7 @@ namespace WarWolfWorks_Mod.UI
             {
                 base.DrawSelf(spriteBatch);
                 Vector2 mousePos = Hooks.MousePos;
-                Perpetrator.player.mouseInterface = ContainsPoint(mousePos);
+                WWWPlayer.Instance.player.mouseInterface = ContainsPoint(mousePos);
                 if (Dragged)
                 {
                     Left.Set(mousePos.X - Offset.X, 0f);
@@ -150,7 +116,6 @@ namespace WarWolfWorks_Mod.UI
 
                 OnActiveDrawSelf(spriteBatch);
             }
-                Main.NewText($"yeeeeeeeeeeeeeee", 175, 75, 255);
         }
 
         protected virtual void OnActiveDrawSelf(SpriteBatch spriteBatch) { }
@@ -158,13 +123,11 @@ namespace WarWolfWorks_Mod.UI
         /// <summary>
         /// Activates this menu, making it draw on the screen.
         /// </summary>
-        public void ActivateMenu(WWWPlayer perpetrator)
+        public void ActivateMenu()
         {
             if (Active)
                 return;
 
-            SetPerpetrator(perpetrator);
-            MenuInterface.SetState(this);
             Activate();
             Active = true;
         }
@@ -177,16 +140,14 @@ namespace WarWolfWorks_Mod.UI
             if (!Active)
                 return;
 
-            RemovePerpetrator();
             Deactivate();
-            MenuInterface.SetState(null);
             Active = false;
         }
 
-        /// <summary>
-        /// <see cref="UserInterface"/> of this menu.
-        /// </summary>
-        public UserInterface MenuInterface { get; private set; }
+        public virtual void OnWorldLoaded(WWWPlayer @for)
+        {
+
+        }
 
         /// <summary>
         /// Constructs this menu, Adding it to the <see cref="AllMenus"/> list.
@@ -196,16 +157,10 @@ namespace WarWolfWorks_Mod.UI
             AllMenus.Add(this);
             WWWPlayer.PostWorldLoadables.Add(this);
 
-            Width = DimensionWidth;
-            Height = DimensionHeight;
-        }
-
-        /// <summary>
-        /// Deconstructs this menu, removing it from <see cref="AllMenus"/> list.
-        /// </summary>
-        ~Menu()
-        {
-            AllMenus.Remove(this);
+            Width.Set(DimensionWidth, 0);
+            Height.Set(DimensionHeight, 0);
+            Top.Set(DimensionTop, 0);
+            Left.Set(DimensionLeft, 0);
         }
     }
 }

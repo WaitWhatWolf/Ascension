@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.UI;
+using WarWolfWorks_Mod.UI;
 
 namespace WarWolfWorks_Mod.Internal
 {
@@ -10,6 +12,8 @@ namespace WarWolfWorks_Mod.Internal
     /// </summary>
     public sealed class WWWMOD : Mod
     {
+        public WWWMOD Instance { get; set; }
+
         /// <summary>
         /// Determines if the time is currently stopped; Used for <see href="https://jojo.fandom.com/wiki/The_World?file=ZA_WARUDO2.gif">ザ・ワールド</see> of 
         /// <see href="https://jojo.fandom.com/wiki/The_World">Star Platinum</see> and <see href="https://jojo.fandom.com/wiki/The_World">The World</see>.
@@ -29,10 +33,30 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public double StoppedTime { get; private set; }
 
-        /// <summary>
-        /// Stops time.
-        /// </summary>
-        /// <param name="perpetrator"></param>
+        public StandMenu StandMenu { get; private set; }
+        public UserInterface StandUI { get; private set; }
+
+        public WWWMOD()
+        {
+            Instance = this;
+        }
+
+        public override void LoadResources()
+        {
+            if (!Main.dedServ)
+            {
+                R_Load_StandMenu();
+            }
+        }
+
+        public void R_Load_StandMenu()
+        {
+            StandMenu = new StandMenu();
+            StandMenu.ActivateMenu();
+            StandUI = new UserInterface();
+            StandUI.SetState(StandMenu);
+        }
+
         public void StopTime(StandType perpetrator)
         {
             OnTimeStopped?.Invoke(perpetrator);
@@ -40,10 +64,6 @@ namespace WarWolfWorks_Mod.Internal
             StoppedTime = Main.time;
         }
 
-        /// <summary>
-        /// Resumes time.
-        /// </summary>
-        /// <param name="perpetrator"></param>
         public void ResumeTime(StandType perpetrator)
         {
             OnTimeResumed?.Invoke(perpetrator);
@@ -62,8 +82,8 @@ namespace WarWolfWorks_Mod.Internal
 
         public override void UpdateUI(GameTime gameTime)
         {
-            try { WWWPlayer.Instance?.Stand?.UI?.Update(gameTime); }
-            catch { }
+            if (StandUI != null)
+                StandUI.Update(gameTime);
         }
     }
 }

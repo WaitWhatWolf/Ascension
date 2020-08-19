@@ -15,11 +15,6 @@ namespace WarWolfWorks_Mod.Internal
     public sealed partial class Stand
     {
         /// <summary>
-        /// The stand's UI display.
-        /// </summary>
-        public StandUI UI { get; private set; }
-
-        /// <summary>
         /// Name of the stand.
         /// </summary>
         public string Name { get; private set; }
@@ -63,18 +58,6 @@ namespace WarWolfWorks_Mod.Internal
         public string UltimateAbilityTexture { get; }
 
         /// <summary>
-        /// Sets the owner.
-        /// </summary>
-        /// <param name="to"></param>
-        private void SetOwner(WWWPlayer to)
-        {
-            if (Owner)
-                throw new SingleCallException(to);
-            Owner = to;
-
-        }
-
-        /// <summary>
         /// Returns the appropriate stand debuff based on the given ID.
         /// </summary>
         /// <param name="id"></param>
@@ -116,19 +99,6 @@ namespace WarWolfWorks_Mod.Internal
             int toSet = GetStandDebuffID(ID);
             if (toSet != -1)
                 player.AddBuff(toSet, int.MaxValue, false);
-        }
-
-        public void SetUI()
-        {
-            UI = new StandUI();
-            UI.LoadInterface(Owner);
-
-            UI.ActivateMenu(Owner);
-        }
-
-        ~Stand()
-        {
-            UI.DeactivateMenu();
         }
 
         /// <summary>

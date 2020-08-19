@@ -50,7 +50,7 @@ namespace WarWolfWorks_Mod.Items
                 return;
             player.Hurt(PlayerDeathReason.ByCustomReason($"{player.name}'s will was not strong enough to manifest a Stand while surviving."), player.statLife - 1, player.direction);
 
-            player.GetModPlayer<WWWPlayer>().ManifestStand(GetStandTypeByName(player));
+            wwwplayer.ManifestStand(GetStandTypeByName(player));
         }
     }
 }

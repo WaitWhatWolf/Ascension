@@ -14,7 +14,7 @@ namespace WarWolfWorks_Mod.Internal
     /// </summary>
     public sealed class WWWPlayer : ModPlayer
     {
-        public static WWWPlayer Instance;
+        public static WWWPlayer Instance { get; private set; }
 
         /// <summary>
         /// All elements which will be called every frame.
@@ -72,7 +72,6 @@ namespace WarWolfWorks_Mod.Internal
                 if (Stand)
                 {
                     Stand.DefineStand(player);
-                    Stand.SetUI();
                 }
             }
 
