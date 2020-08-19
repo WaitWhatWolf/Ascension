@@ -21,6 +21,8 @@ namespace WarWolfWorks_Mod.Items
             item.rare = 10;
         }
 
+        //public override string Texture => "WarWolfWorks_Mod\\Items\\StandArrow.png";
+
         public override bool CanRightClick() => true;
 
         private (string name, StandType stand)[] StandIndexing = new (string name, StandType index)[]

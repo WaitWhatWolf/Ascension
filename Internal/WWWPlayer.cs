@@ -66,7 +66,7 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="player"></param>
         public override void OnEnterWorld(Player player)
         {
-            if (!Stand)
+            if (!Stand && false == true)
             {
                 Stand = Stand.GetStandByID(LoadedStandID, this);
                 if (Stand)
@@ -123,10 +123,10 @@ namespace WarWolfWorks_Mod.Internal
                 updatable.Update();
         }
 
-        public WWWPlayer()
+        /*public WWWPlayer()
         {
             Instance = this;
-        }
+        }*/
 
         /// <summary>
         /// Implicit operator which allows use of !player instead of player == null, and vice-versa.

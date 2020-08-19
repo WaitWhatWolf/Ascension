@@ -5,8 +5,8 @@ namespace WarWolfWorks_Mod.Internal
 {
     public static class Constants
     {
-        public static string TN_STAND_SP_AB_MAIN = "Images/DefaultTexture";
-        public static string TN_DEFAULT = "Images/DefaultTexture";
+        public static string TN_STAND_SP_AB_MAIN = "Images/DefaultTexture.png";
+        public static string TN_DEFAULT = "Images/DefaultTexture.png";
 
         #region Stands
         public const string ANIMBASENAME_STARPLATINUM_IDLE = "SPIDLEA_",

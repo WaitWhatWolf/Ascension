@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Enemy
+namespace WarWolfWorks_Mod.NPCs
 {
-    [AutoloadHead]
-    public class WWWMEnemy : ModNPC
+    public class StandingSamurai : ModNPC
     {
         public override void SetStaticDefaults()
         {
@@ -22,15 +16,11 @@ namespace Enemy
 
         }
 
-        public override string Texture
-        {
-            get { return "WarWolfWorks_Mod/Images/StandingSamurai"; }
-        }
-
         public override string[] AltTextures
         {
             get { return new[] { "WarWolfWorks_Mod/Images/StandingSamurai/StandingSamurai_Alt_1" }; }
         }
+
         public override void SetDefaults()
         {
             //Enemy Hitbox Width and Height

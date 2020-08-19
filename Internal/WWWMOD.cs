@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
+using WarWolfWorks_Mod.Items;
 using WarWolfWorks_Mod.UI;
 
 namespace WarWolfWorks_Mod.Internal
@@ -82,8 +83,8 @@ namespace WarWolfWorks_Mod.Internal
 
         public override void UpdateUI(GameTime gameTime)
         {
-            if (StandUI != null)
-                StandUI.Update(gameTime);
+            //if (StandUI != null)
+            //    StandUI.Update(gameTime);
         }
     }
 }
