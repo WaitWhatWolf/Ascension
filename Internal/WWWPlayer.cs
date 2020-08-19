@@ -14,6 +14,8 @@ namespace WarWolfWorks_Mod.Internal
     /// </summary>
     public sealed class WWWPlayer : ModPlayer
     {
+        public static WWWPlayer Instance;
+
         /// <summary>
         /// All elements which will be called every frame.
         /// </summary>
@@ -67,7 +69,11 @@ namespace WarWolfWorks_Mod.Internal
             if (!Stand)
             {
                 Stand = Stand.GetStandByID(LoadedStandID, this);
-                if (Stand) Stand.DefineStand(player);
+                if (Stand)
+                {
+                    Stand.DefineStand(player);
+                    Stand.SetUI();
+                }
             }
 
             foreach (IPostWorldLoadable ipwl in PostWorldLoadables)
@@ -116,6 +122,11 @@ namespace WarWolfWorks_Mod.Internal
         {
             foreach (IUpdatable updatable in Updatables)
                 updatable.Update();
+        }
+
+        public WWWPlayer()
+        {
+            Instance = this;
         }
 
         /// <summary>

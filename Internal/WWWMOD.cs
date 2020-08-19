@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -57,6 +58,12 @@ namespace WarWolfWorks_Mod.Internal
         {
             if (TimeIsStopped)
                 Main.time = StoppedTime;
+        }
+
+        public override void UpdateUI(GameTime gameTime)
+        {
+            try { WWWPlayer.Instance?.Stand?.UI?.Update(gameTime); }
+            catch { }
         }
     }
 }

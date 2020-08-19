@@ -92,7 +92,7 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public void Update()
         {
-            Timer = Timer.Add(Utilities.TimespanCounterUF);
+            Timer = Timer.Add(Hooks.TimespanCounterUF);
         }
 
         /// <summary>
