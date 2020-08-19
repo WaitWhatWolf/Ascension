@@ -131,7 +131,7 @@ namespace WarWolfWorks_Mod.UI
         {
             if (Active)
             {
-                Vector2 mousePos = Utilities.MousePos;
+                Vector2 mousePos = Vector2.Zero;
                 Perpetrator.player.mouseInterface = ContainsPoint(mousePos);
                 if (Dragged)
                 {
