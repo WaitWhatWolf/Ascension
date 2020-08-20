@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 using WarWolfWorks_Mod.Interfaces;
 using WarWolfWorks_Mod.Internal;
@@ -63,7 +60,7 @@ namespace WarWolfWorks_Mod.UI
         private Vector2 Offset;
 
         protected virtual float DimensionWidth => 1920;
-        protected virtual float DimensionHeight => 1080;
+        protected virtual float DimensionHeight => 512;
         protected virtual float DimensionTop => 0;
         protected virtual float DimensionLeft => 0;
 
@@ -98,20 +95,18 @@ namespace WarWolfWorks_Mod.UI
         /// Handles position change of the menu based on mousedrag.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        protected override void DrawSelf(SpriteBatch spriteBatch)
+        protected sealed override void DrawSelf(SpriteBatch spriteBatch)
         {
             if (Active)
             {
                 base.DrawSelf(spriteBatch);
                 Vector2 mousePos = Hooks.MousePos;
-                WWWPlayer.Instance.player.mouseInterface = ContainsPoint(mousePos);
                 if (Dragged)
                 {
                     Left.Set(mousePos.X - Offset.X, 0f);
                     Top.Set(mousePos.Y - Offset.Y, 0f);
 
                     Recalculate();
-                    RecalculateChildren();
                 }
 
                 OnActiveDrawSelf(spriteBatch);
@@ -149,6 +144,16 @@ namespace WarWolfWorks_Mod.UI
 
         }
 
+        public void ResetDimensions()
+        {
+            Width.Set(DimensionWidth, 0);
+            Height.Set(DimensionHeight, 0);
+            Top.Set(DimensionTop, 0);
+            Left.Set(DimensionLeft, 0);
+
+            Recalculate();
+        }
+
         /// <summary>
         /// Constructs this menu, Adding it to the <see cref="AllMenus"/> list.
         /// </summary>
@@ -157,10 +162,7 @@ namespace WarWolfWorks_Mod.UI
             AllMenus.Add(this);
             WWWPlayer.PostWorldLoadables.Add(this);
 
-            Width.Set(DimensionWidth, 0);
-            Height.Set(DimensionHeight, 0);
-            Top.Set(DimensionTop, 0);
-            Left.Set(DimensionLeft, 0);
+            ResetDimensions();
         }
     }
 }

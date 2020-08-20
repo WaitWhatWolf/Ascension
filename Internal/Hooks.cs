@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using Terraria;
 
 namespace WarWolfWorks_Mod.Internal
 {
@@ -29,9 +30,37 @@ namespace WarWolfWorks_Mod.Internal
         {
             get
             {
-                MouseState state = Mouse.GetState();
-                return new Vector2(state.X, state.Y);
+                //MouseState state = Mouse.GetState();
+                //return new Vector2(state.X, state.Y);
+                return new Vector2(Main.mouseX, Main.mouseY);
             }
         }
+
+        /// <summary>
+        /// Cuts a float to digits length.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="digits"></param>
+        /// <returns></returns>
+        public static float Truncate(this float value, int digits)
+        {
+            double num = Math.Pow(10.0, digits);
+            double num2 = Math.Truncate(num * value) / num;
+            return (float)num2;
+        }
+
+        /// <summary>
+        /// Cuts a float to digits length.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="digits"></param>
+        /// <returns></returns>
+        public static double Truncate(this double value, int digits)
+        {
+            double num = Math.Pow(10.0, digits);
+            double num2 = Math.Truncate(num * value) / num;
+            return num2;
+        }
+
     }
 }
