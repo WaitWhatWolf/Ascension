@@ -15,12 +15,16 @@ namespace WarWolfWorks_Mod.NPCs
             Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.Zombie]; //Zombie has 3 frames but u can instead type in number 3 instead (depending how many frames you want)
 
         }
-
+        /*
+        public override string Texture
+        {
+            get { return "WarWolfWorks_Mod/Images/StandingSamurai"; }
+        }
         public override string[] AltTextures
         {
-            get { return new[] { "WarWolfWorks_Mod/Images/StandingSamurai/StandingSamurai_Alt_1" }; }
+            get { return new[] { "WarWolfWorks_Mod/Images/StandingSamurai/StandingSamuraiAlt1" }; }
         }
-
+        */
         public override void SetDefaults()
         {
             //Enemy Hitbox Width and Height
@@ -39,11 +43,11 @@ namespace WarWolfWorks_Mod.NPCs
             //How much Knockback is resisted
             npc.knockBackResist = 99f;
             //The AI Style (Custom will use -1)
-            npc.aiStyle = 0;
+            npc.aiStyle = 129;
             //Similiar to AI style
             aiType = NPCID.PrimeSaw;
             //The animation type to use
-            animationType = NPCID.Vulture;
+            animationType = NPCID.Zombie;
             //First we get the NPC to Banner using the below.
             banner = Item.NPCtoBanner(NPCID.Zombie);
             //Then we link the banner to the banner item
@@ -55,7 +59,7 @@ namespace WarWolfWorks_Mod.NPCs
             //This is a way of spawning an enemy.
             //SpawnCondition contains a few options and chance gives the chance
             //You can return any float
-            return SpawnCondition.OverworldNightMonster.Chance * 0.25f;
+            return SpawnCondition.OverworldNightMonster.Chance * 1.25f;
             //You can modify this to offer different scenarios.
             //For example:
             /*
