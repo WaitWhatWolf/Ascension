@@ -30,6 +30,13 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public Stand Stand { get; set; }
 
+        /// <summary>
+        /// Hotkey for stand interaction.
+        /// </summary>
+        public static ModHotKey SummonStandKey,
+            AbilityKey,
+            UltimateKey;
+
         private StandType LoadedStandID = StandType.NEWBIE;
 
         /// <summary>
@@ -67,10 +74,6 @@ namespace WarWolfWorks_Mod.Internal
                     Stand.DefineStand(player);
                 }
             }
-
-            Main.NewText(Stand.Name);
-            Instance = player.GetModPlayer<WWWPlayer>();
-            WWWMOD.Instance.StandMenu.ResetDimensions();
 
             foreach (IPostWorldLoadable ipwl in PostWorldLoadables)
                 ipwl.OnWorldLoaded();

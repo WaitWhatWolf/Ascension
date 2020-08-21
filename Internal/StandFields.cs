@@ -17,7 +17,7 @@ namespace WarWolfWorks_Mod.Internal
             Stand toReturn = new Stand()
             {
                 Name = "Star Platinum",
-                Portrait = TEX_UI_STAND_SP_PORTRAIT,
+                Debuff = new StarPlatinumDebuff(),
                 Abilities = new StandAbility[]
                 {
                     new StandMeleeAutoAbility(
@@ -41,7 +41,7 @@ namespace WarWolfWorks_Mod.Internal
             Stand toReturn = new Stand()
             {
                 Name = "The World",
-                Portrait = TEX_UI_STAND_SP_PORTRAIT,
+                Debuff = new TheWorldDebuff(),
                 Abilities = new StandAbility[]
                 {
                     new StandMeleeAutoAbility(TimeSpan.FromSeconds(0.1f), ANIM_THEWORLD_IDLE, ANIM_THEWORLD_ATK)

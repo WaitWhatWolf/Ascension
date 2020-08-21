@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.Utilities;
@@ -30,7 +29,7 @@ namespace WarWolfWorks_Mod.Internal
 
         private Animation AttackAnimation, IdleAnimation;
 
-        public override Texture2D UITexture { get; }
+        public override string Texture => TN_STAND_SP_AB_MAIN;
 
         private Animation GetQueuedAnimation()
         {
@@ -44,23 +43,18 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         protected override void OnUpdate()
         {
-            /*
-            Closest = NPCUtils.SearchForTarget(WWWPlayer.Instance.player.position, NPCUtils.TargetSearchFlag.NPCs).NearestNPC;
+            Closest = NPCUtils.SearchForTarget(Owner.player.position, NPCUtils.TargetSearchFlag.NPCs).NearestNPC;
             Destination = Closest != null 
                 ? Closest.position 
-                : WWWPlayer.Instance.player.oldPosition.X < WWWPlayer.Instance.player.position.X 
-                ? WWWPlayer.Instance.player.position + IdleDistance 
-                : WWWPlayer.Instance.player.position + IdleDistanceFlipped;
+                : Owner.player.oldPosition.X < Owner.player.position.X 
+                ? Owner.player.position + IdleDistance 
+                : Owner.player.position + IdleDistanceFlipped;
 
-            WWWPlayer.Instance.Stand.Projectile.projectile.velocity = Vector2.SmoothStep(WWWPlayer.Instance.Stand.Projectile.projectile.position, Destination, STAND_MOVE_SPEED);
+            Owner.Stand.Projectile.projectile.velocity = Vector2.SmoothStep(Owner.Stand.Projectile.projectile.position, Destination, STAND_MOVE_SPEED);
 
-            ClosestWithinRange = Vector2.Distance(Closest.position, WWWPlayer.Instance.Stand.Projectile.projectile.position) <= STAND_MELEE_RANGE;
+            ClosestWithinRange = Vector2.Distance(Closest.position, Owner.Stand.Projectile.projectile.position) <= STAND_MELEE_RANGE;
 
-            WWWPlayer.Instance.Stand.Projectile.SetAnimation(GetQueuedAnimation());
-            */
-
-            if (WWWMOD.Instance.Key_Ability_Norm.JustPressed)
-                Countdown = new TimeSpan(0, 0, 5);
+            Owner.Stand.Projectile.SetAnimation(GetQueuedAnimation());
         }
 
         /// <summary>
@@ -72,7 +66,6 @@ namespace WarWolfWorks_Mod.Internal
         /// <param name="atktxt">Animation to play the the stand is attacking.</param>
         public StandMeleeAutoAbility(TimeSpan cooldown, Animation idletxt, Animation atktxt) : base()
         {
-            UITexture = TEX_UI_STAND_SP_AUTO;
             Cooldown = cooldown;
             IdleAnimation = idletxt;
             AttackAnimation = atktxt;
