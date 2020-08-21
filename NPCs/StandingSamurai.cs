@@ -224,7 +224,7 @@ namespace WarWolfWorks_Mod.NPCs
             //This is a way of spawning an enemy.
             //SpawnCondition contains a few options and chance gives the chance
             //You can return any float
-            return SpawnCondition.OverworldNightMonster.Chance * 1.25f;
+            return SpawnCondition.OverworldNightMonster.Chance * 0.10f;
             //You can modify this to offer different scenarios.
             //For example:
             /*
