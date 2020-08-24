@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace WarWolfWorks_Mod.Internal
 {
     public static class Constants
     {
-        public static string TN_STAND_SP_AB_MAIN = "Images/DefaultTexture.png";
+        public static string TEXN_STAND_SP_AB_MAIN = "Images/DefaultTexture.png";
         public static string TN_DEFAULT = "Images/DefaultTexture.png";
 
         #region Stands
@@ -39,5 +40,20 @@ namespace WarWolfWorks_Mod.Internal
             new KeyValuePair<TimeSpan, string>(TimeSpan.FromSeconds(0.05d), ANIMBASENAME_THEWORLD_ATK + "1")
             );
         #endregion
+
+#region Textures
+        public static Texture2D TEX_UI_STAND_SP_AUTO { get; private set; }
+        public static Texture2D TEX_UI_STAND_SP_PORTRAIT { get; private set; }
+#endregion
+
+        /// <summary>
+        /// Initializes all non-runtime variables.
+        /// </summary>
+        public static void Init()
+        {
+            TEX_UI_STAND_SP_AUTO = WWWMOD.Instance.GetTexture("UI/SM_SP_AUTO");
+            TEX_UI_STAND_SP_PORTRAIT = WWWMOD.Instance.GetTexture("UI/SM_SP_PORTRAIT");
+
+        }
     }
 }

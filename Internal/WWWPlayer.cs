@@ -30,13 +30,6 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public Stand Stand { get; set; }
 
-        /// <summary>
-        /// Hotkey for stand interaction.
-        /// </summary>
-        public static ModHotKey SummonStandKey,
-            AbilityKey,
-            UltimateKey;
-
         private StandType LoadedStandID = StandType.NEWBIE;
 
         /// <summary>
@@ -71,9 +64,13 @@ namespace WarWolfWorks_Mod.Internal
                 Stand = Stand.GetStandByID(LoadedStandID);
                 if (Stand)
                 {
-                    Stand.DefineStand(player);
+                    Stand.DefineStand();
                 }
             }
+
+            Main.NewText(Stand.Name);
+            Instance = player.GetModPlayer<WWWPlayer>();
+            WWWMOD.Instance.StandMenu.ResetDimensions();
 
             foreach (IPostWorldLoadable ipwl in PostWorldLoadables)
                 ipwl.OnWorldLoaded();
@@ -109,7 +106,7 @@ namespace WarWolfWorks_Mod.Internal
             }
 
             Stand = Stand.GetStandByID(toUse);
-            Stand.DefineStand(player);
+            Stand.DefineStand();
             string standUse = Stand ? Stand.Name : "nothing.";
             Main.NewText($"{player.name} has manifested {standUse}!", 175, 75, 255);
         }

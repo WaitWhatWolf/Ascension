@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
@@ -23,10 +24,6 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public WWWPlayer Owner { get; private set; }
         /// <summary>
-        /// Debuff displayed for this stand.
-        /// </summary>
-        public StandDebuff Debuff { get; private set; }
-        /// <summary>
         /// All abilities of the stand.
         /// </summary>
         public StandAbility[] Abilities { get; private set; }
@@ -34,6 +31,10 @@ namespace WarWolfWorks_Mod.Internal
         /// Stand In-Game. (Stand is actually a projectile, blame Terraria, not me)
         /// </summary>
         public StandProjectile Projectile { get; private set; }
+        /// <summary>
+        /// Used to display on <see cref="StandMenu"/>.
+        /// </summary>
+        public Texture2D Portrait { get; private set; }
         /// <summary>
         /// Stand's ID.
         /// </summary>
@@ -43,36 +44,6 @@ namespace WarWolfWorks_Mod.Internal
         /// Determines if the stand is currently drawn/used by the player.
         /// </summary>
         public bool Active { get; private set; }
-
-        /// <summary>
-        /// Name of the UI Sprite to be displayed as the passive ability.
-        /// </summary>
-        public string PassiveAbilityTexture { get; }
-        /// <summary>
-        /// Name of the UI Sprite to be displayed as the normal ability.
-        /// </summary>
-        public string NormalAbilityTexture { get; }
-        /// <summary>
-        /// Name of the UI Sprite to be displayed as the ultimate ability.
-        /// </summary>
-        public string UltimateAbilityTexture { get; }
-
-        /// <summary>
-        /// Returns the appropriate stand debuff based on the given ID.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public static int GetStandDebuffID(StandType id)
-        {
-            switch (id)
-            {
-                default: return -1;
-                case StandType.STAR_PLATINUM:
-                    return ModContent.BuffType<StarPlatinumDebuff>();
-                case StandType.THE_WORLD:
-                    return ModContent.BuffType<TheWorldDebuff>();
-            }
-        }
 
         /// <summary>
         /// Returns a stand based on the given ID with "to" as it's owner.
@@ -94,11 +65,9 @@ namespace WarWolfWorks_Mod.Internal
         /// <summary>
         /// Should always be called this method when setting a new stand.
         /// </summary>
-        public void DefineStand(Player player)
+        public void DefineStand()
         {
-            int toSet = GetStandDebuffID(ID);
-            if (toSet != -1)
-                player.AddBuff(toSet, int.MaxValue, false);
+            WWWMOD.Instance.StandMenu.ActivateMenu();
         }
 
         /// <summary>

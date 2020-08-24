@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria;
 using WarWolfWorks_Mod.Interfaces;
 
 namespace WarWolfWorks_Mod.Internal
@@ -10,11 +11,6 @@ namespace WarWolfWorks_Mod.Internal
     public abstract class StandAbility : IUpdatable
     {
         /// <summary>
-        /// The modplayer who owns this <see cref="StandAbility"/>'s <see cref="Stand"/>.
-        /// </summary>
-        protected WWWPlayer Owner { get; private set; }
-
-        /// <summary>
         /// Cooldown required for this ability.
         /// </summary>
         public TimeSpan Cooldown { get; protected set; }
@@ -22,7 +18,7 @@ namespace WarWolfWorks_Mod.Internal
         /// <summary>
         /// Current countdown which determines if the cooldown is up.
         /// </summary>
-        public TimeSpan Countdown { get; private set; }
+        public TimeSpan Countdown { get; protected set; }
 
         /// <summary>
         /// Sub-type of this ability.
@@ -34,7 +30,10 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public bool CooldownUp => Countdown >= Cooldown;
 
-        public abstract string Texture { get; }
+        /// <summary>
+        /// The texture used to display the ability on <see cref="StandMenu"/>.
+        /// </summary>
+        public abstract Texture2D UITexture { get; }
 
         /// <summary>
         /// Retuns true if this ability is activated.
@@ -53,7 +52,11 @@ namespace WarWolfWorks_Mod.Internal
         /// </summary>
         public void Update()
         {
-            Countdown = Countdown.Add(Hooks.TimespanCounterUF);
+            if (Countdown.TotalMilliseconds < 0)
+                Countdown = TimeSpan.Zero;
+            else if (Countdown.TotalMilliseconds > 0)
+                Countdown -= TimeSpan.FromSeconds(1f / Main.frameRate);
+
             if (Activates()) OnActivate();
             OnUpdate();
         }
@@ -70,6 +73,12 @@ namespace WarWolfWorks_Mod.Internal
         public StandAbility()
         {
             Countdown = TimeSpan.Zero;
+            WWWPlayer.Updatables.Add(this);
+        }
+
+        ~StandAbility()
+        {
+            WWWPlayer.Updatables.Remove(this);
         }
     }
 }

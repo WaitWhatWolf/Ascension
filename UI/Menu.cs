@@ -98,24 +98,32 @@ namespace WarWolfWorks_Mod.UI
         /// Handles position change of the menu based on mousedrag.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        protected override void DrawSelf(SpriteBatch spriteBatch)
+        protected sealed override void DrawSelf(SpriteBatch spriteBatch)
         {
             if (Active)
             {
                 base.DrawSelf(spriteBatch);
                 Vector2 mousePos = Hooks.MousePos;
-                WWWPlayer.Instance.player.mouseInterface = ContainsPoint(mousePos);
                 if (Dragged)
                 {
                     Left.Set(mousePos.X - Offset.X, 0f);
                     Top.Set(mousePos.Y - Offset.Y, 0f);
 
                     Recalculate();
-                    RecalculateChildren();
                 }
 
                 OnActiveDrawSelf(spriteBatch);
             }
+        }
+
+        public void ResetDimensions()
+        {
+            Width.Set(DimensionWidth, 0);
+            Height.Set(DimensionHeight, 0);
+            Top.Set(DimensionTop, 0);
+            Left.Set(DimensionLeft, 0);
+
+            Recalculate();
         }
 
         protected virtual void OnActiveDrawSelf(SpriteBatch spriteBatch) { }
@@ -157,10 +165,7 @@ namespace WarWolfWorks_Mod.UI
             AllMenus.Add(this);
             WWWPlayer.PostWorldLoadables.Add(this);
 
-            Width.Set(DimensionWidth, 0);
-            Height.Set(DimensionHeight, 0);
-            Top.Set(DimensionTop, 0);
-            Left.Set(DimensionLeft, 0);
+            ResetDimensions();
         }
     }
 }
