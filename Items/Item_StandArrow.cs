@@ -3,6 +3,9 @@ using Terraria.ID;
 using Terraria.GameContent.Creative;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
+using Microsoft.Xna.Framework;
+using Ascension.Items.Rarities;
 
 namespace Ascension.Items
 {
@@ -18,6 +21,7 @@ namespace Ascension.Items
 
         public override void SetStaticDefaults()
         {
+            DisplayName.SetDefault("Stand Arrow");
             Tooltip.SetDefault("Has the power to manifest someone's will.");
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
@@ -29,18 +33,32 @@ namespace Ascension.Items
 
             Item.maxStack = 1;
             Item.value = 0;
+            Item.useStyle = 0;
+
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.useTime = 20;
+            Item.useAnimation = 20;
+            Item.autoReuse = false;
+
+            Item.rare = ModContent.RarityType<Rarity_Chromic>();
+            Item.UseSound = SoundID.Item115;
         }
 
-        
+        public override bool CanUseItem(Player player)
+        {
+            return base.CanUseItem(player);
+        }
+
         public override bool? UseItem(Player player)
         {
-            player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player), player.statLifeMax - 1, -1);
+            Debug.Log("Your will has manifested! But it's not implemented yet so fuck off");
+            player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), player.statLifeMax - 1, -1);
             if(!player.dead)
             {
                 //Do the arrow thing
             }
 
-            return null; //This is here just so the project compiles, will remove it later
+            return true;
         }
     }
 }
