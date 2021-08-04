@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Ascension;
+using Ascension.Utility;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -6,12 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria.UI;
-using WarWolfWorks_Mod.Interfaces;
-using WarWolfWorks_Mod.Internal;
 
 namespace WarWolfWorks_Mod.UI
 {
-    public abstract class Menu : UIState, IPostWorldLoadable
+    public abstract class Menu : UIState
     {
         #region Static
         /// <summary>
@@ -103,7 +103,7 @@ namespace WarWolfWorks_Mod.UI
             if (Active)
             {
                 base.DrawSelf(spriteBatch);
-                Vector2 mousePos = Hooks.MousePos;
+                Vector2 mousePos = ASCResources.MousePos;
                 if (Dragged)
                 {
                     Left.Set(mousePos.X - Offset.X, 0f);
@@ -163,8 +163,6 @@ namespace WarWolfWorks_Mod.UI
         public Menu() : base()
         {
             AllMenus.Add(this);
-            WWWPlayer.PostWorldLoadables.Add(this);
-
             ResetDimensions();
         }
     }

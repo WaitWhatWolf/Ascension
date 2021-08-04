@@ -1,6 +1,5 @@
+displayName = Ascension
 author = WarWolfWorks
-version = 0.0.1
-displayName = WarWolfWorks Mod
-hideCode = false
-hideResources = false
+version = 0.1
+homepage = https://github.com/WaitWhatWolf/Ascension
 includeSource = true

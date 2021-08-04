@@ -1,6 +1,2 @@
-(This mod is currently heavily WIP, Do not expect things to work properly or at all)
-
-The WarWolfWorks mod is now on! Currently, the plan for this mod is:
-- JoJo Stands (w/Star Platinum, The World, Magician's Red, Killer Queen and Hierophant Green being the first/base additions)
-- Infommi Weapons (of all characters except Metalgayzer for now), Vanity items and Bosses
-- Open source! You can access all code, images and content directly by going to Mods>WarWolfWorks Mod>More Info>Extract
+Ascension mod is an upcoming large mod currently
+under developement.
