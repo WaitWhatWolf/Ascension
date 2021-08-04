@@ -10,7 +10,7 @@ namespace Ascension.Internal
     {
         public override void SetDefaultStats(Player player)
         {
-            player.GetModPlayer<AscendedPlayer>().BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
+            //player.GetModPlayer<AscendedPlayer>().BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
         }
 
         /// <summary>
