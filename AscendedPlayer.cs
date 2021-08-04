@@ -6,7 +6,7 @@ namespace Ascension
     public sealed class AscendedPlayer : ModPlayer
     {
         public float BaseUmbralCrit;
-
+        /*
         /// <inheritdoc/>
         public override TagCompound Save()
         {
@@ -24,5 +24,6 @@ namespace Ascension
         {
             //LoadedStandID = (StandType)tag.GetInt("Stand");
         }
+        */
     }
 }

@@ -46,22 +46,25 @@ namespace Ascension
             /// </summary>
             public static void Load()
             {
+                PDRV_STANDARROW = "{0} couldn't handle the arrow's power.";
+
                 pv_Reasons = new SortedDictionary<string, string>();
                 FieldInfo[] fields = typeof(DeathReasons).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.CreateInstance);
                 foreach(FieldInfo field in fields)
                 {
                     if(field.Name.StartsWith("PDRV_"))
                     {
-                        pv_Reasons.Add(field.Name.Replace("PDRV_", string.Empty), field.GetValue(null).ToString());
+                        object val = field.GetValue(null);
+                        if(val != null)
+                            pv_Reasons.Add(field.Name.Replace("PDRV_", string.Empty), val.ToString());
                     }
                 }
-
-                PDRV_STANDARROWKILL = "{0} couldn't handle the arrow's power.";
             }
 
             public static void Unload()
             {
-                PDRV_STANDARROWKILL = null;
+                PDRV_STANDARROW = null;
+                pv_Reasons = null;
             }
 
             /// <summary>
@@ -76,7 +79,7 @@ namespace Ascension
             }
 
             /// <summary> Killed by <see cref="Item_StandArrow"/>. </summary>
-            private static string PDRV_STANDARROWKILL;
+            private static string PDRV_STANDARROW;
 
             private static SortedDictionary<string, string> pv_Reasons;
         }

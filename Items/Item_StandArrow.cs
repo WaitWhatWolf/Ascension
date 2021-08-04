@@ -31,6 +31,7 @@ namespace Ascension.Items
             Item.value = 0;
         }
 
+        
         public override bool? UseItem(Player player)
         {
             player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player), player.statLifeMax - 1, -1);
