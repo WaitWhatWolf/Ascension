@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../tModLoader.targets" />
+  <PropertyGroup>
+    <AssemblyName>Ascension</AssemblyName>
+    <TargetFramework>net5.0</TargetFramework>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Buffs\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Projectiles\" />
+  </ItemGroup>
+</Project>
