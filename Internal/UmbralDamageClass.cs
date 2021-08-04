@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Ascension.Internal
@@ -9,9 +8,9 @@ namespace Ascension.Internal
     /// </summary>
     public sealed class UmbralDamageClass : DamageClass
     {
-        public override void SetStaticDefaults()
+        public override void SetDefaultStats(Player player)
         {
-            Mod.GetContent<AscendedPlayer>().First().BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
+            //player.GetModPlayer<AscendedPlayer>().BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
         }
 
         /// <summary>
@@ -32,7 +31,5 @@ namespace Ascension.Internal
         {
             return damageClass.FullName == Throwing.FullName;
         }
-
-        private Player pv_StoredPlayer;
     }
 }
