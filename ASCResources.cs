@@ -1,4 +1,8 @@
-﻿using Ascension.Items;
+﻿using Ascension.Enums;
+using Ascension.Items;
+using Ascension.Players;
+using Ascension.Utility;
+using Ascension.Players;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -13,6 +17,7 @@ namespace Ascension
     /// </summary>
     public static class ASCResources
     {
+        public static readonly Random GlobalRandom = new();
         /// <summary>
         /// Timer used to get a consistent timespan for a counter.
         /// </summary>
@@ -29,12 +34,71 @@ namespace Ascension
         /// <summary>
         /// Returns the mouse position in vector value.
         /// </summary>
-        public static Vector2 MousePos => new Vector2(Main.mouseX, Main.mouseY);
+        public static Vector2 MousePos => new(Main.mouseX, Main.mouseY);
 
         /// <summary>
         /// Global Assets path.
         /// </summary>
         public const string ASSETS_PATH = "Ascension/Assets/";
+
+        public static class Players
+        {
+            public static string GetStandName(StandID id)
+                => id switch
+                {
+                    StandID.STAR_PLATINUM => "Star Platinum",
+                    StandID.THE_WORLD => "The World",
+                    StandID.MAGICIANS_RED => "Magician's Red",
+                    _ => string.Empty
+                };
+
+            /// <summary>
+            /// Manifests a stand for a given player.
+            /// </summary>
+            /// <param name="player">The player which will manifest the stand.</param>
+            /// <param name="id">Which stand to manifest; If left at <see cref="StandID.NEWBIE"/>, it will select a random stand.</param>
+            /// <param name="debugStandName">Whether a message shows in chat that shows which stand was manifested.</param>
+            /// <returns></returns>
+            public static bool ManifestStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
+            {
+                if (player.in_Stand)
+                    return false;
+
+                string playerName = player.Player.name;
+                foreach (var standReference in pv_StandRefernces) //Looks if the player is named a specific name which would fit a stand
+                {
+                    if(playerName.Contains(standReference.Item1) && playerName.Contains(standReference.Item2))
+                    {
+                        id = standReference.Item3;
+                        break;
+                    }
+                }
+
+                if(id == StandID.NEWBIE) //Randomizes the stand if none were passed
+                {
+                    id = (StandID)GlobalRandom.Next(0, (int)StandID.HIEROPHANT_GREEN);
+                }
+
+                player.in_Stand = new Stand(id);
+
+                if (debugStandName)
+                    Debug.Log($"{playerName}'s will manifested as {player.in_Stand.Name}!");
+
+                return true;
+            }
+
+            /// <summary>
+            /// Used by <see cref="ManifestStand(AscendedPlayer, StandID)"/>.
+            /// </summary>
+            private static readonly (string, string, StandID)[] pv_StandRefernces = new[]
+            {
+                ("Kujo", "Jotaro", StandID.STAR_PLATINUM),
+                ("Dio", "Brando", StandID.THE_WORLD),
+                ("Muhammad", "Avdol", StandID.MAGICIANS_RED),
+                ("Kira", "Yoshikage", StandID.KILLER_QUEEN),
+                ("Noriaki", "Kakyoin", StandID.HIEROPHANT_GREEN),
+            };
+        }
 
         /// <summary>
         /// All possible death reasons; Note that they are all initiated during <see cref="Ascension.Load"/> through <see cref="DeathReasons.Load"/>.
@@ -46,17 +110,17 @@ namespace Ascension
             /// </summary>
             public static void Load()
             {
-                PDRV_STANDARROW = "{0} couldn't handle the arrow's power.";
+                PDRV_STANDARROW = new[] { "{0} couldn't handle the arrow's power.", "The power of the arrow ripped {0} to shreds.", "{0} wasn't worthy of the arrow's power." };
 
-                pv_Reasons = new SortedDictionary<string, string>();
+                pv_Reasons = new SortedDictionary<string, IEnumerable<string>>();
                 FieldInfo[] fields = typeof(DeathReasons).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.CreateInstance);
                 foreach(FieldInfo field in fields)
                 {
                     if(field.Name.StartsWith("PDRV_"))
                     {
-                        object val = field.GetValue(null);
+                        string[] val = (string[])field.GetValue(null);
                         if(val != null)
-                            pv_Reasons.Add(field.Name.Replace("PDRV_", string.Empty), val.ToString());
+                            pv_Reasons.Add(field.Name.Replace("PDRV_", string.Empty), val);
                     }
                 }
             }
@@ -75,13 +139,15 @@ namespace Ascension
             /// <returns></returns>
             public static PlayerDeathReason GetReason(string name, params object[] args)
             {
-                return PlayerDeathReason.ByCustomReason(string.Format(pv_Reasons[name], args));
+                return PlayerDeathReason.ByCustomReason(string.Format(pv_Reasons[name].Random(), args));
             }
 
+#pragma warning disable IDE0052 //Put the PDRV_ variables in here
             /// <summary> Killed by <see cref="Item_StandArrow"/>. </summary>
-            private static string PDRV_STANDARROW;
+            private static string[] PDRV_STANDARROW;
+#pragma warning restore IDE0052
 
-            private static SortedDictionary<string, string> pv_Reasons;
+            private static SortedDictionary<string, IEnumerable<string>> pv_Reasons;
         }
 
         /// <summary>
