@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Ascension.Items.Rarities;
+using Ascension.Players;
 
 namespace Ascension.Items
 {
@@ -46,16 +47,15 @@ namespace Ascension.Items
 
         public override bool CanUseItem(Player player)
         {
-            return base.CanUseItem(player);
+            return player.whoAmI == Main.myPlayer;
         }
 
         public override bool? UseItem(Player player)
         {
-            Debug.Log("Your will has manifested! But it's not implemented yet so fuck off");
             player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), player.statLifeMax - 1, -1);
             if(!player.dead)
             {
-                //Do the arrow thing
+                ASCResources.Players.ManifestStand(player.GetModPlayer<AscendedPlayer>());
             }
 
             return true;
