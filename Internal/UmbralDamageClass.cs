@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Ascension.Players;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -11,7 +12,8 @@ namespace Ascension.Internal
     {
         public override void SetStaticDefaults()
         {
-            Mod.GetContent<AscendedPlayer>().First().BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
+            foreach(var player in Mod.GetContent<AscendedPlayer>())
+                player.BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
         }
 
         /// <summary>
