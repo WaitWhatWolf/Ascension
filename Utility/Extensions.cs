@@ -1,9 +1,11 @@
 ﻿using Ascension.Enums;
+using System.Collections.Generic;
 
 namespace Ascension.Utility
 {
     public static class Extensions
     {
+        public static T Random<T>(this IEnumerable<T> enumerable) => Hooks.Collections.Random(enumerable);
         /// <inheritdoc cref="Hooks.Colors.GetColorByRarity(ERarity)"/>
         public static void GetColor(this ERarity rarity) => Hooks.Colors.GetColorByRarity(rarity);
         /// <inheritdoc cref="Hooks.MathF.Truncate(float, int)"/>

@@ -1,6 +1,8 @@
 ﻿using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 
 namespace Ascension.Utility
@@ -10,6 +12,21 @@ namespace Ascension.Utility
     /// </summary>
     public static class Hooks
     {
+        public static class Collections
+        {
+            /// <summary>
+            /// Returns a random item from an enumerable.
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="enumerable"></param>
+            /// <returns></returns>
+            public static T Random<T>(IEnumerable<T> enumerable)
+            {
+                T[] array = enumerable.ToArray();
+                return array[ASCResources.GlobalRandom.Next(0, array.Length)];
+            }
+        }
+
         public static class MathF
         {
             /// <summary>
