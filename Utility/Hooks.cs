@@ -69,6 +69,18 @@ namespace Ascension.Utility
             #endregion
 
             /// <summary>
+            /// Returns a colored text for item tooltips.
+            /// </summary>
+            /// <param name="text">The original text.</param>
+            /// <param name="color">Color used for the text.</param>
+            /// <returns></returns>
+            public static string GetColoredTooltipText(string text, Color color)
+            {
+                //[c/FF0000:Colors ]
+                return $"[c/{color.Hex3()}:{text}]";
+            }
+
+            /// <summary>
             /// Returns a color based on <see cref="ERarity"/>.
             /// </summary>
             /// <param name="rarity"></param>
