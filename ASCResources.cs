@@ -2,7 +2,6 @@
 using Ascension.Items;
 using Ascension.Players;
 using Ascension.Utility;
-using Ascension.Players;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,6 +10,9 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Input;
+using Ascension.Internal;
+using Terraria.Localization;
+using Terraria.ID;
 
 namespace Ascension
 {
@@ -32,6 +34,11 @@ namespace Ascension
         /// Timer used to get a consistent timespan for a counter; Divided by 60 for an update-friendly timespan.
         /// </summary>
         public static TimeSpan TimespanCounterUF => TimeSpan.FromSeconds(Math.Max(1, 60 / Terraria.Main.frameRate) / 60);
+
+        /// <summary>
+        /// Float value which would amount to 1f if called every frame. (Assuming the game runs at a smooth 60fps)
+        /// </summary>
+        public const float FLOAT_PER_FRAME = 1f / 60f;
 
         /// <summary>
         /// Returns the mouse position in vector value.
@@ -63,7 +70,7 @@ namespace Ascension
                 ItemAssetType.NPCs => ASSETS_PATH_NPCS,
                 ItemAssetType.Debuffs => ASSETS_PATH_DEBUFFS,
                 ItemAssetType.Armors => ASSETS_PATH_ARMORS,
-                ItemAssetType.Projectiles => ASSETS_PATH_ITEMS,
+                ItemAssetType.Projectiles => ASSETS_PATH_PROJECTILES,
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             } + caller.GetType().Name;
 
@@ -85,7 +92,18 @@ namespace Ascension
             /// <param name="id">Which stand to manifest; If left at <see cref="StandID.NEWBIE"/>, it will select a random stand.</param>
             /// <param name="debugStandName">Whether a message shows in chat that shows which stand was manifested.</param>
             /// <returns></returns>
-            public static bool ManifestStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
+            public static int ManifestStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
+            {
+                bool created = CreateStand(player, id, debugStandName);
+                if (!created)
+                    return -1;
+                else
+                {
+                    return 0;
+                }
+            }
+
+            private static bool CreateStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
             {
                 if (player.in_Stand)
                     return false;
@@ -93,14 +111,14 @@ namespace Ascension
                 string playerName = player.Player.name;
                 foreach (var standReference in pv_StandRefernces) //Looks if the player is named a specific name which would fit a stand
                 {
-                    if(playerName.Contains(standReference.Item1) && playerName.Contains(standReference.Item2))
+                    if (playerName.Contains(standReference.Item1) && playerName.Contains(standReference.Item2))
                     {
                         id = standReference.Item3;
                         break;
                     }
                 }
 
-                if(id == StandID.NEWBIE) //Randomizes the stand if none were passed
+                if (id == StandID.NEWBIE) //Randomizes the stand if none were passed
                 {
                     id = (StandID)GlobalRandom.Next(0, (int)StandID.HIEROPHANT_GREEN);
                 }
@@ -186,7 +204,31 @@ namespace Ascension
             /// </summary>
             public static void Load() //Add any recipe-adding in this method
             {
+                Item_RedHotChiliPepper redHotChiliPepper = ModContent.GetInstance<Item_RedHotChiliPepper>();
 
+                redHotChiliPepper.CreateRecipe(1)
+                    .AddRecipeGroup(RECIPE_GROUP_DEMONBARS, 10)
+                    .AddRecipeGroup(RECIPE_GROUP_DEMONFRAGMENTS, 15)
+                    .AddTile(TileID.DemonAltar)
+                    .Register();
+            }
+
+            public static void LoadRecipeGroups()
+            {
+                RecipeGroup demonFragments = new (() => Language.GetTextValue("LegacyMisc.37") + " Demon Fragment", new int[]
+                {
+                    ItemID.ShadowScale,
+                    ItemID.TissueSample
+                });
+                
+                RecipeGroup demonBars = new (() => Language.GetTextValue("LegacyMisc.37") + " Demonic Bar", new int[]
+                {
+                    ItemID.DemoniteBar,
+                    ItemID.CrimtaneBar
+                });
+
+                RecipeGroup.RegisterGroup(RECIPE_GROUP_DEMONFRAGMENTS, demonFragments);
+                RecipeGroup.RegisterGroup(RECIPE_GROUP_DEMONBARS, demonBars);
             }
 
             /// <summary>
@@ -194,8 +236,10 @@ namespace Ascension
             /// </summary>
             public static void Unload() //If you added anything in Load(), you should add an unloading of the same thing here
             {
-
             }
+
+            public const string RECIPE_GROUP_DEMONFRAGMENTS = "Ascension:DemonFragments";
+            public const string RECIPE_GROUP_DEMONBARS = "Ascension:DemonBars";
         }
 
         public static class Input
@@ -220,7 +264,24 @@ namespace Ascension
         /// </summary>
         public static class Stats
         {
+            public static void Load()
+            {
+                DamageClass_Umbral = new UmbralDamageClass();
+            }
+
+            public static void Unload()
+            {
+
+            }
+
+            public const string STAND_STAT_DAMAGE = "Stand Damage";
+            public const string STAND_STAT_ARMORPEN = "Stand ArmorPen";
+            public const string STAND_STAT_KNOCKBACK = "Stand Knock";
+            public const string STAND_STAT_ATTACKSPEED = "Stand AS";
+            public const string STAND_STAT_MOVESPEED = "Stand MS";
+            public const string STAND_STAT_AIRANGE = "Stand Range AI";
             public const float UMBRAL_CRIT_BASE = 4f;
+            public static UmbralDamageClass DamageClass_Umbral;
         }
     }
 }

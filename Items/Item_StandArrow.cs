@@ -33,18 +33,17 @@ namespace Ascension.Items
         {
             Item.width = 32;
             Item.height = 32;
+            Item.useStyle = ItemUseStyleID.EatFood;
+            Item.useAnimation = 25;
+            Item.useTime = 25;
+            Item.useTurn = false;
+            Item.UseSound = SoundID.Item115;
 
             Item.maxStack = 1;
             Item.value = 0;
-            Item.useStyle = 0;
-
-            Item.useStyle = ItemUseStyleID.Swing;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
             Item.autoReuse = false;
 
             Item.rare = ModContent.RarityType<Rarity_Chromic>();
-            Item.UseSound = SoundID.Item115;
         }
 
         public override bool CanUseItem(Player player)
@@ -58,7 +57,8 @@ namespace Ascension.Items
             player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), player.statLifeMax - 1, -1);
             if(!player.dead)
             {
-                ASCResources.Players.ManifestStand(player.GetModPlayer<AscendedPlayer>());
+                AscendedPlayer modPlayer = player.GetModPlayer<AscendedPlayer>();
+                ASCResources.Players.ManifestStand(modPlayer);
             }
 
             return true;
