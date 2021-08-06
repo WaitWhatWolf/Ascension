@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using Terraria;
 
 namespace Ascension
@@ -21,6 +22,14 @@ namespace Ascension
         public static void LogError(object message)
         {
             Main.NewTextMultiline(message.ToString(), c: Color.Crimson);
+        }
+
+        public static void LogEnumerable<T>(IEnumerable<T> list)
+        {
+            foreach(T item in list)
+            {
+                Log(item);
+            }
         }
     }
 }
