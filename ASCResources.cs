@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Input;
 
 namespace Ascension
 {
@@ -40,6 +42,30 @@ namespace Ascension
         /// Global Assets path.
         /// </summary>
         public const string ASSETS_PATH = "Ascension/Assets/";
+        public const string ASSETS_PATH_ITEMS = ASSETS_PATH + "Items/";
+        public const string ASSETS_PATH_NPCS = ASSETS_PATH + "NPCs/";
+        public const string ASSETS_PATH_ARMORS = ASSETS_PATH + "Armors/";
+        public const string ASSETS_PATH_MISC = ASSETS_PATH + "Misc/";
+        public const string ASSETS_PATH_PROJECTILES = ASSETS_PATH + "Projectiles/";
+        public const string ASSETS_PATH_DEBUFFS = ASSETS_PATH + "Debuffs/";
+
+        /// <summary>
+        /// Returns the full path towards a moded component's texture.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="classType"></param>
+        /// <returns></returns>
+        public static string GetAssetsPath(ItemAssetType type, IModType caller)
+            => type switch
+            {
+                ItemAssetType.Misc => ASSETS_PATH_MISC,
+                ItemAssetType.Items => ASSETS_PATH_ITEMS,
+                ItemAssetType.NPCs => ASSETS_PATH_NPCS,
+                ItemAssetType.Debuffs => ASSETS_PATH_DEBUFFS,
+                ItemAssetType.Armors => ASSETS_PATH_ARMORS,
+                ItemAssetType.Projectiles => ASSETS_PATH_ITEMS,
+                _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
+            } + caller.GetType().Name;
 
         public static class Players
         {
@@ -79,7 +105,7 @@ namespace Ascension
                     id = (StandID)GlobalRandom.Next(0, (int)StandID.HIEROPHANT_GREEN);
                 }
 
-                player.in_Stand = new Stand(id);
+                player.in_Stand = new Stand(player, id);
 
                 if (debugStandName)
                     Debug.Log($"{playerName}'s will manifested as {player.in_Stand.Name}!");
@@ -170,6 +196,23 @@ namespace Ascension
             {
 
             }
+        }
+
+        public static class Input
+        {
+            public static ModKeybind Keybind_Stand_Invoke;
+
+            public static void Load(Ascension ascension)
+            {
+                Keybind_Stand_Invoke = KeybindLoader.RegisterKeybind(ascension, KEY_STAND_INVOKE, Keys.Q);
+            }
+
+            public static void Unload()
+            {
+                Keybind_Stand_Invoke = null;
+            }
+
+            public const string KEY_STAND_INVOKE = "Invoke Stand";
         }
 
         /// <summary>

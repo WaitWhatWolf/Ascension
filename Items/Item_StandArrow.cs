@@ -7,10 +7,12 @@ using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Ascension.Items.Rarities;
 using Ascension.Players;
+using static Ascension.ASCResources;
+using Ascension.Enums;
 
 namespace Ascension.Items
 {
-    public sealed class Item_StandArrow : ModItem
+    public sealed class Item_StandArrow : AscensionItem
     {
         public override void AddRecipes()
         {
@@ -52,6 +54,7 @@ namespace Ascension.Items
 
         public override bool? UseItem(Player player)
         {
+            
             player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), player.statLifeMax - 1, -1);
             if(!player.dead)
             {
