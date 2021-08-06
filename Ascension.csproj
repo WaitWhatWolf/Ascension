@@ -10,6 +10,5 @@
   <ItemGroup>
     <Folder Include="Buffs\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="Projectiles\" />
   </ItemGroup>
 </Project>
