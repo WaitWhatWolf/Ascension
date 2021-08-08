@@ -22,5 +22,6 @@ namespace Ascension.Enums
         Projectiles,
         Dusts,
         Tiles,
+        Placeables,
     }
 }

@@ -60,6 +60,7 @@ namespace Ascension
         public const string ASSETS_PATH_PROJECTILES = ASSETS_PATH + "Projectiles/";
         public const string ASSETS_PATH_DUSTS = ASSETS_PATH + "Dusts/";
         public const string ASSETS_PATH_TILES = ASSETS_PATH + "Tiles/";
+        public const string ASSETS_PATH_PLACEABLES = ASSETS_PATH + "Placeables/";
         public const string ASSETS_PATH_BUFFS = ASSETS_PATH + "Buffs/";
         public const string ASSETS_PATH_UI = ASSETS_PATH + "UI/";
         public const string ASSETS_PATH_UI_ASSETSONLY = ASSETS_PATH_ASSETSONLY + "UI/";
@@ -73,17 +74,7 @@ namespace Ascension
         /// <param name="caller"></param>
         /// <returns></returns>
         public static string GetAssetsPath(ItemAssetType type, IModType caller)
-            => type switch
-            {
-                ItemAssetType.Misc => ASSETS_PATH_MISC,
-                ItemAssetType.Items => ASSETS_PATH_ITEMS,
-                ItemAssetType.NPCs => ASSETS_PATH_NPCS,
-                ItemAssetType.Buffs => ASSETS_PATH_BUFFS,
-                ItemAssetType.Projectiles => ASSETS_PATH_PROJECTILES,
-                ItemAssetType.Dusts => ASSETS_PATH_DUSTS,
-                ItemAssetType.Tiles => ASSETS_PATH_TILES,
-                _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
-            } + caller.GetType().Name;
+            => GetAssetsPath(type) + caller.GetType().Name;
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
@@ -93,6 +84,9 @@ namespace Ascension
         /// <param name="caller"></param>
         /// <returns></returns>
         public static string GetAssetsPath(ItemAssetType type, string subFolder, IModType caller)
+            => GetAssetsPath(type) + subFolder + caller.GetType().Name;
+
+        private static string GetAssetsPath(ItemAssetType type) 
             => type switch
             {
                 ItemAssetType.Misc => ASSETS_PATH_MISC,
@@ -101,9 +95,11 @@ namespace Ascension
                 ItemAssetType.Buffs => ASSETS_PATH_BUFFS,
                 ItemAssetType.Projectiles => ASSETS_PATH_PROJECTILES,
                 ItemAssetType.Dusts => ASSETS_PATH_DUSTS,
+                ItemAssetType.Placeables => ASSETS_PATH_PLACEABLES,
                 ItemAssetType.Tiles => ASSETS_PATH_TILES,
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
-            } + subFolder + caller.GetType().Name;
+            };
+        
 
         public static class Players
         {
