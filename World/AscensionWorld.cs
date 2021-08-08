@@ -1,4 +1,6 @@
-﻿using Ascension.Players;
+﻿using Ascension.Internal;
+using Ascension.Players;
+using Ascension.UI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace Ascension.World
@@ -43,10 +46,13 @@ namespace Ascension.World
                 );
             }
         }
+
         private void Event_OnManifestStand(Stand stand, int val)
         {
             pv_Stand = stand;
             pv_HasStand = true;
+            pv_Stand.StandMenu.SetDefaultPosition(ModContent.GetInstance<AscensionConfig>().StandMenuPosX,
+            ModContent.GetInstance<AscensionConfig>().StandMenuPosY);
 
             Debug.Log(pv_HasStand);
         }

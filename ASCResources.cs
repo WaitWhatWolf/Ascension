@@ -16,6 +16,8 @@ using Terraria.ID;
 using Ascension.Sound;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.IO;
+using Terraria.IO;
 
 namespace Ascension
 {

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace Ascension.UI
@@ -92,6 +93,8 @@ namespace Ascension.UI
 
             Recalculate();
             RecalculateChildren();
+
+            //Debug.Log($"{Left.Pixels} : {Top.Pixels}");
         }
 
         /// <summary>
@@ -152,9 +155,34 @@ namespace Ascension.UI
             Active = false;
         }
 
-        public virtual void OnWorldLoaded()
+        /// <summary>
+        /// Saves the position(s) of this menu.
+        /// </summary>
+        [Obsolete]
+        public virtual void SaveCoordinates(out TagCompound compound)
         {
+            compound = new TagCompound()
+            {
+                [nameof(Left)] = GetTagCompoundSringFromDimensions(Left),
+                [nameof(Top)] = GetTagCompoundSringFromDimensions(Top),
+                [nameof(Width)] = GetTagCompoundSringFromDimensions(Width),
+                [nameof(Height)] = GetTagCompoundSringFromDimensions(Height),
+            };
+        }
 
+        /// <summary>
+        /// Loads the position(s) of this menu.
+        /// </summary>
+        /// <param name="compound"></param>
+        [Obsolete]
+        public virtual void LoadCoordinates(TagCompound compound)
+        {
+            pr_LoadedLeft = GetDimensionsFromTagCompound(compound, nameof(Left));
+            pr_LoadedTop = GetDimensionsFromTagCompound(compound, nameof(Top));
+            pr_LoadedWidth = GetDimensionsFromTagCompound(compound, nameof(Width));
+            pr_LoadedHeight = GetDimensionsFromTagCompound(compound, nameof(Height));
+
+            pr_LoadedDimensions = true;
         }
 
         /// <summary>
@@ -165,5 +193,26 @@ namespace Ascension.UI
             AllMenus.Add(this);
             ResetDimensions();
         }
+
+        [Obsolete]
+        protected string GetTagCompoundSringFromDimensions(StyleDimension dimension) => $"{GetType().Name}:{dimension.Pixels}:{dimension.Precent}";
+
+        [Obsolete]
+        protected StyleDimension GetDimensionsFromTagCompound(TagCompound compound, string name)
+        {
+            string[] args = compound.GetString(name).Split(':');
+            return new StyleDimension(Convert.ToSingle(args[1]), Convert.ToSingle(args[2]));
+        }
+
+        [Obsolete]
+        protected bool pr_LoadedDimensions;
+        [Obsolete]
+        protected StyleDimension pr_LoadedLeft;
+        [Obsolete]
+        protected StyleDimension pr_LoadedTop;
+        [Obsolete]
+        protected StyleDimension pr_LoadedWidth;
+        [Obsolete]
+        protected StyleDimension pr_LoadedHeight;
     }
 }

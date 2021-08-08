@@ -1,4 +1,5 @@
-﻿using Ascension.Players;
+﻿using Ascension.Internal;
+using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Ascension.UI
@@ -26,8 +28,16 @@ namespace Ascension.UI
                 return 66 + (34 * abilitiesLength);
             }
         }
-        protected override float DimensionLeft => Main.screenWidth / 2;
-        protected override float DimensionTop => Main.screenHeight * 0.2f;
+        protected override float DimensionLeft => pv_X;
+        protected override float DimensionTop => pv_Y;
+
+        public void SetDefaultPosition(int x, int y)
+        {
+            pv_X = x;
+            pv_Y = y;
+
+            ResetDimensions();
+        }
 
         public override void OnInitialize()
         {
@@ -45,7 +55,7 @@ namespace Ascension.UI
             }
         }
 
-        public Menu_Stand(Stand stand)
+        public Menu_Stand(Stand stand) : base()
         {
             pv_Stand = stand;
 
@@ -59,6 +69,7 @@ namespace Ascension.UI
             pv_BackgroundImage.Top.Set(0, 0f);
             pv_BackgroundImage.Height.Set(DimensionHeight, 0f);
             pv_BackgroundImage.Color = Hooks.Colors.Tangelo;
+            pv_BackgroundImage.IgnoresMouseInteraction = true;
             Append(pv_BackgroundImage);
 
             pv_PortraitImage = new UIImage(stand.Portrait);
@@ -67,7 +78,7 @@ namespace Ascension.UI
             pv_PortraitImage.Top.Set(2, 0f);
             pv_PortraitImage.Height.Set(64, 0f);
             pv_PortraitImage.OnMouseOver += Event_PortraitOnMouseOver;
-            pv_PortraitImage.OnMouseOver += Event_AbilityOnMouseOut;
+            pv_PortraitImage.OnMouseOut += Event_AbilityOnMouseOut;
             Append(pv_PortraitImage);
 
             for (int i = 0; i < pv_Stand.Abilities.Length; i++)
@@ -108,7 +119,7 @@ namespace Ascension.UI
             pv_TooltipText = new(string.Empty, 1f, false);
             pv_TooltipText.IgnoresMouseInteraction = true;
             pv_TooltipText.Deactivate();
-            Append(pv_TooltipText);
+            //Append(pv_TooltipText);
         }
 
         private void Event_AbilityOnMouseOver(UIMouseEvent mEvent, UIElement element)
@@ -134,13 +145,20 @@ namespace Ascension.UI
 
         private void UpdateTooltip()
         {
+
             if (pv_MouseOverIndex == -1)
             {
                 pv_TooltipText.Deactivate();
+                pv_TooltipText.Remove();
+
                 return;
             }
 
+            if (!HasChild(pv_TooltipText))
+                Append(pv_TooltipText);
+
             pv_TooltipText.Activate();
+            
 
             int left = pv_MouseOverIndex switch
             {
@@ -187,5 +205,8 @@ namespace Ascension.UI
         private UITextPanel<string> pv_TooltipText;
 
         private int pv_MouseOverIndex;
+
+        private float pv_X;
+        private float pv_Y;
     }
 }
