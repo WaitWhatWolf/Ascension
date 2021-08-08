@@ -70,7 +70,7 @@ namespace Ascension
         /// Returns the full path towards a moded component's texture.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="classType"></param>
+        /// <param name="caller"></param>
         /// <returns></returns>
         public static string GetAssetsPath(ItemAssetType type, IModType caller)
             => type switch
@@ -84,6 +84,26 @@ namespace Ascension
                 ItemAssetType.Tiles => ASSETS_PATH_TILES,
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             } + caller.GetType().Name;
+
+        /// <summary>
+        /// Returns the full path towards a moded component's texture.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="subFolder"></param>
+        /// <param name="caller"></param>
+        /// <returns></returns>
+        public static string GetAssetsPath(ItemAssetType type, string subFolder, IModType caller)
+            => type switch
+            {
+                ItemAssetType.Misc => ASSETS_PATH_MISC,
+                ItemAssetType.Items => ASSETS_PATH_ITEMS,
+                ItemAssetType.NPCs => ASSETS_PATH_NPCS,
+                ItemAssetType.Buffs => ASSETS_PATH_BUFFS,
+                ItemAssetType.Projectiles => ASSETS_PATH_PROJECTILES,
+                ItemAssetType.Dusts => ASSETS_PATH_DUSTS,
+                ItemAssetType.Tiles => ASSETS_PATH_TILES,
+                _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
+            } + subFolder + caller.GetType().Name;
 
         public static class Players
         {
