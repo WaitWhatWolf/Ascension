@@ -27,6 +27,58 @@ namespace Ascension.Utility
             }
         }
 
+        public static class InGame
+        {
+            /// <summary>
+            /// Returns all NPCs within a given range of center.
+            /// </summary>
+            /// <param name="attacker"></param>
+            /// <param name="center"></param>
+            /// <param name="within"></param>
+            /// <returns></returns>
+            public static List<NPC> GetAllWithin(object attacker, Vector2 center, float within)
+            {
+                List<NPC> toReturn = new();
+
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC npc = Main.npc[i];
+
+                    if (npc.CanBeChasedBy(attacker, true))
+                    {
+                        float between = Vector2.Distance(npc.Center, center);
+                        bool inRange = between <= within;
+
+                        if (inRange)
+                        {
+                            toReturn.Add(npc);
+                        }
+                    }
+                }
+
+                return toReturn;
+            }
+        }
+
+        public static class Random
+        {
+            /// <summary>
+            /// Returns a <see cref="Vector2"/> with each of it's values being a random number between min and max.
+            /// </summary>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <returns></returns>
+            public static Vector2 Range(Vector2 min, Vector2 max)
+            {
+                return new Vector2(Range(min.X, max.X), Range(min.Y, max.Y));
+            }
+
+            public static float Range(float min, float max)
+            {
+                return (float)(ASCResources.GlobalRandom.NextDouble() * (max - min) + min);
+            }
+        }
+
         public static class MathF
         {
             /// <summary>
@@ -53,6 +105,33 @@ namespace Ascension.Utility
                 double num = Math.Pow(10.0, digits);
                 double num2 = Math.Truncate(num * value) / num;
                 return num2;
+            }
+
+            /// <summary>
+            ///   <para>Moves a point current towards target.</para>
+            /// </summary>
+            /// <param name="current"></param>
+            /// <param name="target"></param>
+            /// <param name="maxDistanceDelta"></param>
+            public static Vector2 MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta)
+            {
+                Vector2 a = target - current;
+                float magnitude = Magnitude(a);
+                if (!(magnitude <= maxDistanceDelta) && magnitude != 0f)
+                {
+                    return current + a / magnitude * maxDistanceDelta;
+                }
+                return target;
+            }
+
+            /// <summary>
+            /// Returns the magnitude of a vector. (Square root of it's dot product)
+            /// </summary>
+            /// <param name="original"></param>
+            /// <returns></returns>
+            public static float Magnitude(Vector2 original)
+            {
+                return System.MathF.Sqrt(Vector2.Dot(original, original));
             }
         }
 

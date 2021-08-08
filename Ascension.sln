@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29009.5
+VisualStudioVersion = 16.10.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ascension", "Ascension.csproj", "{E8E1778D-C916-45A8-A49B-7EFF8BE1B744}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ascension", "Ascension.csproj", "{43F0621B-C6C6-4E2F-9667-C3C06CC4A283}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8E1778D-C916-45A8-A49B-7EFF8BE1B744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8E1778D-C916-45A8-A49B-7EFF8BE1B744}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8E1778D-C916-45A8-A49B-7EFF8BE1B744}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8E1778D-C916-45A8-A49B-7EFF8BE1B744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43F0621B-C6C6-4E2F-9667-C3C06CC4A283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43F0621B-C6C6-4E2F-9667-C3C06CC4A283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43F0621B-C6C6-4E2F-9667-C3C06CC4A283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43F0621B-C6C6-4E2F-9667-C3C06CC4A283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C1E282E6-F813-4DDC-B02D-55CF6F3C6959}
+		SolutionGuid = {48B54BFE-2EE3-4CB2-B75B-55D1704098F3}
 	EndGlobalSection
 EndGlobal

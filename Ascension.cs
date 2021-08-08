@@ -1,3 +1,4 @@
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Ascension
@@ -17,16 +18,25 @@ namespace Ascension
         public override void Load()
         {
             ASCResources.DeathReasons.Load();
+            ASCResources.Textures.Load(this);
             ASCResources.Input.Load(this);
             ASCResources.Stats.Load();
+            ASCResources.Sound.Load(this);
         }
 
         public override void Unload()
         {
             ASCResources.DeathReasons.Unload();
             ASCResources.Recipes.Unload();
+            ASCResources.Textures.Unload();
             ASCResources.Input.Unload();
             ASCResources.Stats.Unload();
+            ASCResources.Sound.Unload();
+        }
+
+        public Ascension()
+        {
+            SoundAutoloadingEnabled = false;
         }
     }
 }

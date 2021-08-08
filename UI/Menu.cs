@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria.UI;
 
-namespace WarWolfWorks_Mod.UI
+namespace Ascension.UI
 {
     public abstract class Menu : UIState
     {

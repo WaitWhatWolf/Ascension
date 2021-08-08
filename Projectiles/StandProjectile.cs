@@ -1,4 +1,6 @@
 ﻿using Ascension.Players;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -46,12 +48,27 @@ namespace Ascension.Projectiles
 			OnBossDefeated(string.Empty);
 		}
 
+		public sealed override void AI()
+		{
+			if (!CheckActive(pv_Owner))
+				return;
+
+			pv_Stand.GetCurrentMovementAI()();
+
+			BonusAI();
+		}
+
 		/// <summary>
-		/// Called when a new boss has been defeated;
-		/// Also called when <see cref="SetupStand(Player, Stand)"/> is successfully setup.
-		/// Make sure to include "base.OnBossDefeated();".
+		/// Called at the end of <see cref="AI"/>.
 		/// </summary>
-		protected virtual void OnBossDefeated(string name)
+		protected virtual void BonusAI() { }
+
+        /// <summary>
+        /// Called when a new boss has been defeated;
+        /// Also called when <see cref="SetupStand(Player, Stand)"/> is successfully setup.
+        /// Make sure to include "base.OnBossDefeated();".
+        /// </summary>
+        protected virtual void OnBossDefeated(string name)
         {
 			Projectile.damage = pv_Stand.GetStat(STAND_STAT_DAMAGE);
 			Projectile.knockBack = pv_Stand.GetSingleStat(STAND_STAT_KNOCKBACK);
@@ -59,5 +76,13 @@ namespace Ascension.Projectiles
 
 		protected Player pv_Owner;
 		protected Stand pv_Stand;
+
+		private bool CheckActive(Player owner)
+		{
+			if (owner.dead || !owner.active)
+				return false;
+
+			return true;
+		}
 	}
 }

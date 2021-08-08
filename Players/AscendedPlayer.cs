@@ -26,6 +26,11 @@ namespace Ascension.Players
         /// </summary>
         public event Action<string> OnNewBossDefeated;
 
+        /// <summary>
+        /// Invoked when the player manifests his stand.
+        /// </summary>
+        public event Action<Stand, int> OnManifestStand;
+
         /// <inheritdoc/>
         public override TagCompound Save()
         {
@@ -69,18 +74,26 @@ namespace Ascension.Players
 
         public override void PreUpdate()
         {
+            if (!in_IsStandUser || Player.dead)
+                return;
+
             if (ASCResources.Input.Keybind_Stand_Invoke.JustPressed)
             {
                 if (!in_Stand.Active)
                     in_Stand.Invoke();
                 else in_Stand.Recall();
             }
+
+            if(in_Stand)
+                in_Stand.Update();
         }
 
         public override void OnEnterWorld(Player player)
         {
             if (pv_LoadedStandID != StandID.NEWBIE && ASCResources.Players.ManifestStand(this, pv_LoadedStandID, false) != -1)
-                Debug.Log($"Your will is currently manifested as {in_Stand.Name}");
+            {
+                Debug.Log($"Your will is currently manifested as {in_Stand.Name}, Level {in_Stand.Level}");
+            }
 
             //Debug.Log("Defeated Bosses: " + DefeatedBosses.Count);
             //Debug.LogEnumerable(DefeatedBosses);
@@ -92,7 +105,13 @@ namespace Ascension.Players
             pv_LoadedStandID = StandID.NEWBIE;
         }
 
+        private void OnManifestCall(int val)
+        {
+            OnManifestStand?.Invoke(in_Stand, val);
+        }
+
         internal Stand in_Stand = null;
+        internal bool in_IsStandUser = false;
         private StandID pv_LoadedStandID = StandID.NEWBIE;
     }
 }

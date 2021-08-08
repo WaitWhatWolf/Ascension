@@ -13,6 +13,9 @@ using Microsoft.Xna.Framework.Input;
 using Ascension.Internal;
 using Terraria.Localization;
 using Terraria.ID;
+using Ascension.Sound;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 
 namespace Ascension
 {
@@ -49,12 +52,17 @@ namespace Ascension
         /// Global Assets path.
         /// </summary>
         public const string ASSETS_PATH = "Ascension/Assets/";
+        public const string ASSETS_PATH_ASSETSONLY = "Assets/";
         public const string ASSETS_PATH_ITEMS = ASSETS_PATH + "Items/";
         public const string ASSETS_PATH_NPCS = ASSETS_PATH + "NPCs/";
         public const string ASSETS_PATH_ARMORS = ASSETS_PATH + "Armors/";
         public const string ASSETS_PATH_MISC = ASSETS_PATH + "Misc/";
         public const string ASSETS_PATH_PROJECTILES = ASSETS_PATH + "Projectiles/";
         public const string ASSETS_PATH_DEBUFFS = ASSETS_PATH + "Debuffs/";
+        public const string ASSETS_PATH_UI = ASSETS_PATH + "UI/";
+        public const string ASSETS_PATH_UI_ASSETSONLY = ASSETS_PATH_ASSETSONLY + "UI/";
+
+        public const string ASSETS_PATH_SOUND_CUSTOM = ASSETS_PATH + "Sound/Custom/";
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
@@ -90,22 +98,26 @@ namespace Ascension
             /// </summary>
             /// <param name="player">The player which will manifest the stand.</param>
             /// <param name="id">Which stand to manifest; If left at <see cref="StandID.NEWBIE"/>, it will select a random stand.</param>
-            /// <param name="debugStandName">Whether a message shows in chat that shows which stand was manifested.</param>
+            /// <param name="debugStandName">Whether a message shows in chat that shows which stand was manifested & upgraded.</param>
             /// <returns></returns>
             public static int ManifestStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
             {
-                bool created = CreateStand(player, id, debugStandName);
-                if (!created)
+                bool create = CreateStand(player, id, debugStandName);
+                
+                int toUse = player.in_Stand.UpgradeStand(debugStandName);
+
+                if (toUse == 0 && !create)
                     return -1;
-                else
-                {
-                    return 0;
-                }
+
+                typeof(AscendedPlayer).GetMethod("OnManifestCall", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .CreateDelegate<Action<int>>(player).Invoke(toUse);
+
+                return toUse;
             }
 
-            private static bool CreateStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
+            private static bool CreateStand(AscendedPlayer player, StandID id, bool debugStandName)
             {
-                if (player.in_Stand)
+                if (player.in_IsStandUser)
                     return false;
 
                 string playerName = player.Player.name;
@@ -124,6 +136,7 @@ namespace Ascension
                 }
 
                 player.in_Stand = new Stand(player, id);
+                player.in_IsStandUser = true;
 
                 if (debugStandName)
                     Debug.Log($"{playerName}'s will manifested as {player.in_Stand.Name}!");
@@ -242,13 +255,59 @@ namespace Ascension
             public const string RECIPE_GROUP_DEMONBARS = "Ascension:DemonBars";
         }
 
+        public static class Textures
+        {
+            public static Asset<Texture2D> Stand_Ability_StarPlatinum_Punch { get; private set; }
+            public static Asset<Texture2D> Stand_Ability_StarPlatinum_ORA { get; private set; }
+            public static Asset<Texture2D> Stand_Portrait_StarPlatinum { get; private set; }
+
+            public static void Load(Ascension ascension)
+            {
+                Stand_Ability_StarPlatinum_Punch = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_PUNCH);
+                Stand_Ability_StarPlatinum_ORA = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_ORA);
+                Stand_Portrait_StarPlatinum = ascension.Assets.Request<Texture2D>(STAND_PORTRAIT_STARPLATINUM);
+            }
+
+            public static void Unload()
+            {
+                Stand_Ability_StarPlatinum_Punch = null;
+                Stand_Ability_StarPlatinum_ORA = null;
+                Stand_Portrait_StarPlatinum = null;
+            }
+
+            private const string STAND_ABILITY_STARPLATINUM_PUNCH = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
+            private const string STAND_ABILITY_STARPLATINUM_ORA = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
+            private const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
+        }
+
         public static class Input
         {
             public static ModKeybind Keybind_Stand_Invoke;
+            public static ModKeybind Keybind_Stand_Ability_First;
+            public static ModKeybind Keybind_Stand_Ability_Second;
+            public static ModKeybind Keybind_Stand_Ability_Ultimate;
+
+            /// <summary>
+            /// Returns a keybind for a stand ability based on the ability index.
+            /// </summary>
+            /// <param name="index"></param>
+            /// <returns></returns>
+            public static ModKeybind GetStandAbilityKey(int index)
+            {
+                return index switch
+                {
+                    1 => Keybind_Stand_Ability_First,
+                    2 => Keybind_Stand_Ability_Second,
+                    _ => Keybind_Stand_Ability_Ultimate
+                };
+            }
 
             public static void Load(Ascension ascension)
             {
                 Keybind_Stand_Invoke = KeybindLoader.RegisterKeybind(ascension, KEY_STAND_INVOKE, Keys.Q);
+                Keybind_Stand_Ability_First = KeybindLoader.RegisterKeybind(ascension, KEY_STAND_ABILITY1, Keys.Z);
+                Keybind_Stand_Ability_Second = KeybindLoader.RegisterKeybind(ascension, KEY_STAND_ABILITY2, Keys.X);
+                Keybind_Stand_Ability_Ultimate = KeybindLoader.RegisterKeybind(ascension, KEY_STAND_ABILITYULTIMATE, Keys.R);
             }
 
             public static void Unload()
@@ -256,7 +315,10 @@ namespace Ascension
                 Keybind_Stand_Invoke = null;
             }
 
-            public const string KEY_STAND_INVOKE = "Invoke Stand";
+            public const string KEY_STAND_INVOKE = "Stand: Invoke";
+            public const string KEY_STAND_ABILITY1 = "Stand: Ability 1";
+            public const string KEY_STAND_ABILITY2 = "Stand: Ability 2";
+            public const string KEY_STAND_ABILITYULTIMATE = "Stand: Ultimate";
         }
 
         /// <summary>
@@ -275,6 +337,7 @@ namespace Ascension
             }
 
             public const string STAND_STAT_DAMAGE = "Stand Damage";
+            public const string STAND_STAT_ATTACKRANGE = "Stand Attack Range";
             public const string STAND_STAT_ARMORPEN = "Stand ArmorPen";
             public const string STAND_STAT_KNOCKBACK = "Stand Knock";
             public const string STAND_STAT_ATTACKSPEED = "Stand AS";
@@ -282,6 +345,28 @@ namespace Ascension
             public const string STAND_STAT_AIRANGE = "Stand Range AI";
             public const float UMBRAL_CRIT_BASE = 4f;
             public static UmbralDamageClass DamageClass_Umbral;
+        }
+
+        public static class Sound
+        {
+            public const string STAND_STARPLATINUM_INVOKE = ASSETS_PATH_SOUND_CUSTOM + "Stand_StarPlatinum_Invoke";
+
+            public static int Stand_StarPlatinum_Invoke_Index { get; private set; }
+
+            public static Dictionary<int, AscensionSound> Sounds { get; } = new();
+
+            public static void Load(Ascension ascension)
+            {
+                //AscensionSound as_StarPlatinum_Invoke;
+                ascension.AddSound(SoundType.Custom, STAND_STARPLATINUM_INVOKE);
+                Stand_StarPlatinum_Invoke_Index = SoundLoader.GetSoundSlot(SoundType.Custom, STAND_STARPLATINUM_INVOKE);
+                //Sounds.Add(Stand_StarPlatinum_Invoke_Index, as_StarPlatinum_Invoke);
+            }
+
+            public static void Unload()
+            {
+                
+            }
         }
     }
 }

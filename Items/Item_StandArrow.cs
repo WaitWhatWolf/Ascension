@@ -53,7 +53,6 @@ namespace Ascension.Items
 
         public override bool? UseItem(Player player)
         {
-            
             player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), player.statLifeMax - 1, -1);
             if(!player.dead)
             {
