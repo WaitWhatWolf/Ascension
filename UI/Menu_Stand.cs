@@ -17,10 +17,17 @@ namespace Ascension.UI
 {
     public sealed class Menu_Stand : Menu
     {
-        protected override float DimensionHeight => 64;
-        protected override float DimensionWidth => 64 + 32 * (pv_Stand?.Abilities.Length ?? 3);
-        protected override float DimensionLeft => Main.screenWidth / 3;
-        protected override float DimensionTop => Main.screenHeight * 0.9f;
+        protected override float DimensionHeight => 68;
+        protected override float DimensionWidth
+        {
+            get
+            {
+                int abilitiesLength = pv_Stand?.Abilities.Length ?? 3;
+                return 66 + (34 * abilitiesLength);
+            }
+        }
+        protected override float DimensionLeft => Main.screenWidth / 2;
+        protected override float DimensionTop => Main.screenHeight * 0.2f;
 
         public override void OnInitialize()
         {
@@ -29,19 +36,12 @@ namespace Ascension.UI
 
         protected override void OnActiveDrawSelf(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < pv_Stand.Abilities.Length; i++)
+            for (int i = 1; i < pv_Stand.Abilities.Length; i++)
             {
                 StandAbility ability = pv_Stand.Abilities[i];
-                Rectangle rectangle = pv_AbilityImages[i].GetClippingRectangle(spriteBatch);
-                
-                if (i != 0)
-                {
-                    spriteBatch.DrawString(FontAssets.MouseText.Value, ASCResources.Input.GetStandAbilityKey(i).GetAssignedKeys().First(), rectangle.Center(), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
-                    if (ability.GetCurrentCooldown() > 0f)
-                        spriteBatch.DrawString(FontAssets.MouseText.Value,
-                           ability.GetCurrentCooldown().Truncate(1).ToString(), rectangle.Bottom(), Color.Crimson, 0, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                }
+                float abilityCurrentCooldown = ability.GetCurrentCooldown();
+                pv_AbilityCooldowns[i - 1].SetText(abilityCurrentCooldown <= 0 ? string.Empty : abilityCurrentCooldown.Truncate(1).ToString());
             }
         }
 
@@ -50,39 +50,140 @@ namespace Ascension.UI
             pv_Stand = stand;
 
             pv_AbilityImages = new UIImage[pv_Stand.Abilities.Length];
+            pv_AbilityKeys = new UIText[pv_Stand.Abilities.Length];
+            pv_AbilityCooldowns = new UIText[pv_Stand.Abilities.Length];
 
-            //Background image to add
-            /*pv_BackgroundImage = new UIImage(TextureAssets.Logo4);
+            pv_BackgroundImage = new UIImage(ASCResources.Textures.Stand_Menu_Background);
             pv_BackgroundImage.Left.Set(0, 0f);
             pv_BackgroundImage.Width.Set(DimensionWidth, 0f);
             pv_BackgroundImage.Top.Set(0, 0f);
             pv_BackgroundImage.Height.Set(DimensionHeight, 0f);
-            Append(pv_BackgroundImage);*/
+            pv_BackgroundImage.Color = Hooks.Colors.Tangelo;
+            Append(pv_BackgroundImage);
 
             pv_PortraitImage = new UIImage(stand.Portrait);
-            pv_PortraitImage.Left.Set(0, 0f);
+            pv_PortraitImage.Left.Set(2, 0f);
             pv_PortraitImage.Width.Set(64, 0f);
-            pv_PortraitImage.Top.Set(0, 0f);
+            pv_PortraitImage.Top.Set(2, 0f);
             pv_PortraitImage.Height.Set(64, 0f);
+            pv_PortraitImage.OnMouseOver += Event_PortraitOnMouseOver;
+            pv_PortraitImage.OnMouseOver += Event_AbilityOnMouseOut;
             Append(pv_PortraitImage);
 
             for (int i = 0; i < pv_Stand.Abilities.Length; i++)
             {
                 UIImage image = new(pv_Stand.Abilities[i].Icon);
-                image.Left.Set(64 + (32 * i), 0f);
+                image.Left.Set(66 + (34 * i), 0f);
                 image.Width.Set(32, 0f);
-                image.Top.Set(32, 0f);
+                image.Top.Set(34, 0f);
                 image.Height.Set(32, 0f);
                 image.Color = Color.White;
+                image.OnMouseOver += Event_AbilityOnMouseOver;
+                image.OnMouseOut += Event_AbilityOnMouseOut;
                 this.Append(image);
+
+                if (i != 0)
+                {
+                    UIText textKey = new(ASCResources.Input.GetStandAbilityKey(i).GetAssignedKeys().First(), 0.75f, true);
+                    textKey.Left.Set(0, 0.2f);
+                    textKey.Top.Set(0, 0.2f);
+                    textKey.TextColor = Hooks.Colors.Tangelo;
+                    textKey.IgnoresMouseInteraction = true;
+                    image.Append(textKey);
+
+                    UIText textCooldown = new(string.Empty, 0.4f, true);
+                    textCooldown.Left.Set(0, 0.5f);
+                    textCooldown.Top.Set(0, 0.25f);
+                    textCooldown.TextColor = Color.WhiteSmoke;
+                    textCooldown.IgnoresMouseInteraction = true;
+                    image.Append(textCooldown);
+
+                    pv_AbilityKeys[i - 1] = textKey;
+                    pv_AbilityCooldowns[i - 1] = textCooldown;
+                }
 
                 pv_AbilityImages[i] = image;
             }
+
+            pv_TooltipText = new(string.Empty, 1.5f, false);
+            pv_TooltipText.MaxWidth.Set(160, 0f);
+            pv_TooltipText.MaxWidth.Set(320, 0f);
+            pv_TooltipText.MinHeight.Set(60, 0f);
+            pv_TooltipText.IgnoresMouseInteraction = true;
+            pv_TooltipText.BackgroundColor = Color.Gray;
+            pv_TooltipText.BorderColor = Hooks.Colors.Tangelo;
+            pv_TooltipText.TextColor = Hooks.Colors.Tangelo;
+            Append(pv_TooltipText);
+        }
+
+        private void Event_AbilityOnMouseOver(UIMouseEvent mEvent, UIElement element)
+        {
+            pv_MouseOverIndex = Array.IndexOf(pv_AbilityImages, mEvent.Target);
+
+            UpdateTooltip();
+        } 
+        
+        private void Event_PortraitOnMouseOver(UIMouseEvent mEvent, UIElement element)
+        {
+            pv_MouseOverIndex = -2;
+
+            UpdateTooltip();
+        }
+        
+        private void Event_AbilityOnMouseOut(UIMouseEvent mEvent, UIElement element)
+        {
+            pv_MouseOverIndex = -1;
+
+            UpdateTooltip();
+        }
+
+        private void UpdateTooltip()
+        {
+            if(pv_MouseOverIndex == -1)
+            {
+                pv_TooltipText.Deactivate();
+                return;
+            }
+
+            pv_TooltipText.Activate();
+
+            int left = pv_MouseOverIndex switch
+            {
+                0 => 99,
+                1 => 122,
+                2 => 155,
+                -2 => 66,
+                _ => 0,
+            };
+
+            int top = pv_MouseOverIndex switch //This is here for later use...probably.
+            {
+                _ => 64,
+            };
+
+            string text = pv_MouseOverIndex switch
+            {
+                0 => pv_Stand.Abilities[0].TooltipText,
+                1 => pv_Stand.Abilities[1].TooltipText,
+                2 => pv_Stand.Abilities[2].TooltipText,
+                -2 => pv_Stand.Description,
+                _ => string.Empty
+            };
+
+            pv_TooltipText.SetText(text);
+            pv_TooltipText.Left.Set(left, 0f);
+            pv_TooltipText.Top.Set(top, 0f);
+            pv_TooltipText.Recalculate();
         }
 
         private Stand pv_Stand;
         private UIImage pv_BackgroundImage;
         private UIImage pv_PortraitImage;
         private UIImage[] pv_AbilityImages;
+        private UIText[] pv_AbilityCooldowns;
+        private UIText[] pv_AbilityKeys;
+        private UITextPanel<string> pv_TooltipText;
+
+        private int pv_MouseOverIndex;
     }
 }

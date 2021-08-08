@@ -18,8 +18,9 @@ namespace Ascension.Enums
         Misc = 0,
         Items,
         NPCs,
-        Debuffs,
-        Armors,
+        Buffs,
         Projectiles,
+        Dusts,
+        Tiles,
     }
 }

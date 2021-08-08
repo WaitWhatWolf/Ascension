@@ -11,7 +11,9 @@ namespace Ascension.Players
 {
     public sealed class StandAbility_StarPlatinum_Punch : StandAbility
     {
-        public override string Name { get; }
+        public override string Name { get; } = "Ora! Ora! Ora!";
+
+        public override string Description => $"Star Platinum's bread & butter: Just punching.\nAttacks all nearby enemies repeatedly.\nAttacks every {GetCooldown()}s.";
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_Punch;
 

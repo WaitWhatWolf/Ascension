@@ -58,7 +58,9 @@ namespace Ascension
         public const string ASSETS_PATH_ARMORS = ASSETS_PATH + "Armors/";
         public const string ASSETS_PATH_MISC = ASSETS_PATH + "Misc/";
         public const string ASSETS_PATH_PROJECTILES = ASSETS_PATH + "Projectiles/";
-        public const string ASSETS_PATH_DEBUFFS = ASSETS_PATH + "Debuffs/";
+        public const string ASSETS_PATH_DUSTS = ASSETS_PATH + "Dusts/";
+        public const string ASSETS_PATH_TILES = ASSETS_PATH + "Tiles/";
+        public const string ASSETS_PATH_BUFFS = ASSETS_PATH + "Buffs/";
         public const string ASSETS_PATH_UI = ASSETS_PATH + "UI/";
         public const string ASSETS_PATH_UI_ASSETSONLY = ASSETS_PATH_ASSETSONLY + "UI/";
 
@@ -76,9 +78,10 @@ namespace Ascension
                 ItemAssetType.Misc => ASSETS_PATH_MISC,
                 ItemAssetType.Items => ASSETS_PATH_ITEMS,
                 ItemAssetType.NPCs => ASSETS_PATH_NPCS,
-                ItemAssetType.Debuffs => ASSETS_PATH_DEBUFFS,
-                ItemAssetType.Armors => ASSETS_PATH_ARMORS,
+                ItemAssetType.Buffs => ASSETS_PATH_BUFFS,
                 ItemAssetType.Projectiles => ASSETS_PATH_PROJECTILES,
+                ItemAssetType.Dusts => ASSETS_PATH_DUSTS,
+                ItemAssetType.Tiles => ASSETS_PATH_TILES,
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             } + caller.GetType().Name;
 
@@ -260,12 +263,14 @@ namespace Ascension
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_Punch { get; private set; }
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_ORA { get; private set; }
             public static Asset<Texture2D> Stand_Portrait_StarPlatinum { get; private set; }
+            public static Asset<Texture2D> Stand_Menu_Background { get; private set; }
 
             public static void Load(Ascension ascension)
             {
                 Stand_Ability_StarPlatinum_Punch = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_PUNCH);
                 Stand_Ability_StarPlatinum_ORA = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_ORA);
                 Stand_Portrait_StarPlatinum = ascension.Assets.Request<Texture2D>(STAND_PORTRAIT_STARPLATINUM);
+                Stand_Menu_Background = ascension.Assets.Request<Texture2D>(STAND_MENU_BACKGROUND);
             }
 
             public static void Unload()
@@ -273,11 +278,13 @@ namespace Ascension
                 Stand_Ability_StarPlatinum_Punch = null;
                 Stand_Ability_StarPlatinum_ORA = null;
                 Stand_Portrait_StarPlatinum = null;
+                Stand_Menu_Background = null;
             }
 
             private const string STAND_ABILITY_STARPLATINUM_PUNCH = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
             private const string STAND_ABILITY_STARPLATINUM_ORA = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
             private const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
+            private const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
         }
 
         public static class Input

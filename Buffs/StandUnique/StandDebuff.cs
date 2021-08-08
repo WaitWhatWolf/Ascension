@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 
-namespace Ascension.Debuffs.StandUnique
+namespace Ascension.Buffs.StandUnique
 {
     /// <summary>
     /// Base class used for custom debuffs in relation to <see cref="StandHandlerNPC"/>.

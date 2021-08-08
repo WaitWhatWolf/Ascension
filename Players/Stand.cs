@@ -33,6 +33,12 @@ namespace Ascension.Players
         /// The name of the stand.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// The tooltip of the stand.
+        /// </summary>
+        public string Description { get; }
+
         /// <summary>
         /// The identity of the stand.
         /// </summary>
@@ -230,6 +236,7 @@ namespace Ascension.Players
 
                     pv_InvokeSoundIndex = ASCResources.Sound.Stand_StarPlatinum_Invoke_Index;
                     Portrait = ASCResources.Textures.Stand_Portrait_StarPlatinum;
+                    this.Description = "Star Platinum, a stand which excels at everything outside of range.";
                     break;
             }
 

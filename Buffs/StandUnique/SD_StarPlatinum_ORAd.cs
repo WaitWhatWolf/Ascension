@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 
-namespace Ascension.Debuffs.StandUnique
+namespace Ascension.Buffs.StandUnique
 {
     public sealed class SD_StarPlatinum_ORAd : StandDebuff
     {

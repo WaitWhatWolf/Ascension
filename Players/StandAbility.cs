@@ -20,6 +20,16 @@ namespace Ascension.Players
         /// Name of this ability.
         /// </summary>
         public abstract string Name { get; }
+        
+        /// <summary>
+        /// The description of this ability.
+        /// </summary>
+        public abstract string Description { get; }
+
+        /// <summary>
+        /// The text used for tooltips.
+        /// </summary>
+        public virtual string TooltipText => Name + '\n' + Description;
 
         /// <summary>
         /// The icon of this ability to be displayed in the UI.

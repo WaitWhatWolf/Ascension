@@ -1,4 +1,4 @@
-﻿using Ascension.Debuffs.StandUnique;
+﻿using Ascension.Buffs.StandUnique;
 using Ascension.Players;
 using System;
 using System.Collections.Generic;

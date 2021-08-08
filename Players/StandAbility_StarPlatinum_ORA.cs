@@ -1,4 +1,4 @@
-﻿using Ascension.Debuffs.StandUnique;
+﻿using Ascension.Buffs.StandUnique;
 using Ascension.NPCs;
 using Ascension.Projectiles;
 using Ascension.Utility;
@@ -14,9 +14,11 @@ namespace Ascension.Players
 {
     public class StandAbility_StarPlatinum_ORA : StandAbility
     {
-        protected override float Cooldown { get; } = 10f;
-
         public override string Name { get; } = "ORA!!!";
+
+        public override string Description => $"Star Platinum quicky rushes to it's stand user and punches any nearby enemy with massive damage & knockback.\nCooldown: {GetCooldown()}";
+
+        protected override float Cooldown { get; } = 10f;
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_ORA;
 
