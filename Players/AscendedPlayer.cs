@@ -105,6 +105,18 @@ namespace Ascension.Players
             pv_LoadedStandID = StandID.NEWBIE;
         }
 
+        public override void UpdateDead()
+        {
+            base.UpdateDead();
+            in_Stand.Recall();
+        }
+
+        public override void OnRespawn(Player player)
+        {
+            base.OnRespawn(player);
+            if(in_IsStandUser) in_Stand.Invoke();
+        }
+
         private void OnManifestCall(int val)
         {
             OnManifestStand?.Invoke(in_Stand, val);

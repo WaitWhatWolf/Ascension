@@ -111,6 +111,15 @@ namespace Ascension
                     StandID.MAGICIANS_RED => "Magician's Red",
                     _ => string.Empty
                 };
+            
+            public static string GetStandDescription(StandID id)
+                => id switch
+                {
+                    StandID.STAR_PLATINUM => "Star Platinum, a stand which excels at\neverything outside of range.\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.GetColorByRarity(ERarity.Chromic)) + "\n\n" + Hooks.Colors.GetColoredTooltipText("Good grief.", Color.Crimson),
+                    StandID.THE_WORLD => "The World",
+                    StandID.MAGICIANS_RED => "Magician's Red",
+                    _ => string.Empty
+                };
 
             /// <summary>
             /// Manifests a stand for a given player.

@@ -105,14 +105,9 @@ namespace Ascension.UI
                 pv_AbilityImages[i] = image;
             }
 
-            pv_TooltipText = new(string.Empty, 1.5f, false);
-            pv_TooltipText.MaxWidth.Set(160, 0f);
-            pv_TooltipText.MaxWidth.Set(320, 0f);
-            pv_TooltipText.MinHeight.Set(60, 0f);
+            pv_TooltipText = new(string.Empty, 1f, false);
             pv_TooltipText.IgnoresMouseInteraction = true;
-            pv_TooltipText.BackgroundColor = Color.Gray;
-            pv_TooltipText.BorderColor = Hooks.Colors.Tangelo;
-            pv_TooltipText.TextColor = Hooks.Colors.Tangelo;
+            pv_TooltipText.Deactivate();
             Append(pv_TooltipText);
         }
 
@@ -139,7 +134,7 @@ namespace Ascension.UI
 
         private void UpdateTooltip()
         {
-            if(pv_MouseOverIndex == -1)
+            if (pv_MouseOverIndex == -1)
             {
                 pv_TooltipText.Deactivate();
                 return;
@@ -170,9 +165,16 @@ namespace Ascension.UI
                 _ => string.Empty
             };
 
+            Vector2 size = FontAssets.MouseText.Value.MeasureString(text);
+
             pv_TooltipText.SetText(text);
             pv_TooltipText.Left.Set(left, 0f);
             pv_TooltipText.Top.Set(top, 0f);
+            pv_TooltipText.MaxWidth.Set(size.X, 0f);
+            pv_TooltipText.Width.Set(size.X, 0f);
+            pv_TooltipText.MaxHeight.Set(size.Y + 8f, 0f);
+            pv_TooltipText.Height.Set(size.Y + 8f, 0f);
+
             pv_TooltipText.Recalculate();
         }
 

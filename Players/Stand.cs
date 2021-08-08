@@ -73,13 +73,13 @@ namespace Ascension.Players
         /// Returns the mod stand projectile of this stand.
         /// </summary>
         /// <returns></returns>
-        public StandProjectile GetStandModProjectile() => (StandProjectile)Main.projectile[pv_InstancedStand].ModProjectile;
+        public StandProjectile GetStandModProjectile() => pv_InstancedStand;
 
         /// <summary>
         /// Returns the normal stand projectile of this stand.
         /// </summary>
         /// <returns></returns>
-        public Projectile GetStandProjectile() => Main.projectile[pv_InstancedStand];
+        public Projectile GetStandProjectile() => pv_InstancedStand.Projectile;
 
         /// <summary>
         /// Returns the current movement AI used by the stand.
@@ -150,15 +150,16 @@ namespace Ascension.Players
             switch (ID)
             {
                 case StandID.STAR_PLATINUM:
-                    pv_InstancedStand = Projectile.NewProjectile(new ProjectileSource_Stand(Owner, this), Owner.Player.Center, 
+                    pv_InstancedStandIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Owner, this), Owner.Player.Center, 
                         Vector2.Zero, ModContent.ProjectileType<StarPlatinum>(), GetStat(STAND_STAT_DAMAGE), 
                         GetSingleStat(STAND_STAT_KNOCKBACK));
-                    ((StarPlatinum)Main.projectile[pv_InstancedStand].ModProjectile).SetupStand(Owner.Player, this);
+                    pv_InstancedStand = (StarPlatinum)Main.projectile[pv_InstancedStandIndex].ModProjectile;
+                    pv_InstancedStand.SetupStand(Owner.Player, this);
                     break;
                 default: Active = false; break;
             }
 
-            SoundEngine.PlaySound(pv_InstancedStand, Owner.Player.Center);
+            SoundEngine.PlaySound(pv_InstancedStandIndex, Owner.Player.Center);
             StandMenu.ActivateMenu();
         }
 
@@ -167,9 +168,9 @@ namespace Ascension.Players
         /// </summary>
         public void Recall()
         {
-            Main.projectile[pv_InstancedStand].Kill();
+            pv_InstancedStand?.Projectile.Kill();
             Active = false;
-            pv_InstancedStand = -1;
+            pv_InstancedStand = null;
             StandMenu.DeactivateMenu();
         }
 
@@ -213,6 +214,7 @@ namespace Ascension.Players
             Active = false;
             ID = id;
             Name = GetStandName(ID);
+            Description = GetStandDescription(ID);
             Level = 1;
 
             Stat damage = default;
@@ -236,7 +238,6 @@ namespace Ascension.Players
 
                     pv_InvokeSoundIndex = ASCResources.Sound.Stand_StarPlatinum_Invoke_Index;
                     Portrait = ASCResources.Textures.Stand_Portrait_StarPlatinum;
-                    this.Description = "Star Platinum, a stand which excels at everything outside of range.";
                     break;
             }
 
@@ -270,7 +271,8 @@ namespace Ascension.Players
         private Action pv_BaseMovementAI;
         private Dictionary<string, Stat> pv_Stats = new();
         private List<Action> pv_MovementAIs = new();
-        private int pv_InstancedStand = -1;
+        private StandProjectile pv_InstancedStand = null;
+        private int pv_InstancedStandIndex = -1;
         private int pv_InvokeSoundIndex = -1;
 
         public static implicit operator bool(Stand stand) => stand != null && stand.ID != StandID.NEWBIE;

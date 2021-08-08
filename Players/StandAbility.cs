@@ -1,4 +1,5 @@
 ﻿using Ascension.Interfaces;
+using Ascension.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -29,7 +30,7 @@ namespace Ascension.Players
         /// <summary>
         /// The text used for tooltips.
         /// </summary>
-        public virtual string TooltipText => Name + '\n' + Description;
+        public virtual string TooltipText => Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tangelo) + '\n' + Description;
 
         /// <summary>
         /// The icon of this ability to be displayed in the UI.
@@ -107,7 +108,7 @@ namespace Ascension.Players
         /// Returns the cooldown of this ability.
         /// </summary>
         /// <returns></returns>
-        public float GetCooldown() => Cooldown;
+        public float GetCooldown(int truncate = 2) => Cooldown.Truncate(truncate);
 
         /// <summary>
         /// Returns the current cooldown of this ability.

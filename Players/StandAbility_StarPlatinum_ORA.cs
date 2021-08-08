@@ -16,7 +16,7 @@ namespace Ascension.Players
     {
         public override string Name { get; } = "ORA!!!";
 
-        public override string Description => $"Star Platinum quicky rushes to it's stand user and punches any nearby enemy with massive damage & knockback.\nCooldown: {GetCooldown()}";
+        public override string Description => $"Star Platinum quicky rushes to it's stand user\nand punches any nearby enemy with massive damage & knockback.\nCooldown: {GetCooldown()}";
 
         protected override float Cooldown { get; } = 10f;
 
