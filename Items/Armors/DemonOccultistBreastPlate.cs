@@ -10,10 +10,12 @@ using static Terraria.ModLoader.ModContent;
 using Microsoft.Xna.Framework;
 using Ascension.Tiles;
 using Ascension.Items;
+using Ascension.Enums;
+using Ascension.Attributes;
 
-namespace Ascension.Armors
+namespace Ascension.Items.Armors
 {
-    [AutoloadEquip(EquipType.Body)]
+    [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Body)]
     class DemonOccultistBreastPlate : AscensionItem
     {
         public override void SetStaticDefaults()

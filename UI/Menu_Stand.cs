@@ -1,22 +1,21 @@
-﻿using Ascension.Internal;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Ascension.UI
 {
+    /// <summary>
+    /// Menu which displays all info of a <see cref="Stand"/>.
+    /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class Menu_Stand : Menu
     {
         protected override float DimensionHeight => 68;

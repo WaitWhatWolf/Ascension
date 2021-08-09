@@ -1,9 +1,10 @@
-﻿using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Terraria;
 
 namespace Ascension.Buffs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class FriendlySmash : AscensionBuff
     {
         public override void SetStaticDefaults()

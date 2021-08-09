@@ -1,14 +1,16 @@
-﻿using Terraria;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Items;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System;
-using Microsoft.Xna.Framework;
-using System.Collections;
 using Terraria.ModLoader.Utilities;
-using Ascension.Items;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     public class StandingSamurai : AscensionNPC
     {
         public bool PlayerClose;

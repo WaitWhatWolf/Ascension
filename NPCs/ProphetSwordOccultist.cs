@@ -1,16 +1,11 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.Audio;
-using Ascension.Items;
-using Terraria.DataStructures;
-using Ascension.Items.Projectiles;
-using Ascension.Enums;
 
-namespace Ascension.NPCs.ProphetSwordOccultist
+namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class ProphetSwordOccultist : AscensionNPC
     {
         public override void SetStaticDefaults()

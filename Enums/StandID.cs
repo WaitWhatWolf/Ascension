@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ascension.Attributes;
 
 namespace Ascension.Enums
 {
     /// <summary>
     /// Identification for Stands.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
     public enum StandID
     {
         NEWBIE = -1,

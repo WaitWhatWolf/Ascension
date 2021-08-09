@@ -9,9 +9,12 @@ using static Ascension.ASCResources.Stats;
 using static Ascension.ASCResources;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Ascension.Attributes;
+using Ascension.Enums;
 
 namespace Ascension.Players
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public class StandAbility_StarPlatinum_ORA : StandAbility
     {
         public override string Name { get; } = "ORA!!!";

@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using static Terraria.ModLoader.ModContent;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Microsoft.Xna.Framework;
-using Ascension.Tiles;
-using Ascension.Items;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
-namespace Ascension.Armors
+namespace Ascension.Items.Armors
 {
-    [AutoloadEquip(EquipType.Body)]
+    [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Body)]
     class SamuraiChestplate : AscensionItem
     {
         public override void SetStaticDefaults()

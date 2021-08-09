@@ -1,13 +1,11 @@
-﻿using Ascension.Players;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Players;
 using Terraria.DataStructures;
 
 namespace Ascension.Projectiles
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class ProjectileSource_Stand : IProjectileSource
     {
         public ProjectileSource_Stand(AscendedPlayer player, Stand stand)

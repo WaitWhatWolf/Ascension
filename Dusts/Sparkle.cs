@@ -1,8 +1,10 @@
-﻿using Terraria;
-using Terraria.ModLoader;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Terraria;
 
 namespace Ascension.Dusts
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class Sparkle : AscensionDust
     {
             public override void OnSpawn(Dust dust)

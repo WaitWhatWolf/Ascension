@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Microsoft.Xna.Framework.Graphics;
-using Ascension.Items.Placeable;
+﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Items.Placeable;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Ascension.Tiles
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidTile : AscensionTile
     {
         public override void SetStaticDefaults()

@@ -1,20 +1,18 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Items;
+using Ascension.Items.Projectiles;
+using Ascension.Items.Weapons;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Graphics;
-using System.IO;
-using System.Text.RegularExpressions;
-using Terraria.Localization;
-using Ascension.Items.Projectiles;
-using Terraria.Audio;
-using Ascension.Items.Weapons;
-using Ascension.Items;
-using Terraria.DataStructures;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class DemonSwordOccultist : AscensionNPC
     {
         bool PlayerClose;

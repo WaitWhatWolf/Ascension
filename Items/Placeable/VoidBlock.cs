@@ -1,12 +1,13 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
-using Ascension.Items;
-using Ascension.Tiles;
+﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Tiles;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Ascension.Items.Placeable
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidBlock : AscensionItem
     {
         public override void SetStaticDefaults()

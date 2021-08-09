@@ -1,7 +1,7 @@
-﻿using Ascension.Buffs;
-using Ascension.Dusts;
+﻿using Ascension.Attributes;
+using Ascension.Buffs;
+using Ascension.Enums;
 using Ascension.Projectiles;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 
 namespace Ascension.Items.Projectiles
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class PlayerSmashWave : AscensionProjectile
     {
         int counter;

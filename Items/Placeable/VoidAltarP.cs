@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using System;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Ascension.Items.Placeable
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidAltarP : AscensionItem
     {
         public override void SetStaticDefaults()

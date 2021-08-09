@@ -1,16 +1,15 @@
-﻿using Ascension.Players;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 
 namespace Ascension.Buffs.StandUnique
 {
-    public sealed class SD_StarPlatinum_ORAd : StandDebuff
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08), Obsolete("No longer used; Standard knockback is used for now.")]
+    public sealed class SB_StarPlatinum_ORAd : StandBuff
     {
         public override bool AllowRemove() => pv_Cooldown <= 0;
 
@@ -25,7 +24,7 @@ namespace Ascension.Buffs.StandUnique
             pv_Cooldown -= ASCResources.FLOAT_PER_FRAME;
         }
 
-        public SD_StarPlatinum_ORAd(Stand stand, Vector2 direction, float speed, float duration = 0.5f) : base(stand)
+        public SB_StarPlatinum_ORAd(Stand stand, Vector2 direction, float speed, float duration = 0.5f) : base(stand)
         {
             pv_Direction = direction * 10f;
             pv_Speed = speed;

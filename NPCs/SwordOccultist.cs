@@ -1,17 +1,18 @@
-﻿using Terraria;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Items.Projectiles;
+using Ascension.Items.Weapons;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System;
-using Microsoft.Xna.Framework;
-using System.Collections;
-using Ascension.Items.Projectiles;
-using Terraria.Audio;
-using Ascension.Items.Weapons;
 using Terraria.ModLoader.Utilities;
-using Terraria.DataStructures;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class SwordOccultist : AscensionNPC
     {
         int counter = 0;

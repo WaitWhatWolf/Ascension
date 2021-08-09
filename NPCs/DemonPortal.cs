@@ -1,16 +1,19 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Items;
+using Ascension.Items.Projectiles;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Ascension.Items.Projectiles;
 using Terraria.ModLoader.Utilities;
-using Terraria.Audio;
-using Ascension.Items;
-using Terraria.DataStructures;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class DemonPortal : AscensionNPC
     {
         int counter;

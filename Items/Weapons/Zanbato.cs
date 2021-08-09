@@ -7,9 +7,11 @@ using System;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Ascension.Enums;
+using Ascension.Attributes;
 
 namespace Ascension.Items.Weapons
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class Zanbato : AscensionItem
     {
         public override void SetStaticDefaults()

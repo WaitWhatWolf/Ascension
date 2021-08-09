@@ -1,4 +1,6 @@
-﻿using Ascension.Dusts;
+﻿using Ascension.Attributes;
+using Ascension.Dusts;
+using Ascension.Enums;
 using Ascension.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -8,6 +10,7 @@ using Terraria.ModLoader;
 
 namespace Ascension.Items.Projectiles
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class FallingBlades : AscensionProjectile
     {
         public override void SetDefaults()

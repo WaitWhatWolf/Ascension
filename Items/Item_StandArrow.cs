@@ -9,9 +9,11 @@ using Ascension.Items.Rarities;
 using Ascension.Players;
 using static Ascension.ASCResources;
 using Ascension.Enums;
+using Ascension.Attributes;
 
 namespace Ascension.Items
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public sealed class Item_StandArrow : AscensionItem
     {
         public override void AddRecipes()

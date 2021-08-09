@@ -7,9 +7,12 @@ using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Ascension.Items.Rarities;
 using Ascension.Players;
+using Ascension.Enums;
+using Ascension.Attributes;
 
 namespace Ascension.Items
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 06)]
     public sealed class Item_RedHotChiliPepper : AscensionItem
     {
         public override void SetStaticDefaults()

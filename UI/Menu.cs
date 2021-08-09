@@ -1,17 +1,18 @@
-﻿using Ascension;
-using Ascension.Utility;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace Ascension.UI
 {
+    /// <summary>
+    /// Core class for most menus in <see cref="Ascension"/>.
+    /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2019, 12, 16), Note(Dev.WaitWhatWolf, "Yes, it's that old.")]
     public abstract class Menu : UIState
     {
         #region Static
@@ -158,7 +159,7 @@ namespace Ascension.UI
         /// <summary>
         /// Saves the position(s) of this menu.
         /// </summary>
-        [Obsolete]
+        [Obsolete, Note(Dev.WaitWhatWolf, "Kept for style points. +10")]
         public virtual void SaveCoordinates(out TagCompound compound)
         {
             compound = new TagCompound()
@@ -174,7 +175,7 @@ namespace Ascension.UI
         /// Loads the position(s) of this menu.
         /// </summary>
         /// <param name="compound"></param>
-        [Obsolete]
+        [Obsolete, Note(Dev.WaitWhatWolf, "That one kept for style points as well; +20")]
         public virtual void LoadCoordinates(TagCompound compound)
         {
             pr_LoadedLeft = GetDimensionsFromTagCompound(compound, nameof(Left));

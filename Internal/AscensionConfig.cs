@@ -1,10 +1,16 @@
-﻿using Ascension.UI;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.UI;
 using System;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
 namespace Ascension.Internal
 {
+    /// <summary>
+    /// Config manager of the <see cref="Ascension"/> mod.
+    /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class AscensionConfig : ModConfig
     {
         public override ConfigScope Mode { get; } = ConfigScope.ClientSide;

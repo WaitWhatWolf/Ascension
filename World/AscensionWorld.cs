@@ -1,21 +1,47 @@
-﻿using Ascension.Internal;
+﻿using Ascension.Attributes;
+using Ascension.Buffs.StandUnique;
+using Ascension.Enums;
+using Ascension.Internal;
 using Ascension.Players;
-using Ascension.UI;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 using Terraria.UI;
 
 namespace Ascension.World
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public class AscensionWorld : ModSystem
     {
+        /// <summary>
+        /// Determines the active state of "ZA WORUDO" a.k.a time stop.
+        /// </summary>
+        public bool IsInTheWorld { get; private set; }
+        public SB_TheWorld TheWorldDebuff { get; private set; }
+        public Stand TheWorldPerpetrator { get; private set; }
+
+        public event Action<AscensionWorld> OnTheWorldBegin;
+        public event Action<AscensionWorld> OnTheWorldEnd;
+
+        public void SetTheWorld(Stand perpetrator, SB_TheWorld buff)
+        {
+            IsInTheWorld = true;
+            TheWorldDebuff = buff;
+            TheWorldPerpetrator = perpetrator;
+
+            OnTheWorldBegin?.Invoke(this);
+        }
+
+        public void StopTheWorld()
+        {
+            IsInTheWorld = false;
+            TheWorldDebuff = null;
+            TheWorldPerpetrator = null;
+
+            OnTheWorldEnd?.Invoke(this);
+        }
+
         public override void OnWorldLoad()
         {
             pv_AscendedPlayer = Main.player[Main.myPlayer].GetModPlayer<AscendedPlayer>();

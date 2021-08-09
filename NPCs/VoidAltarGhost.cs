@@ -4,9 +4,12 @@ using Terraria.ModLoader;
 using Ascension.Tiles;
 using Ascension.Buffs;
 using Ascension.Items;
+using Ascension.Enums;
+using Ascension.Attributes;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidAltarGhost : AscensionNPC
     {
         Player player2; //used for adding a buff if the NPC is killed

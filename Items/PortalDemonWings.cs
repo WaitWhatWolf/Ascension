@@ -1,10 +1,12 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using Ascension.Enums;
+using Ascension.Attributes;
 
 namespace Ascension.Items
 {
-    [AutoloadEquip(EquipType.Wings)]
+    [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Wings)]
     public class PortalDemonWings : AscensionItem
     {
         //NotYetUsed

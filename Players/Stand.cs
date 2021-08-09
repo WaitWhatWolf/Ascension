@@ -1,24 +1,25 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Ascension.Projectiles;
+using Ascension.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ModLoader;
+using Terraria.UI;
 using static Ascension.ASCResources.Players;
 using static Ascension.ASCResources.Stats;
-using static Ascension.ASCResources.Sound;
-using Microsoft.Xna.Framework.Graphics;
-using Ascension.UI;
-using Terraria.UI;
-using ReLogic.Content;
 
 namespace Ascension.Players
 {
     /// <summary>
     /// Core class for Stands.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
     public sealed class Stand
     {
         /// <summary>
@@ -179,7 +180,7 @@ namespace Ascension.Players
         /// </summary>
         public void Update()
         {
-            for(int i = 0; i < Level; i++)
+            for(int i = 0; i < Abilities.Length; i++) //i < Level <---- to revert to this
             {
                 Abilities[i].Update();
                 //This makes it so even if the stand is recalled, it will still cool down all abilities.
@@ -256,6 +257,7 @@ namespace Ascension.Players
                     {
                         new StandAbility_StarPlatinum_Punch(this),
                         new StandAbility_StarPlatinum_ORA(this),
+                        new StandAbility_StarPlatinum_TheWorld(this),
                     };
                     break;
             }

@@ -1,9 +1,11 @@
-using Terraria;
+using Ascension.Attributes;
+using Ascension.Enums;
 using Terraria.ModLoader;
 
 namespace Ascension
 {
-	public sealed class Ascension : Mod
+    [CreatedBy(Dev.All, 2021, 08, 04), Note(Dev.WaitWhatWolf, "<3 (nohomo)")]
+    public sealed class Ascension : Mod
 	{
         public override void AddRecipeGroups()
         {

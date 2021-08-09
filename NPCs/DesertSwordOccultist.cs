@@ -1,22 +1,17 @@
-﻿using Terraria;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Projectiles.Minions;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System;
-using Microsoft.Xna.Framework;
-using System.Collections;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using Terraria.Localization;
-using Terraria.ModLoader.IO;
-using Terraria.DataStructures;
-using Microsoft.Xna.Framework.Graphics;
-using Ascension.Projectiles.Minions;
 using Terraria.ModLoader.Utilities;
-using Terraria.Audio;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class DesertSwordOccultist : AscensionNPC
     {
         bool PlayerClose;

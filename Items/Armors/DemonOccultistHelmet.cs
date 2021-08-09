@@ -7,10 +7,12 @@ using static Terraria.ModLoader.ModContent;
 using Microsoft.Xna.Framework;
 using Ascension.Tiles;
 using Ascension.Items;
+using Ascension.Attributes;
+using Ascension.Enums;
 
-namespace Ascension.Armors
+namespace Ascension.Items.Armors
 {
-    [AutoloadEquip(EquipType.Head)]
+    [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Head)]
     class DemonOccultistHelmet : AscensionItem
     {
         public override void SetStaticDefaults()

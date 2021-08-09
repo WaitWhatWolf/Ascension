@@ -1,15 +1,20 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Ascension.NPCs;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
+using static Ascension.ASCResources;
 
 namespace Ascension.Projectiles.Minions
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class SilentMinionEnemy : AscensionNPC
     {
+        [ModifiedBy(Dev.WaitWhatWolf, "Changed sub-folder value from a raw string value to a constant in Ascension.ASCResources.", 2021, 08, 09)]
+        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Projectiles, ASSETS_SUBPATH_MINIONS, this);
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Baby Silent Killer");
@@ -17,8 +22,6 @@ namespace Ascension.Projectiles.Minions
             //The frame count for the enemy
             Main.npcFrameCount[NPC.type] = 1; //Zombie has 3 frames but u can instead type in number 3 instead (depending how many frames you want)
         }
-
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Projectiles, "Minions/", this);
 
         public override void SetDefaults()
         {

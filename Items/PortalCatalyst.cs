@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Ascension.Items
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     public class PortalCatalyst : AscensionItem
     {
         public override void SetStaticDefaults()

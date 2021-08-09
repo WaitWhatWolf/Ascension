@@ -1,4 +1,5 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -7,6 +8,7 @@ using Terraria.ObjectData;
 
 namespace Ascension.Tiles
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     public class VoidAltar : AscensionTile
     {
         public override void SetStaticDefaults()

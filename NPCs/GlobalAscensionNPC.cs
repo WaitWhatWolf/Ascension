@@ -1,14 +1,12 @@
-﻿using Ascension.Players;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Players;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Ascension.NPCs
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 06)]
     public sealed class GlobalAscensionNPC : GlobalNPC
     {
         public override void OnKill(NPC npc)

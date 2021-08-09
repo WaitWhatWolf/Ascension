@@ -1,4 +1,5 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
@@ -8,6 +9,7 @@ namespace Ascension.Items.Rarities
     /// <summary>
     /// The base rarity class for all <see cref="Ascension"/> rarities.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public abstract class Rarity : ModRarity
     {
         /// <inheritdoc/>

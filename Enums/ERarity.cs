@@ -1,8 +1,11 @@
-﻿namespace Ascension.Enums
+﻿using Ascension.Attributes;
+
+namespace Ascension.Enums
 {
     /// <summary>
     /// Rarity enum used for various methods, items, etc...
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public enum ERarity
     {
         /// <summary>

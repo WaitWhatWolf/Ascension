@@ -1,18 +1,20 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Ascension.ASCResources;
 
 namespace Ascension.Projectiles.Minions
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class SilentMinion : AscensionProjectile
     {
-        bool targetFound = false;
-        int counter2;
-        int counter;
-        bool wait = false;
+        [ModifiedBy(Dev.WaitWhatWolf, "Changed sub-folder value from a raw string value to a constant in Ascension.ASCResources.", 2021, 08, 09)]
+        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Projectiles, ASSETS_SUBPATH_MINIONS, this);
+        
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Baby-Silent Killer Minion");
@@ -29,7 +31,6 @@ namespace Ascension.Projectiles.Minions
             // Don't mistake this with "if this is true, then it will automatically home". It is just for damage reduction for certain NPCs
             ProjectileID.Sets.CountsAsHoming[Projectile.type] = true;
         }
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Projectiles, "Minions/", this);
         public sealed override void SetDefaults()
         {
             Projectile.width = 38;
@@ -289,5 +290,10 @@ namespace Ascension.Projectiles.Minions
                 #endregion
             }
         }
+
+        bool targetFound = false;
+        int counter2;
+        int counter;
+        bool wait = false;
     }
 }

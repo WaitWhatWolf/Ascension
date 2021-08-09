@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ascension.Attributes;
 
 namespace Ascension.Enums
 {
     /// <summary>
     /// Used with <see cref="AscensionItem"/> to determine where the image asset(s) is loaded from.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 06)]
     public enum ItemAssetType
     {
         /// <summary>

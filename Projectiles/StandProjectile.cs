@@ -1,9 +1,8 @@
-﻿using Ascension.Players;
-using System;
-using System.Collections.Generic;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Players;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 using static Ascension.ASCResources.Stats;
 
 namespace Ascension.Projectiles
@@ -11,7 +10,8 @@ namespace Ascension.Projectiles
     /// <summary>
     /// The base class for all in-game stand instances.
     /// </summary>
-    public abstract class StandProjectile : AscensionProjectile
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
+	public abstract class StandProjectile : AscensionProjectile
     {
 		/// <summary>
 		/// Sets necessary variables to make the stand work; Make sure to include "base.SetStaticDefaults();".

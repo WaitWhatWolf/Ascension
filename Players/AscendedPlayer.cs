@@ -1,4 +1,5 @@
 ﻿using Ascension;
+using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Items;
 using Ascension.Players;
@@ -14,6 +15,7 @@ namespace Ascension.Players
     /// <summary>
     /// Core player class of the <see cref="Ascension"/> mod.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
     public sealed class AscendedPlayer : ModPlayer
     {
         public float BaseUmbralCrit;

@@ -1,6 +1,6 @@
-﻿using Ascension.Players;
-using System.Linq;
-using Terraria;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Players;
 using Terraria.ModLoader;
 
 namespace Ascension.Internal
@@ -8,6 +8,7 @@ namespace Ascension.Internal
     /// <summary>
     /// <see cref="DamageClass"/> type for the Umbral class.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public sealed class UmbralDamageClass : DamageClass
     {
         public override void SetStaticDefaults()

@@ -1,11 +1,8 @@
-﻿using Ascension.Interfaces;
-using Ascension.Players;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Interfaces;
 using Ascension.NPCs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Ascension.Players;
 using Terraria;
 
 namespace Ascension.Buffs.StandUnique
@@ -13,7 +10,8 @@ namespace Ascension.Buffs.StandUnique
     /// <summary>
     /// Base class used for custom debuffs in relation to <see cref="StandHandlerNPC"/>.
     /// </summary>
-    public abstract class StandDebuff : IStandReferencable
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
+    public abstract class StandBuff : IStandReferencable
     {
         public Stand Stand { get; }
 
@@ -46,7 +44,7 @@ namespace Ascension.Buffs.StandUnique
         /// </summary>
         public virtual void Init() { }
 
-        public StandDebuff(Stand stand)
+        public StandBuff(Stand stand)
         {
             Stand = stand;
         }

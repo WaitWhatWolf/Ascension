@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
-using Terraria;
-using Terraria.GameContent.Generation;
-using Terraria.ModLoader;
-using Terraria.WorldBuilding;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Ascension.Tiles;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using Terraria;
+using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.IO;
-using Terraria.DataStructures;
-using System;
+using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace Ascension.World
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     public class CompactWorldGen : ModSystem
     {
         // 3. We use the ModifyWorldGenTasks method to tell the game the order that our world generation code should run

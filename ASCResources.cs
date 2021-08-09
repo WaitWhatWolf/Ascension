@@ -1,29 +1,29 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Internal;
 using Ascension.Items;
 using Ascension.Players;
+using Ascension.Sound;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Input;
-using Ascension.Internal;
-using Terraria.Localization;
 using Terraria.ID;
-using Ascension.Sound;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System.IO;
-using Terraria.IO;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Ascension
 {
     /// <summary>
     /// The class which stores all static and const resources of this mod.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 03)]
     public static class ASCResources
     {
         public static readonly Random GlobalRandom = new();
@@ -66,8 +66,9 @@ namespace Ascension
         public const string ASSETS_PATH_BUFFS = ASSETS_PATH + "Buffs/";
         public const string ASSETS_PATH_UI = ASSETS_PATH + "UI/";
         public const string ASSETS_PATH_UI_ASSETSONLY = ASSETS_PATH_ASSETSONLY + "UI/";
-
         public const string ASSETS_PATH_SOUND_CUSTOM = ASSETS_PATH + "Sound/Custom/";
+
+        public const string ASSETS_SUBPATH_MINIONS = "Minions/";
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
@@ -102,7 +103,7 @@ namespace Ascension
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             };
         
-
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
         public static class Players
         {
             public static string GetStandName(StandID id)
@@ -190,6 +191,7 @@ namespace Ascension
         /// <summary>
         /// All possible death reasons; Note that they are all initiated during <see cref="Ascension.Load"/> through <see cref="DeathReasons.Load"/>.
         /// </summary>
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
         public static class DeathReasons
         {
             /// <summary>
@@ -240,6 +242,7 @@ namespace Ascension
         /// <summary>
         /// All recipe-related shenanegans.
         /// </summary>
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
         public static class Recipes
         {
             /// <summary>
@@ -285,10 +288,12 @@ namespace Ascension
             public const string RECIPE_GROUP_DEMONBARS = "Ascension:DemonBars";
         }
 
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
         public static class Textures
         {
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_Punch { get; private set; }
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_ORA { get; private set; }
+            public static Asset<Texture2D> Stand_Ability_StarPlatinum_TheWorld { get; private set; }
             public static Asset<Texture2D> Stand_Portrait_StarPlatinum { get; private set; }
             public static Asset<Texture2D> Stand_Menu_Background { get; private set; }
 
@@ -296,6 +301,7 @@ namespace Ascension
             {
                 Stand_Ability_StarPlatinum_Punch = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_PUNCH);
                 Stand_Ability_StarPlatinum_ORA = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_ORA);
+                Stand_Ability_StarPlatinum_TheWorld = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_THEWORLD);
                 Stand_Portrait_StarPlatinum = ascension.Assets.Request<Texture2D>(STAND_PORTRAIT_STARPLATINUM);
                 Stand_Menu_Background = ascension.Assets.Request<Texture2D>(STAND_MENU_BACKGROUND);
             }
@@ -304,16 +310,19 @@ namespace Ascension
             {
                 Stand_Ability_StarPlatinum_Punch = null;
                 Stand_Ability_StarPlatinum_ORA = null;
+                Stand_Ability_StarPlatinum_TheWorld = null;
                 Stand_Portrait_StarPlatinum = null;
                 Stand_Menu_Background = null;
             }
 
             private const string STAND_ABILITY_STARPLATINUM_PUNCH = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
             private const string STAND_ABILITY_STARPLATINUM_ORA = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
+            private const string STAND_ABILITY_STARPLATINUM_THEWORLD = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_TheWorld";
             private const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
             private const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
         }
 
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 06)]
         public static class Input
         {
             public static ModKeybind Keybind_Stand_Invoke;
@@ -358,6 +367,7 @@ namespace Ascension
         /// <summary>
         /// All stat-related shenanegans.
         /// </summary>
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
         public static class Stats
         {
             public static void Load()
@@ -381,6 +391,7 @@ namespace Ascension
             public static UmbralDamageClass DamageClass_Umbral;
         }
 
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
         public static class Sound
         {
             public const string STAND_STARPLATINUM_INVOKE = ASSETS_PATH_SOUND_CUSTOM + "Stand_StarPlatinum_Invoke";

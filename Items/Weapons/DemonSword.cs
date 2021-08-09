@@ -1,15 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Ascension.Items.Projectiles;
+using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using System;
-using Ascension.Enums;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Ascension.Items.Weapons
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class DemonSword : AscensionItem
     {
         public override void SetStaticDefaults()

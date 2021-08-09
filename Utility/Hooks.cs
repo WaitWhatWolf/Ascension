@@ -1,4 +1,5 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Ascension.Utility
     /// <summary>
     /// Utility class which contains the vast majority of utility methods.
     /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public static class Hooks
     {
         public static class Collections
@@ -54,6 +56,24 @@ namespace Ascension.Utility
                             toReturn.Add(npc);
                         }
                     }
+                }
+
+                return toReturn;
+            }
+
+            /// <summary>
+            /// Returns all NPCs.
+            /// </summary>
+            /// <returns></returns>
+            public static List<NPC> GetAll()
+            {
+                List<NPC> toReturn = new();
+
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC npc = Main.npc[i];
+
+                    toReturn.Add(npc);
                 }
 
                 return toReturn;

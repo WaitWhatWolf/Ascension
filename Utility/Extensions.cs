@@ -1,8 +1,13 @@
-﻿using Ascension.Enums;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
 using System.Collections.Generic;
 
 namespace Ascension.Utility
 {
+    /// <summary>
+    /// Utility class which contains all extension methods for <see cref="Hooks"/>.
+    /// </summary>
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public static class Extensions
     {
         public static T Random<T>(this IEnumerable<T> enumerable) => Hooks.Collections.Random(enumerable);

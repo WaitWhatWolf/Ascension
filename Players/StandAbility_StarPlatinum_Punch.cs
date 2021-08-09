@@ -1,14 +1,16 @@
-﻿using Ascension.Utility;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using static Ascension.ASCResources.Stats;
 
 namespace Ascension.Players
 {
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class StandAbility_StarPlatinum_Punch : StandAbility
     {
         public override string Name { get; } = "Ora! Ora! Ora!";

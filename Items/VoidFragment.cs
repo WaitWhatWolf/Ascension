@@ -1,9 +1,11 @@
-﻿using Terraria;
+﻿using Ascension.Attributes;
+using Ascension.Enums;
+using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Ascension.Items
 {
+    [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidFragment : AscensionItem
     {
         public override void SetStaticDefaults()
