@@ -57,6 +57,7 @@ namespace Ascension.UI
         public Menu_Stand(Stand stand) : base()
         {
             pv_Stand = stand;
+            pv_Stand.OnAbilityUnlock += Event_OnAbilityUnlock;
 
             pv_AbilityImages = new UIImage[pv_Stand.Abilities.Length];
             pv_AbilityKeys = new UIText[pv_Stand.Abilities.Length];
@@ -90,7 +91,9 @@ namespace Ascension.UI
                 image.Color = Color.White;
                 image.OnMouseOver += Event_AbilityOnMouseOver;
                 image.OnMouseOut += Event_AbilityOnMouseOut;
-                this.Append(image);
+                image.Deactivate();
+
+                //this.Append(image);
 
                 if (i != 0)
                 {
@@ -118,7 +121,6 @@ namespace Ascension.UI
             pv_TooltipText = new(string.Empty, 1f, false);
             pv_TooltipText.IgnoresMouseInteraction = true;
             pv_TooltipText.Deactivate();
-            //Append(pv_TooltipText);
         }
 
         private void Event_AbilityOnMouseOver(UIMouseEvent mEvent, UIElement element)
@@ -140,6 +142,14 @@ namespace Ascension.UI
             pv_MouseOverIndex = -1;
 
             UpdateTooltip();
+        }
+
+        private void Event_OnAbilityUnlock(int index)
+        {
+            Append(pv_AbilityImages[index]);
+            pv_AbilityImages[index].Activate();
+
+            Debug.Log("Yeee");
         }
 
         private void UpdateTooltip()

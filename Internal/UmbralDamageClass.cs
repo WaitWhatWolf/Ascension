@@ -11,10 +11,11 @@ namespace Ascension.Internal
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public sealed class UmbralDamageClass : DamageClass
     {
+        //protected override string DisplayNameInternal => "Umbral Damage";
+
         public override void SetStaticDefaults()
         {
-            foreach(var player in Mod.GetContent<AscendedPlayer>())
-                player.BaseUmbralCrit = ASCResources.Stats.UMBRAL_CRIT_BASE;
+            ClassName.SetDefault("umbral damage");
         }
 
         /// <summary>

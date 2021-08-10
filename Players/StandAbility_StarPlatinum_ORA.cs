@@ -56,10 +56,13 @@ namespace Ascension.Players
                 List<NPC> npcs = Hooks.InGame.GetAllWithin(projectile, projectile.Center, 250f);
                 foreach (NPC npc in npcs)
                 {
-                    float knock = Stand.GetSingleStat(STAND_STAT_KNOCKBACK) * 20f;
+                    float knock = Stand.GetSingleStat(STAND_STAT_KNOCKBACK);
                     npc.StrikeNPC(Stand.GetStat(STAND_STAT_DAMAGE) * 10, knock, -npc.direction);
-
-                    //npc.GetGlobalNPC<StandHandlerNPC>(true).AddDebuff(new SD_StarPlatinum_ORAd(Stand, npc.DirectionFrom(Stand.Owner.Player.position/*projectile.Center*/), 100f));
+                    Vector2 direction = npc.Center - projectile.Center;
+                    direction.Normalize();
+                    direction -= new Vector2(0f, 0.2f); //Makes enemies tend to get knocked upwards
+                    direction *= knock * 10f;
+                    npc.velocity = direction;
                 }
 
                 pv_WithinORARange = false;

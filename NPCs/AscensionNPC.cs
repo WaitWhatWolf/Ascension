@@ -11,5 +11,6 @@ namespace Ascension.NPCs
     public abstract class AscensionNPC : ModNPC
     {
         public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.NPCs, this);
+
     }
 }

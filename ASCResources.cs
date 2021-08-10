@@ -69,6 +69,7 @@ namespace Ascension
         public const string ASSETS_PATH_SOUND_CUSTOM = ASSETS_PATH + "Sound/Custom/";
 
         public const string ASSETS_SUBPATH_MINIONS = "Minions/";
+        public const string ASSETS_SUBPATH_WEAPONS = "Weapons/";
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
@@ -103,6 +104,31 @@ namespace Ascension
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             };
         
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
+        public static class Reflection
+        {
+            /// <summary>
+            /// Pointer to a private field in <see cref="NPC"/> called ignorePlayerInteraction.
+            /// </summary>
+            public static int IgnorePlayerInteractions
+            {
+                get => (int)pv_FIignorePlayerInteraction.GetValue(null);
+                set => pv_FIignorePlayerInteraction.SetValue(null, value);
+            }
+
+            public static void Load()
+            {
+                pv_FIignorePlayerInteraction = typeof(NPC).GetField("ignorePlayerInteractions", BindingFlags.NonPublic | BindingFlags.Instance);
+            }
+
+            public static void Unload()
+            {
+
+            }
+
+            private static FieldInfo pv_FIignorePlayerInteraction;
+        }
+
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
         public static class Players
         {
@@ -124,6 +150,21 @@ namespace Ascension
                     _ => string.Empty
                 };
 
+            public static Action<Stand> GetStandStatUpdater(StandID id)
+                => id switch
+                {
+                    StandID.STAR_PLATINUM => (s) => 
+                    {
+                        s.Owner.Player.GetDamage<MeleeDamageClass>() += (0.1f * s.Level);
+                        s.Owner.Player.meleeSpeed *= (1.1f * s.Level);
+                        s.Owner.Player.GetKnockback<MeleeDamageClass>() += (0.2f * s.Level);
+                        s.Owner.Player.GetCritChance<MeleeDamageClass>() += (5 * s.Level);
+                        s.Owner.Player.statDefense += (5 * s.Level);
+                    }
+                    ,
+                    _ => throw new Exception("Cannot set stat updater for a undefined stand."),
+                };
+
             /// <summary>
             /// Manifests a stand for a given player.
             /// </summary>
@@ -134,7 +175,9 @@ namespace Ascension
             public static int ManifestStand(AscendedPlayer player, StandID id = StandID.NEWBIE, bool debugStandName = true)
             {
                 bool create = CreateStand(player, id, debugStandName);
-                
+
+                player.in_Stand.TryUnlockAbilities(false);
+
                 int toUse = player.in_Stand.UpgradeStand(debugStandName);
 
                 if (toUse == 0 && !create)
@@ -374,9 +417,41 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
         public static class Stats
         {
+            #region Stacking
+            /// <summary>
+            /// Base stacking index of the default stacking calculation. Stats with this stacking will be used as the base value for calculation.
+            /// </summary>
+            public const int STATS_STACKING_BASE = -1;
+            /// <summary>
+            /// Overrider stacking index of the default stacking calculation. Stats with this stacking will override the base value with it's own. (useful for weapons or items if they have base stats)
+            /// Calculation: Base = Overrider
+            /// </summary>
+            public const int STATS_STACKING_OVERRIDER = 0;
+            /// <summary>
+            /// Additive stacking index of the default stacking calculation. Stats with this stacking will add themselves on top of the base value.
+            /// Calculation: Base + Value
+            /// </summary>
+            public const int STATS_STACKING_ADDITIVE = 1;
+            /// <summary>
+            /// Base Multiplier stacking index of the default stacking calculation. Stats with this stacking will multiply the BASE value by their own.
+            /// Calculation: Base * (Value + 1)
+            /// </summary>
+            public const int STATS_STACKING_BASEMULT = 2;
+            /// <summary>
+            /// Total Multiplier stacking index of the default stacking calculation. Stats with this stacking will multiply the TOTAL value by their own.
+            /// Calculation: (Base + All Value Calculations) * (Value + 1)
+            /// </summary>
+            public const int STATS_STACKING_TOTALMULT = 3;
+            /// <summary>
+            /// Pwner stacking index of the default stacking calculation. Stats with this stacking will ignore any calculation and return their own value.
+            /// Calculation: (Base + All Value Calculation) = Value
+            /// </summary>
+            public const int STATS_STACKING_PWNER = 42;
+            #endregion
+
             public static void Load()
             {
-                DamageClass_Umbral = new UmbralDamageClass();
+
             }
 
             public static void Unload()
@@ -392,7 +467,7 @@ namespace Ascension
             public const string STAND_STAT_MOVESPEED = "Stand MS";
             public const string STAND_STAT_AIRANGE = "Stand Range AI";
             public const float UMBRAL_CRIT_BASE = 4f;
-            public static UmbralDamageClass DamageClass_Umbral;
+            public static DamageClass DamageClass_Umbral { get; } = new UmbralDamageClass();
         }
 
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]

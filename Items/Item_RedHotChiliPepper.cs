@@ -47,7 +47,7 @@ namespace Ascension.Items
         public override bool CanUseItem(Player player) => !player.GetModPlayer<AscendedPlayer>().ConsumedRedHotChiliPepper;
         public override bool? UseItem(Player player)
         {
-            Debug.Log("The arrow is calling your name...");
+            Debug.Chat("The arrow is calling your name...", Color.Purple);
             player.GetModPlayer<AscendedPlayer>().ConsumedRedHotChiliPepper = true;
 
             return true;

@@ -20,6 +20,7 @@ namespace Ascension
         public override void Load()
         {
             ASCResources.DeathReasons.Load();
+            ASCResources.Reflection.Load();
             ASCResources.Textures.Load(this);
             ASCResources.Input.Load(this);
             ASCResources.Stats.Load();
@@ -29,6 +30,7 @@ namespace Ascension
         public override void Unload()
         {
             ASCResources.DeathReasons.Unload();
+            ASCResources.Reflection.Unload();
             ASCResources.Recipes.Unload();
             ASCResources.Textures.Unload();
             ASCResources.Input.Unload();

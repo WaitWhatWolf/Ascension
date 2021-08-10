@@ -1,10 +1,13 @@
 ﻿using Ascension;
 using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Interfaces;
+using Ascension.Internal;
 using Ascension.Items;
 using Ascension.Players;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;
@@ -16,12 +19,17 @@ namespace Ascension.Players
     /// Core player class of the <see cref="Ascension"/> mod.
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
-    public sealed class AscendedPlayer : ModPlayer
+    public sealed class AscendedPlayer : ModPlayer, IAscensionEntity
     {
-        public float BaseUmbralCrit;
         public bool ConsumedRedHotChiliPepper;
         
+        public bool[] UnlockedStandAbility { get; private set; } = new bool[4];
         public List<string> DefeatedBosses { get; private set; }
+
+        /// <summary>
+        /// Stats of the ascended player.
+        /// </summary>
+        public EntityStats Stats { get; private set; } 
 
         /// <summary>
         /// Invoked when a new boss is defeated.
@@ -86,12 +94,20 @@ namespace Ascension.Players
                 else in_Stand.Recall();
             }
 
-            if(in_Stand)
+            if(in_IsStandUser)
                 in_Stand.Update();
+        }
+
+        public override void PostUpdate()
+        {
+            if (in_IsStandUser)
+                in_Stand.UpdateStats();
         }
 
         public override void OnEnterWorld(Player player)
         {
+            Stats = new EntityStats(this);
+
             if (pv_LoadedStandID != StandID.NEWBIE && ASCResources.Players.ManifestStand(this, pv_LoadedStandID, false) != -1)
             {
                 Debug.Log($"Your will is currently manifested as {in_Stand.Name}, Level {in_Stand.Level}");
@@ -105,6 +121,7 @@ namespace Ascension.Players
         {
             in_Stand = null;
             pv_LoadedStandID = StandID.NEWBIE;
+            Stats = null;
         }
 
         public override void UpdateDead()

@@ -1,4 +1,4 @@
-﻿using Ascension.Attributes;
+﻿    using Ascension.Attributes;
 using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using System;
@@ -31,6 +31,27 @@ namespace Ascension.Utility
 
         public static class InGame
         {
+            /// <summary>
+            /// Returns a chance which rolls count times. (0-1 scale)
+            /// </summary>
+            /// <param name="count"></param>
+            /// <returns></returns>
+            public static float GetChance(int count)
+            {
+                {
+                    float chance = 0;
+                    for (int i = 0; i < count; i++)
+                    {
+                        float newChance = (float)ASCResources.GlobalRandom.NextDouble();
+                        if (newChance > chance)
+                            chance = newChance;
+                    }
+
+                    //Debug.Log(string.Format("Rolled Chance: {0}, Roll count was {1}", V_DEBUG_LAYER_ITEMS, chance, count));
+                    return chance;
+                }
+            }
+
             /// <summary>
             /// Returns all NPCs within a given range of center.
             /// </summary>
@@ -93,6 +114,11 @@ namespace Ascension.Utility
                 return new Vector2(Range(min.X, max.X), Range(min.Y, max.Y));
             }
 
+            public static int Range(int min, int max)
+            {
+                return ASCResources.GlobalRandom.Next(min, max);
+            }
+
             public static float Range(float min, float max)
             {
                 return (float)(ASCResources.GlobalRandom.NextDouble() * (max - min) + min);
@@ -152,6 +178,16 @@ namespace Ascension.Utility
             public static float Magnitude(Vector2 original)
             {
                 return System.MathF.Sqrt(Vector2.Dot(original, original));
+            }
+
+            /// <summary>
+            /// Returns the deminishing returns of a percent value (0-1).
+            /// </summary>
+            /// <param name="value01"></param>
+            /// <returns></returns>
+            public static float DeminishingPercent(float value01)
+            {
+                return 1f / (1f + value01);
             }
         }
 
@@ -222,7 +258,7 @@ namespace Ascension.Utility
             /// <returns></returns>
             public static Color GetColorByRarity(ERarity rarity)
             {
-                if(rarity == ERarity.Unknown)
+                if (rarity == ERarity.Unknown)
                     Debug.LogWarning("Passed rarity to Hooks.Colors.GetColorByRarity is ERarity.Unknown; Make sure this is intended.");
 
                 return rarity switch
@@ -239,3 +275,4 @@ namespace Ascension.Utility
         }
     }
 }
+

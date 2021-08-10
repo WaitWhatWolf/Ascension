@@ -79,8 +79,6 @@ namespace Ascension.World
             pv_HasStand = true;
             pv_Stand.StandMenu.SetDefaultPosition(ModContent.GetInstance<AscensionConfig>().StandMenuPosX,
             ModContent.GetInstance<AscensionConfig>().StandMenuPosY);
-
-            Debug.Log(pv_HasStand);
         }
 
         private AscendedPlayer pv_AscendedPlayer;

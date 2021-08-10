@@ -12,6 +12,11 @@ namespace Ascension
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public static class Debug
     {
+        public static void Chat(object message, Color color)
+        {
+            Main.NewTextMultiline(message.ToString(), c: color);
+        }
+
         public static void Log(object message)
         {
             Main.NewTextMultiline(message.ToString(), c: Color.LightCyan);

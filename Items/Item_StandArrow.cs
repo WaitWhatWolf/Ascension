@@ -59,7 +59,11 @@ namespace Ascension.Items
             if(!player.dead)
             {
                 AscendedPlayer modPlayer = player.GetModPlayer<AscendedPlayer>();
-                ASCResources.Players.ManifestStand(modPlayer);
+                
+                if(!modPlayer.in_IsStandUser)
+                    ASCResources.Players.ManifestStand(modPlayer);
+
+                modPlayer.in_Stand.TryUnlockAbilities();
             }
 
             return true;

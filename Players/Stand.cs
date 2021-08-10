@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Internal;
 using Ascension.Projectiles;
 using Ascension.UI;
 using Microsoft.Xna.Framework;
@@ -22,6 +23,11 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
     public sealed class Stand
     {
+        /// <summary>
+        /// Invoked when <see cref="UnlockAbility(int)"/> is successfully called.
+        /// </summary>
+        public event Action<int> OnAbilityUnlock;
+
         /// <summary>
         /// The player who owns this stand.
         /// </summary>
@@ -127,18 +133,47 @@ namespace Ascension.Players
         /// <returns>True if stand was upgraded.</returns>
         public int UpgradeStand(bool debugUpgrade = true)
         {
-            int toReturn = 0;
-            if(Level == 1 && Owner.ConsumedRedHotChiliPepper)
-            {
-                if(debugUpgrade)
-                {
-                    Debug.Log($"{Name} has awakened the {Abilities[1].Name} ability!");
-                }
-                Level++;
-                toReturn++;
-            }
+            int toReturn = 1;
 
+            if(Level <= 1)
+                Level++;
+
+            if(debugUpgrade)
+            {
+                Debug.Log($"{Name} has leveled up! (Current Level: {Level})");
+            }
             return toReturn;
+        }
+
+        /// <summary>
+        /// Attempts to unlock all abilities according to their unlock requirements.
+        /// </summary>
+        /// <param name="debugUnlocks"></param>
+        public void TryUnlockAbilities(bool debugUnlocks = true)
+        {
+            UnlockAbility(0, false);
+            if(Owner.ConsumedRedHotChiliPepper)
+                UnlockAbility(1, debugUnlocks);
+
+            //UnlockAbility(2, debugUnlocks);
+            //UnlockAbility(3, debugUnlocks);
+        }
+
+        /// <summary>
+        /// Unlocks a specific ability.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="debugUnlock"></param>
+        public void UnlockAbility(int index, bool debugUnlock = true)
+        {
+            if (!Owner.UnlockedStandAbility[index])
+            {
+                Owner.UnlockedStandAbility[index] = true;
+                if(debugUnlock)
+                    Debug.Log($"{Name} has unlocked {Abilities[index].Name}!");
+
+                OnAbilityUnlock?.Invoke(index);
+            }
         }
 
         /// <summary>
@@ -156,6 +191,7 @@ namespace Ascension.Players
                         GetSingleStat(STAND_STAT_KNOCKBACK));
                     pv_InstancedStand = (StarPlatinum)Main.projectile[pv_InstancedStandIndex].ModProjectile;
                     pv_InstancedStand.SetupStand(Owner.Player, this);
+                    
                     break;
                 default: Active = false; break;
             }
@@ -180,12 +216,18 @@ namespace Ascension.Players
         /// </summary>
         public void Update()
         {
+            if (Active)
+                pv_InstancedStand.Projectile.timeLeft = int.MaxValue;
+
             for(int i = 0; i < Abilities.Length; i++) //i < Level <---- to revert to this
             {
+                if (!Owner.UnlockedStandAbility[i])
+                    continue;
                 Abilities[i].Update();
                 //This makes it so even if the stand is recalled, it will still cool down all abilities.
                 if (Active)
                 {
+
                     //Tries to activate this ability if it's either the basic attack or the correct key was pressed.
                     if (i == 0 || ASCResources.Input.GetStandAbilityKey(i).JustPressed)
                         Abilities[i].TryActivate();
@@ -195,19 +237,28 @@ namespace Ascension.Players
             }
         }
 
-        public int GetStat(string statName)
+        /// <summary>
+        /// This should be called by the player every frame.
+        /// </summary>
+        public void UpdateStats()
         {
-            int toUse = Owner.DefeatedBosses.Count;
-            if (Level > 1) toUse += 5;
-            return pv_Stats[statName].GetScaledValue(toUse);
+            if (Active)
+                pv_StatUpdater(this);
         }
 
-        public float GetSingleStat(string statName)
-        {
-            int toUse = Owner.DefeatedBosses.Count;
-            if (Level > 1) toUse += 5;
-            return pv_Stats[statName].GetSingleScaledValue(toUse);
-        }
+        /// <summary>
+        /// Returns a calculated int value using the owner's stats.
+        /// </summary>
+        /// <param name="statName"></param>
+        /// <returns></returns>
+        public int GetStat(string statName) => (int)Owner.Stats.CalculatedValue(pv_Stats[statName]);
+
+        /// <summary>
+        /// Returns a calculated float value using the owner's stats.
+        /// </summary>
+        /// <param name="statName"></param>
+        /// <returns></returns>
+        public float GetSingleStat(string statName) => Owner.Stats.CalculatedValue(pv_Stats[statName]);
 
         public Stand(AscendedPlayer player, StandID id)
         {
@@ -216,26 +267,27 @@ namespace Ascension.Players
             ID = id;
             Name = GetStandName(ID);
             Description = GetStandDescription(ID);
+            pv_StatUpdater = GetStandStatUpdater(ID);
             Level = 1;
 
-            Stat damage = default;
-            Stat attackrange = default;
-            Stat armorpen = default;
-            Stat attackspeed = default;
-            Stat knockback = default;
-            Stat AIrange = default;
-            Stat movespeed = default;
+            Stat damage = new(0f, STATS_STACKING_BASE, (int)Affection.Damage);
+            Stat attackrange = new(0f, STATS_STACKING_BASE, (int)Affection.Range);
+            Stat armorpen = new(0f, STATS_STACKING_BASE, (int)Affection.ArmorPen);
+            Stat attackspeed = new(0f, STATS_STACKING_BASE, (int)Affection.AttackSpeed);
+            Stat knockback = new(0f, STATS_STACKING_BASE, (int)Affection.Knockback);
+            Stat AIrange = new(0f, STATS_STACKING_BASE, (int)Affection.MovementRange);
+            Stat movespeed = new(0f, STATS_STACKING_BASE, (int)Affection.MovementSpeed);
 
             switch (ID) //Add stats here
             {
                 case StandID.STAR_PLATINUM:
-                    damage = new(5f, 2.5f, 1);
-                    attackrange = new Stat(40f, 5f, 1);
-                    armorpen = new(10f, 3f, 1);
-                    attackspeed = new(180f, 20f, 1);
-                    knockback = new(2f, 0.1f, 2);
-                    AIrange = new(200f, 5f, 1);
-                    movespeed = new(20f, 0.1f, 2);
+                    damage.Value = 5f;
+                    attackrange.Value = 40f;
+                    armorpen.Value = 10f;
+                    attackspeed.Value = 180f;
+                    knockback.Value = 2f;
+                    AIrange.Value = 200f;
+                    movespeed.Value = 20f;
 
                     pv_InvokeSoundIndex = ASCResources.Sound.Stand_StarPlatinum_Invoke_Index;
                     Portrait = ASCResources.Textures.Stand_Portrait_StarPlatinum;
@@ -249,6 +301,13 @@ namespace Ascension.Players
             pv_Stats.Add(STAND_STAT_KNOCKBACK, knockback);
             pv_Stats.Add(STAND_STAT_MOVESPEED, movespeed);
             pv_Stats.Add(STAND_STAT_AIRANGE, AIrange);
+            Owner.Stats.AddStat(damage);
+            Owner.Stats.AddStat(attackrange);
+            Owner.Stats.AddStat(armorpen);
+            Owner.Stats.AddStat(attackspeed);
+            Owner.Stats.AddStat(knockback);
+            Owner.Stats.AddStat(movespeed);
+            Owner.Stats.AddStat(AIrange);
 
             switch (ID) //Add abilities here
             {
@@ -272,6 +331,7 @@ namespace Ascension.Players
         }
 
         private Action pv_BaseMovementAI;
+        private Action<Stand> pv_StatUpdater;
         private Dictionary<string, Stat> pv_Stats = new();
         private List<Action> pv_MovementAIs = new();
         private StandProjectile pv_InstancedStand = null;
@@ -279,58 +339,5 @@ namespace Ascension.Players
         private int pv_InvokeSoundIndex = -1;
 
         public static implicit operator bool(Stand stand) => stand != null && stand.ID != StandID.NEWBIE;
-
-        private struct Stat
-        {
-            public float BaseValue;
-            public float ScaleFactor;
-            public int ScaleType;
-
-            public float GetSingleScaledValue(int amount)
-            {
-                return ScaleType switch
-                {
-                    4 => BaseValue / (ScaleFactor * (amount + 1)),
-                    3 => BaseValue - (ScaleFactor * amount),
-                    2 => BaseValue * (1f + (ScaleFactor * (amount + 1))),
-                    _ => BaseValue + (ScaleFactor * amount)
-                };
-            }
-
-            public int GetScaledValue(int amount)
-            {
-                int int_BaseValue = (int)BaseValue;
-                int int_ScaleFactor = (int)ScaleFactor;
-
-                return ScaleType switch
-                {
-                    4 => int_BaseValue / (int_ScaleFactor * (amount + 1)),
-                    3 => int_BaseValue - (int_ScaleFactor * amount),
-                    2 => int_BaseValue * int_ScaleFactor * (amount + 1),
-                    _ => int_BaseValue + (int_ScaleFactor * amount)
-                };
-            }
-
-            /// <summary>
-            /// Creates a new stat.
-            /// </summary>
-            /// <param name="baseVal">The base value of the stat.</param>
-            /// <param name="scaleFactor">By how much the stat scales per boss defeated.</param>
-            /// <param name="scaleType">
-            /// The way ScaleFactor is applied to <see cref="BaseValue"/>:
-            /// <list type="number">
-            /// <item>Additive</item>
-            /// <item>Multiplicative</item>
-            /// <item>Substractive</item>
-            /// <item>Divisive</item>
-            /// </list>
-            /// </param>
-            public Stat(float baseVal, float scaleFactor, int scaleType)
-            {
-                BaseValue = baseVal;
-                ScaleFactor = scaleFactor;
-                ScaleType = scaleType;
-            }
-        }
     }
 }
