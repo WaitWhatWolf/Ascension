@@ -19,7 +19,8 @@ namespace Ascension.Players
     {
         public override string Name { get; } = "ORA!!!";
 
-        public override string Description => $"Star Platinum quicky rushes to it's stand user\nand punches any nearby enemy with massive damage & knockback.\nCooldown: {GetCooldown()}";
+        public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) + " quicky rushes to it's stand user\nand punches any nearby enemy with massive damage & knockback.\n"
+            + Hooks.Colors.GetColoredTooltipText($"Cooldown: {GetCooldown()}", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
         protected override float Cooldown { get; } = 10f;
 
@@ -52,7 +53,7 @@ namespace Ascension.Players
             if (pv_WithinORARange)
             {
                 Projectile projectile = Stand.GetStandProjectile();
-                List<NPC> npcs = Hooks.InGame.GetAllWithin(projectile, projectile.Center, 500f);
+                List<NPC> npcs = Hooks.InGame.GetAllWithin(projectile, projectile.Center, 250f);
                 foreach (NPC npc in npcs)
                 {
                     float knock = Stand.GetSingleStat(STAND_STAT_KNOCKBACK) * 20f;
@@ -76,8 +77,9 @@ namespace Ascension.Players
         {
             pv_StandProjectile.velocity = Vector2.Zero;
             float currentDist = Vector2.Distance(pv_StandProjectile.Center, pv_Owner.Center);
-            float speed = currentDist > 100f ? pv_StandMoveSpeed * (currentDist / 10f) : pv_StandMoveSpeed; //Accelerates based on distance
-            Vector2 toUse = Hooks.MathF.MoveTowards(pv_StandProjectile.Center, pv_Owner.Center, pv_StandMoveSpeed * FLOAT_PER_FRAME);
+            float speed = pv_StandMoveSpeed; //Accelerates based on distance
+            if (currentDist >= 1000f) speed *= (currentDist / 10f);
+            Vector2 toUse = Hooks.MathF.MoveTowards(pv_StandProjectile.Center, pv_Owner.Center, speed * FLOAT_PER_FRAME);
             pv_StandProjectile.Center = toUse;
 
             Vector2 directionToOwner = pv_Owner.Center - pv_StandProjectile.Center;

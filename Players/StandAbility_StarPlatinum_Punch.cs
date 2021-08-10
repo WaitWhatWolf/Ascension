@@ -15,7 +15,8 @@ namespace Ascension.Players
     {
         public override string Name { get; } = "Ora! Ora! Ora!";
 
-        public override string Description => $"Star Platinum's bread & butter: Just punching.\nAttacks all nearby enemies repeatedly.\nAttacks every {GetCooldown()}s.";
+        public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) + "'s bread & butter: Just punching.\nAttacks all nearby enemies repeatedly.\n"
+            + Hooks.Colors.GetColoredTooltipText($"Attacks every {GetCooldown()}s.", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_Punch;
 

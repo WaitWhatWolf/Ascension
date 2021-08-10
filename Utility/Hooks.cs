@@ -165,6 +165,42 @@ namespace Ascension.Utility
             /// The best color. (Orange color with a red-ish hue)
             /// </summary>
             public static readonly Color Tangelo = new Color(0.976f, 0.302f, 0f);
+
+            /// <summary>
+            /// Color used to refer to a stand title.
+            /// </summary>
+            public static readonly Color Tooltip_Stand_Title = Color.MediumPurple;
+
+            /// <summary>
+            /// Color used to refer to a stand ability.
+            /// </summary>
+            public static readonly Color Tooltip_Stand_Ability = Tangelo;
+
+            /// <summary>
+            /// Color used to refer to a stand ability's cooldown.
+            /// </summary>
+            public static readonly Color Tooltip_Stand_Ability_Cooldown = Color.PaleVioletRed;
+
+            /// <summary>
+            /// Color used for quotes.
+            /// </summary>
+            public static readonly Color Tooltip_Quote = Color.Crimson;
+            /// <summary>
+            /// Color used to refer to a damage class.
+            /// </summary>
+            public static readonly Color Tooltip_Class = Color.DarkRed;
+            /// <summary>
+            /// Color used to refer to special effects.
+            /// </summary>
+            public static readonly Color Tooltip_Effect = Color.Gold;
+            /// <summary>
+            /// Color used to refer to buffs.
+            /// </summary>
+            public static readonly Color Tooltip_Buff = Color.LimeGreen;
+            /// <summary>
+            /// Color used to refer to debuffs.
+            /// </summary>
+            public static readonly Color Tooltip_Debuff = Color.OrangeRed;
             #endregion
 
             /// <summary>

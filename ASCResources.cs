@@ -118,7 +118,7 @@ namespace Ascension
             public static string GetStandDescription(StandID id)
                 => id switch
                 {
-                    StandID.STAR_PLATINUM => "Star Platinum, a stand which excels at\neverything outside of range.\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.GetColorByRarity(ERarity.Chromic)) + "\n\n" + Hooks.Colors.GetColoredTooltipText("Good grief.", Color.Crimson),
+                    StandID.STAR_PLATINUM => "Star Platinum, a stand which excels at\neverything outside of range.\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.Tooltip_Class) + "\n\n" + Hooks.Colors.GetColoredTooltipText("Good grief.", Hooks.Colors.Tooltip_Quote),
                     StandID.THE_WORLD => "The World",
                     StandID.MAGICIANS_RED => "Magician's Red",
                     _ => string.Empty
@@ -293,6 +293,7 @@ namespace Ascension
         {
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_Punch { get; private set; }
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_ORA { get; private set; }
+            public static Asset<Texture2D> Stand_Ability_StarPlatinum_Receipt { get; private set; }
             public static Asset<Texture2D> Stand_Ability_StarPlatinum_TheWorld { get; private set; }
             public static Asset<Texture2D> Stand_Portrait_StarPlatinum { get; private set; }
             public static Asset<Texture2D> Stand_Menu_Background { get; private set; }
@@ -301,6 +302,7 @@ namespace Ascension
             {
                 Stand_Ability_StarPlatinum_Punch = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_PUNCH);
                 Stand_Ability_StarPlatinum_ORA = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_ORA);
+                Stand_Ability_StarPlatinum_Receipt = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_RECEIPT);
                 Stand_Ability_StarPlatinum_TheWorld = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_THEWORLD);
                 Stand_Portrait_StarPlatinum = ascension.Assets.Request<Texture2D>(STAND_PORTRAIT_STARPLATINUM);
                 Stand_Menu_Background = ascension.Assets.Request<Texture2D>(STAND_MENU_BACKGROUND);
@@ -310,6 +312,7 @@ namespace Ascension
             {
                 Stand_Ability_StarPlatinum_Punch = null;
                 Stand_Ability_StarPlatinum_ORA = null;
+                Stand_Ability_StarPlatinum_Receipt = null;
                 Stand_Ability_StarPlatinum_TheWorld = null;
                 Stand_Portrait_StarPlatinum = null;
                 Stand_Menu_Background = null;
@@ -317,6 +320,7 @@ namespace Ascension
 
             private const string STAND_ABILITY_STARPLATINUM_PUNCH = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
             private const string STAND_ABILITY_STARPLATINUM_ORA = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
+            private const string STAND_ABILITY_STARPLATINUM_RECEIPT = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Receipt";
             private const string STAND_ABILITY_STARPLATINUM_THEWORLD = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_TheWorld";
             private const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
             private const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";

@@ -15,14 +15,14 @@ namespace Ascension.Players
     {
         public override string Name { get; } = "Star Platinum: The World";
 
-        public override string Description => Hooks.Colors.GetColoredTooltipText("Stops time.", Color.Gold)
+        public override string Description => Hooks.Colors.GetColoredTooltipText("Stops time.", Hooks.Colors.Tooltip_Effect)
             + "\nDuring the time stop, any damage\n"
             + "Taken by enemies will be stored\n"
             + "at 150% it's value.\n"
-            + "At the end of the time stop,"
+            + "At the end of the time stop,\n"
             + "all enemies will recieve the\n"
             + "stored damage.\n"
-            + $"Cooldown: {GetCooldown()}";
+            + Hooks.Colors.GetColoredTooltipText($"Cooldown: {GetCooldown()}", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_TheWorld;
 

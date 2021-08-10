@@ -164,6 +164,7 @@ namespace Ascension.UI
                 0 => 99,
                 1 => 122,
                 2 => 155,
+                3 => 188,
                 -2 => 66,
                 _ => 0,
             };
@@ -178,6 +179,7 @@ namespace Ascension.UI
                 0 => pv_Stand.Abilities[0].TooltipText,
                 1 => pv_Stand.Abilities[1].TooltipText,
                 2 => pv_Stand.Abilities[2].TooltipText,
+                3 => pv_Stand.Abilities[3].TooltipText,
                 -2 => pv_Stand.Description,
                 _ => string.Empty
             };
