@@ -257,6 +257,7 @@ namespace Ascension.Players
                     {
                         new StandAbility_StarPlatinum_Punch(this),
                         new StandAbility_StarPlatinum_ORA(this),
+                        new StandAbility_StarPlatinum_Receipt(this),
                         new StandAbility_StarPlatinum_TheWorld(this),
                     };
                     break;
