@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Ascension.Utility
 {
@@ -123,6 +125,45 @@ namespace Ascension.Utility
             {
                 return (float)(ASCResources.GlobalRandom.NextDouble() * (max - min) + min);
             }
+        }
+
+        /// <summary>
+        /// All text-based utility methods & fields.
+        /// </summary>
+        public static class Text
+        {
+            /// <summary>
+            /// Returns a formatted string which separates capital letters with a space.
+            /// </summary>
+            /// <param name="for"></param>
+            /// <returns></returns>
+            public static string GetFormatClassName(IModType @for)
+            {
+                string name = @for.GetType().Name;
+                int classTypeIndex = name.IndexOf('_'); //This looks if a class starts with "Item_", "Projectile_", "Tile_", etc...
+                if (classTypeIndex != -1)
+                    name = name[(classTypeIndex + 1)..];
+
+                Match match = pv_Regex_ClassFormat.Match(name);
+
+                if (!match.Success)
+                    return name;
+
+                string toReturn = name;
+
+                do
+                {
+                    match = match.NextMatch();
+                    int index = match.Value.Length == 1 ? match.Index : match.Index + 1;
+                    toReturn = toReturn.Insert(index, " ");
+                }
+                while (match.Success);
+
+                return toReturn;
+            }
+
+            [Note(Dev.WaitWhatWolf, "The right to left option is required as GetFormatClassName depends on the regex going from right to left.")]
+            private static Regex pv_Regex_ClassFormat = new(@"[a-z][A-Z]", RegexOptions.RightToLeft);
         }
 
         public static class MathF
