@@ -1,10 +1,6 @@
 ﻿using Ascension.Enums;
 using Ascension.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ascension.Attributes
 {
