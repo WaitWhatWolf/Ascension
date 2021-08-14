@@ -144,20 +144,17 @@ namespace Ascension.Utility
                 if (classTypeIndex != -1)
                     name = name[(classTypeIndex + 1)..];
 
-                Match match = pv_Regex_ClassFormat.Match(name);
+                MatchCollection matches = pv_Regex_ClassFormat.Matches(name);
 
-                if (!match.Success)
+                if (matches.Count < 1)
                     return name;
 
                 string toReturn = name;
 
-                do
+                foreach(Match match in matches)
                 {
-                    match = match.NextMatch();
-                    int index = match.Value.Length == 1 ? match.Index : match.Index + 1;
-                    toReturn = toReturn.Insert(index, " ");
+                    toReturn = toReturn.Insert(match.Index + 1, " ");
                 }
-                while (match.Success);
 
                 return toReturn;
             }
