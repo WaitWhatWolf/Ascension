@@ -21,7 +21,7 @@ namespace Ascension.Projectiles.Minions
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
         }
 
-        protected override string TextureSubFolder { get; } = ASSETS_SUBPATH_MINIONS;
+        protected override string TextureSubFolder { get; } = ASSETS_SUBPATH_WEAPONS;
 
         protected override string DisplayNameDefault { get; } = "Silent Kill";
 
