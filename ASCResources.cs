@@ -81,14 +81,16 @@ namespace Ascension
             => GetAssetsPath(type) + caller.GetType().Name;
 
         /// <summary>
-        /// Returns the full path towards a moded component's texture.
+        /// Returns the full path towards a moded component's texture; If subFolder given is empty, it will simply ignore it.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="subFolder"></param>
         /// <param name="caller"></param>
         /// <returns></returns>
         public static string GetAssetsPath(ItemAssetType type, string subFolder, IModType caller)
-            => GetAssetsPath(type) + subFolder + caller.GetType().Name;
+            => !string.IsNullOrEmpty(subFolder) 
+            ? GetAssetsPath(type) + subFolder + caller.GetType().Name
+            : GetAssetsPath(type, caller);
 
         private static string GetAssetsPath(ItemAssetType type) 
             => type switch
