@@ -7,12 +7,10 @@ namespace Ascension.Buffs
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class Smash : AscensionBuff
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Smashed far");
-            Description.SetDefault("Immense power hits you");
-            Main.debuff[Type] = true;
-        }
+        protected override string DisplayNameDefault { get; } = "Smashed far";
+        protected override bool CountsAsDebuff { get; } = true;
+        protected override string DescriptionDefault { get; } = "Immense power hits you";
+
         public static void Effects(Player player)
         {
 

@@ -1,6 +1,6 @@
 ﻿using Ascension.Attributes;
-using Ascension.Buffs;
 using Ascension.Enums;
+using Ascension.Projectiles.Minions;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -8,21 +8,17 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Ascension.ASCResources;
 
-namespace Ascension.Projectiles.Minions
+namespace Ascension.Buffs
 {
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class SilentMinionBuff : AscensionBuff
     {
-        [ModifiedBy(Dev.WaitWhatWolf, "Changed sub-folder value from a raw string value to a constant in Ascension.ASCResources.", 2021, 08, 09)]
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Projectiles, ASSETS_SUBPATH_MINIONS, this);
+        protected override string TextureSubFolder => ASSETS_SUBPATH_MINIONS;
 
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Baby Silent Killer");
-            Description.SetDefault("Baby Silent Killer minion, not really the brightest but it has a cool sword on the back");
-            Main.buffNoSave[Type] = true;
-            Main.buffNoTimeDisplay[Type] = true;
-        }
+        protected override string DisplayNameDefault { get; } = "Baby Silent Killer";
+        protected override string DescriptionDefault { get; } = "Not really the brightest but it has a cool sword on the back";
+        protected override bool SaveBuff { get; } = false;
+        protected override bool DisplayBuffTimer { get; } = false;
 
         public override void Update(Player player, ref int buffIndex)
         {

@@ -14,11 +14,6 @@ namespace Ascension.Projectiles
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/11 18:06:15")]
     public class Projectile_WormedSlimeJavelin : AscensionProjectile
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Wormed Slime Javelin");
-        }
-
         public override void SetDefaults()
         {
 

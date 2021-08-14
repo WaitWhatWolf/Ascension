@@ -1,4 +1,5 @@
 ﻿using Ascension.Attributes;
+using Ascension.Buffs;
 using Ascension.Enums;
 using Ascension.Items;
 using Microsoft.Xna.Framework;
