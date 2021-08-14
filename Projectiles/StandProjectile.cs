@@ -18,6 +18,7 @@ namespace Ascension.Projectiles
 		/// </summary>
         public override void SetStaticDefaults()
         {
+			base.SetStaticDefaults();
 			//The line below is just so I don't forget, ignore
 			//Main.projFrames[Projectile.type] = 4;
 

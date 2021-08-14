@@ -18,10 +18,7 @@ namespace Ascension.Items
         /// where asset type is <see cref="ItemAssetType.Items"/> and <see cref="IModType"/> is <see cref="this"/>;
         /// If <see cref="TextureSubFolder"/> is set, it will also include it as argument for the subfolder.
         /// </summary>
-        public override string Texture 
-            => string.IsNullOrEmpty(TextureSubFolder) 
-            ? ASCResources.GetAssetsPath(ItemAssetType.Items, this)
-            : ASCResources.GetAssetsPath(ItemAssetType.Items, TextureSubFolder, this);
+        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Items, TextureSubFolder, this);
 
         /// <summary>
         /// If this field is overriden, it will be included as a subfolder for <see cref="Texture"/>'s path.
