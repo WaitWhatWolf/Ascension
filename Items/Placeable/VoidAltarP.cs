@@ -9,11 +9,8 @@ namespace Ascension.Items.Placeable
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidAltarP : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            Tooltip.SetDefault("Void Altar used for sacrifices to the void");
-        }
-
+        protected override string TooltipDefault { get; } = "Used for sacrifices to the void";
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

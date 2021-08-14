@@ -8,10 +8,8 @@ namespace Ascension.Items
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidFragment : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Void Fragment");
-        }
+        protected override string TooltipDefault { get; } = "A fragment of the unknown.";
+        protected override int JourneyCheatCount { get; } = 50;
 
         public override void SetDefaults()
         {

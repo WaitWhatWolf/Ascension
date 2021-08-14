@@ -15,14 +15,11 @@ namespace Ascension.Items.Armors
     [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Head)]
     class DemonOccultistHelmet : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            DisplayName.SetDefault("Void Helmet");
-            Tooltip.SetDefault("Heavy and full of squishy material."
+        protected override string DisplayNameDefault { get; } = "Void Helmet";
+        protected override string TooltipDefault { get; } = "Heavy and full of squishy material."
                 + "\n-20% melee crit chance"
-                + "\n-5% melee speed attack");        
-        }
+                + "\n-5% melee speed attack";
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

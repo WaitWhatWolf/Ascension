@@ -10,11 +10,11 @@ namespace Ascension.Items.Placeable
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidBlock : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Void Block");
-            Tooltip.SetDefault("This item will create a tile.");
-        }
+        [Note(Dev.WaitWhatWolf, "Previous tooltip: \"This item will create a tile.\"" +
+            "@Adragon if you want to change it back feel free to, I just thought this was probably a forgotten placeholder tooltip.")]
+        protected override string TooltipDefault { get; } = "Stare into the void long enough...Oh god it's staring back";
+        protected override int JourneyCheatCount { get; } = 100;
+
 
         public override void SetDefaults()
         {

@@ -10,15 +10,12 @@ namespace Ascension.Items.Armors
     [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Head)]
     class SamuraiHelmet : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            DisplayName.SetDefault("Samurai Helmet");
-            Tooltip.SetDefault("Spooky yet cool."
+        protected override string TooltipDefault { get; } = "Spooky yet cool."
                 + "\n+2% melee crit chance"
                 + "\n+10% melee speed attack"
-                + "\n+20 max mana");
-        }
+                + "\n+20 max mana";
+
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

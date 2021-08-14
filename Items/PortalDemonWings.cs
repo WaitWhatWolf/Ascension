@@ -9,18 +9,23 @@ namespace Ascension.Items
     [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Wings)]
     public class PortalDemonWings : AscensionItem
     {
+        [Note(Dev.WaitWhatWolf, "You set the item's name as the tooltip and never set the name...@adi pls add something here it's your item xd")]
+        protected override string TooltipDefault
+        {
+            get
+            {
+                Debug.LogWarning("@adi pls read note in PortalDemonWings");
+                return "<tooltip to add>";
+            }
+        }
+
+        protected override int JourneyCheatCount { get; } = 1;
+
         //NotYetUsed
-        /*
-        public override bool Autoload(ref string name)
+        /*public override bool Autoload(ref string name)
         {
             return !ModContent.GetInstance<ExampleConfigServer>().DisableExampleWings;
-        }
-        */
-
-        public override void SetStaticDefaults()
-        {
-            Tooltip.SetDefault("Portal Demon Wings");
-        }
+        }*/
 
         public override void SetDefaults()
         {

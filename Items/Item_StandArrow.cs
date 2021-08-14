@@ -16,19 +16,16 @@ namespace Ascension.Items
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public sealed class Item_StandArrow : AscensionItem
     {
+        protected override string TooltipDefault { get; } = "Has the power to manifest someone's will.";
+
+        protected override int JourneyCheatCount { get; } = 0;
+
         public override void AddRecipes()
         {
             CreateRecipe(1)
                 .AddCondition(NetworkText.FromKey("RecipeConditions.LowHealth"), r => Main.LocalPlayer.statLife < Main.LocalPlayer.statLifeMax / 10)
                 .AddTile(TileID.DemonAltar)
                 .Register();
-        }
-
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Stand Arrow");
-            Tooltip.SetDefault("Has the power to manifest someone's will.");
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()

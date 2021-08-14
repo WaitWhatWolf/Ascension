@@ -8,19 +8,23 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Ascension.Enums;
 using Ascension.Attributes;
+using static Ascension.ASCResources;
 
 namespace Ascension.Items.Weapons
 {
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class Zanbato : AscensionItem
     {
+        /// <inheritdoc/>
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Feels very light upon pickup");
+            base.SetStaticDefaults();
             Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
         }
 
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Items, "Weapons/", this);
+        protected override string TooltipDefault { get; } = "Feels very light upon pickup";
+        protected override int JourneyCheatCount { get; } = 1;
+        protected override string TextureSubFolder { get; } = ASSETS_SUBPATH_WEAPONS;
 
         public override void SetDefaults()
         {

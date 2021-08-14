@@ -2,7 +2,6 @@
 using Ascension.Enums;
 using Ascension.Items;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -14,16 +13,21 @@ namespace Ascension.Projectiles.Minions
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class SilentMinionItem : AscensionItem
     {
-        [ModifiedBy(Dev.WaitWhatWolf, "Changed sub-folder value from a raw string value to a constant in Ascension.ASCResources.", 2021, 08, 09)]
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Projectiles, ASSETS_SUBPATH_MINIONS, this);
-
+        /// <inheritdoc/>
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Silent Kill");
-            Tooltip.SetDefault("Summons a baby silent killer to fight for you");
+            base.SetStaticDefaults();
             ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true; // This lets the player target anywhere on the whole screen while using a controller.
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
         }
+
+        protected override string TextureSubFolder { get; } = ASSETS_SUBPATH_MINIONS;
+
+        protected override string DisplayNameDefault { get; } = "Silent Kill";
+
+        protected override string TooltipDefault { get; } = "Summons a baby silent killer to fight for you";
+
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

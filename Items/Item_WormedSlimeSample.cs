@@ -9,12 +9,8 @@ namespace Ascension.Items
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
     public sealed class Item_WormedSlimeSample : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Wormed Slime Sample");
-            Tooltip.SetDefault("King Slime's Gel.\nLooks like something lives inside...");
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 20;
-        }
+        protected override string TooltipDefault { get; } = "King Slime's Gel.\nLooks like something lives inside...";
+        protected override int JourneyCheatCount { get; } = 20;
 
         public override void SetDefaults()
         {

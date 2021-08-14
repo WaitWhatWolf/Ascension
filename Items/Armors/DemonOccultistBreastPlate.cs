@@ -18,15 +18,12 @@ namespace Ascension.Items.Armors
     [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Body)]
     class DemonOccultistBreastPlate : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            DisplayName.SetDefault("Void Breastplate");
-            Tooltip.SetDefault("Extremely heavy and full of" 
-                +"\nsquishy material."
+        protected override string DisplayNameDefault { get; } = "Void Breastplate";
+        protected override string TooltipDefault { get; } = "Extremely heavy and full of"
+                + "\nsquishy material."
                 + "\n-10% melee crit chance"
-                + "\n-10% melee speed attack");
-        }
+                + "\n-10% melee speed attack";
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

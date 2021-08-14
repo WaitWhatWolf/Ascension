@@ -15,15 +15,11 @@ namespace Ascension.Items
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 06)]
     public sealed class Item_RedHotChiliPepper : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Red Hot Chilli Pepper");
-            Tooltip.SetDefault("Allows the player to resist the arrow another time.\n"
+        protected override string TooltipDefault => "Allows the player to resist the arrow another time.\n"
                 + Hooks.Colors.GetColoredTooltipText("After consuming the Red Hot Chili Pepper, you can use the", Color.CornflowerBlue)
                 + Hooks.Colors.GetColoredTooltipText(" Stand Arrow ", Hooks.Colors.GetColorByRarity(Enums.ERarity.Chromic))
-                + Hooks.Colors.GetColoredTooltipText("again to gain new powers.", Color.CornflowerBlue));
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
-        }
+                + Hooks.Colors.GetColoredTooltipText("again to gain new powers.", Color.CornflowerBlue);
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

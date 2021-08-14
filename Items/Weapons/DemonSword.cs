@@ -15,11 +15,12 @@ namespace Ascension.Items.Weapons
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Pierce the air!");
+            base.SetStaticDefaults();
             Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
         }
-
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Items, "Weapons/", this);
+        protected override string TooltipDefault { get; } = "Pierce the air!";
+        protected override int JourneyCheatCount { get; } = 1;
+        protected override string TextureSubFolder { get; } = ASCResources.ASSETS_SUBPATH_WEAPONS;
 
         public override void SetDefaults()
         {

@@ -33,7 +33,7 @@ namespace Ascension.Items
         /// </summary>
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault(DisplayNameDefault1);
+            DisplayName.SetDefault(DisplayNameDefault);
             Tooltip.SetDefault(TooltipDefault);
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = JourneyCheatCount;
         }
@@ -41,7 +41,7 @@ namespace Ascension.Items
         /// <summary>
         /// The default display name of this item; Points to <see cref="Hooks.Text.GetFormatClassName(IModType)"/> by default.
         /// </summary>
-        protected virtual string DisplayNameDefault1 => Hooks.Text.GetFormatClassName(this);
+        protected virtual string DisplayNameDefault => Hooks.Text.GetFormatClassName(this);
         /// <summary>
         /// The default tooltip of this item.
         /// </summary>

@@ -11,13 +11,12 @@ namespace Ascension.Items.Armors
     [CreatedBy(Dev.Adragon, 2021, 08, 08), AutoloadEquip(EquipType.Legs)]
     class DemonOccultistBoots : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            DisplayName.SetDefault("Void Boots");
-            Tooltip.SetDefault("Heavy and slippery."
-                + "\n-20% movement speed");
-        }
+        protected override string DisplayNameDefault { get; } = "Void Boots";
+
+        protected override string TooltipDefault { get; } = "Heavy and slippery."
+                + "\n-20% movement speed";
+
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

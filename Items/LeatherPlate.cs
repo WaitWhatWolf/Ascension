@@ -8,10 +8,10 @@ namespace Ascension.Items
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     public class LeatherPlate : AscensionItem
     {
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault("Leather Plate");
-        }
+        [Note(Dev.WaitWhatWolf, "There was no tooltip set before the autojourneyitemimplement branch.")]
+        protected override string TooltipDefault { get; } = string.Empty;
+
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {

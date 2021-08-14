@@ -8,18 +8,23 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Ascension.Enums;
 using Ascension.Attributes;
+using static Ascension.ASCResources;
 
 namespace Ascension.Items.Weapons
 {
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class RuneBlade : AscensionItem
     {
+        /// <inheritdoc/>
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("You make the rules here. Every 5 seconds that is.");
+            base.SetStaticDefaults();
             Item.staff[Item.type] = true; //this makes the useStyle animate as a staff instead of as a gun
         }
-        public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.Items, "Weapons/", this);
+
+        protected override string TooltipDefault { get; } = "You make the rules here. Every 5 seconds that is.";
+        protected override string TextureSubFolder { get; } = ASSETS_SUBPATH_WEAPONS;
+        protected override int JourneyCheatCount { get; } = 1;
 
         public override void SetDefaults()
         {
