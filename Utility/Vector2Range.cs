@@ -5,17 +5,17 @@ using System;
 namespace Ascension.Utility
 {
     /// <summary>
-    /// Range struct for Clamping/Range utility in <see cref="Single"/> value.
+    /// Range struct for Clamping/Range utility in <see cref="Vector2"/> value.
     /// </summary>
     [Serializable, Note(Enums.Dev.WaitWhatWolf, "Imported from the WarWolfWorks-x-Stride library.")]
     public struct Vector2Range : IEquatable<Vector2Range>
     {
         /// <summary>
-        /// The minimal value of this <see cref="FloatRange"/>.
+        /// The minimal value of this <see cref="Vector2Range"/>.
         /// </summary>
         public Vector2 Min;
         /// <summary>
-        /// The maximal value of this <see cref="FloatRange"/>.
+        /// The maximal value of this <see cref="Vector2Range"/>.
         /// </summary>
         public Vector2 Max;
 
@@ -54,7 +54,7 @@ namespace Ascension.Utility
         public (Vector2 min, Vector2 max) GetTupleRange() => (Min, Max);
 
         /// <summary>
-        /// Returns true if both <see cref="FloatRange"/> values have the same <see cref="Min"/> and <see cref="Max"/> values.
+        /// Returns true if both <see cref="Vector2Range"/> values have the same <see cref="Min"/> and <see cref="Max"/> values.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
@@ -62,7 +62,7 @@ namespace Ascension.Utility
             => other.Min == Min && other.Max == Max;
 
         /// <summary>
-        /// Creates a new <see cref="FloatRange"/>.
+        /// Creates a new <see cref="Vector2Range"/>.
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -73,7 +73,7 @@ namespace Ascension.Utility
         }
 
         /// <summary>
-        /// Creates a new <see cref="FloatRange"/>.
+        /// Creates a new <see cref="Vector2Range"/>.
         /// </summary>
         public Vector2Range(float minX, float minY, float maxX, float maxY)
         {
@@ -84,6 +84,8 @@ namespace Ascension.Utility
         //TODO: Convert to Vector3Range
         //public static implicit operator IntRange(FloatRange range)
         //    => new IntRange(Convert.ToInt32(range.Min), Convert.ToInt32(range.Max));
+        public static implicit operator Vector2Range(Vector2 range)
+            => new(range, range);
 
         public static Vector2Range operator +(Vector2Range f, Vector2Range f2)
             => new(f.Min + f2.Min, f.Max + f2.Max);
@@ -97,7 +99,7 @@ namespace Ascension.Utility
             => !f.Equals(f2);
 
         /// <summary>
-        /// Returns true if the given object is a <see cref="FloatRange"/> and has the same <see cref="Min"/> and <see cref="Max"/> value.
+        /// Returns true if the given object is a <see cref="Vector2Range"/> and has the same <see cref="Min"/> and <see cref="Max"/> value.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>

@@ -79,6 +79,8 @@ namespace Ascension.Utility
         /// <param name="range"></param>
         public static implicit operator FloatRange(IntRange range)
             => new FloatRange(range.Min, range.Max);
+        public static implicit operator IntRange(int val)
+            => new(val, val + 1);
 
         public static IntRange operator +(IntRange i, IntRange i2)
             => new IntRange(i.Min + i2.Min, i.Max + i2.Max);

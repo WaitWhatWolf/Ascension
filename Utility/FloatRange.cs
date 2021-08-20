@@ -73,6 +73,8 @@ namespace Ascension.Utility
 
         public static implicit operator IntRange(FloatRange range)
             => new IntRange(Convert.ToInt32(range.Min), Convert.ToInt32(range.Max));
+        public static implicit operator FloatRange(float val)
+            => new FloatRange(val, val);
 
         public static FloatRange operator +(FloatRange f, FloatRange f2)
             => new FloatRange(f.Min + f2.Min, f.Max + f2.Max);
