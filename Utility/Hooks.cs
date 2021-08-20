@@ -34,6 +34,33 @@ namespace Ascension.Utility
         public static class InGame
         {
             /// <summary>
+            /// Creates a range of dusts.
+            /// </summary>
+            /// <param name="type">What dust to create.</param>
+            /// <param name="amount">The random amount of dust to be created.</param>
+            /// <param name="position">The position at which to create the dusts.</param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <param name="color"></param>
+            /// <param name="speedX"></param>
+            /// <param name="speedY"></param>
+            /// <param name="alpha"></param>
+            /// <param name="scale"></param>
+            /// <param name="onCreate"></param>
+            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, Color color, float speedX = 0f, float speedY = 0f, int alpha = 0, float scale = 1f, Action<Dust> onCreate = null)
+            {
+                int max = amount.GetRandom();
+                for (int i = 0; i < max; i++)
+                {
+                    int dust = Dust.NewDust(position.GetRandom(), width, height, type, speedX, speedY, alpha, color, scale);
+                    onCreate?.Invoke(Main.dust[dust]);
+                }
+            }
+
+            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, float speedX = 0f, float speedY = 0f, int alpha = 0, float scale = 1f, Action<Dust> onCreate = null)
+                => CreateDust(type, amount, position, width, height, default, speedX, speedY, alpha, scale, onCreate);
+
+            /// <summary>
             /// Returns a chance which rolls count times. (0-1 scale)
             /// </summary>
             /// <param name="count"></param>
@@ -101,6 +128,14 @@ namespace Ascension.Utility
 
                 return toReturn;
             }
+
+            public static void ApplyModBuffToAllWithin<T>(object attacker, Vector2 center, float within, int duration) where T : ModBuff
+            {
+                foreach (NPC npc in Hooks.InGame.GetAllWithin(attacker, center, within))
+                {
+                    npc.AddBuff(ModContent.BuffType<T>(), duration);
+                }
+            }
         }
 
         public static class Random
@@ -166,6 +201,27 @@ namespace Ascension.Utility
         public static class MathF
         {
             /// <summary>
+            /// Processes a countdown and returns true if the countdown reached it's destination.
+            /// </summary>
+            /// <remarks>The countdown is counted down to 0, so negative <paramref name="dest"/> is not allowed.</remarks>
+            /// <param name="countdown"></param>
+            /// <param name="dest"></param>
+            /// <returns></returns>
+            public static bool ProcessCountdown(ref float countdown, float dest)
+            {
+                if (dest < 0f)
+                    throw new ArgumentException("dest variable cannot be below 0.");
+
+                countdown -= ASCResources.FLOAT_PER_FRAME;
+                if(countdown <= 0)
+                {
+                    countdown = dest;
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
             /// Cuts a float to digits length.
             /// </summary>
             /// <param name="value"></param>
@@ -226,6 +282,50 @@ namespace Ascension.Utility
             public static float DeminishingPercent(float value01)
             {
                 return 1f / (1f + value01);
+            }
+
+            /// <summary>
+            /// Clamps a float value between min and max.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <returns></returns>
+            public static float Clamp(float value, float min, float max)
+            {
+                float aMin = Math.Min(min, max);
+                float aMax = Math.Max(min, max);
+
+                value = value > aMax ? aMax : value;
+                return value < aMin ? aMin : value;
+            }
+
+            /// <summary>
+            /// Clamps an int value between min and max.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <returns></returns>
+            public static int Clamp(int value, int min, int max)
+            {
+                int aMin = Math.Min(min, max);
+                int aMax = Math.Max(min, max);
+
+                value = value > aMax ? aMax : value;
+                return value < aMin ? aMin : value;
+            }
+
+            /// <summary>
+            /// Clamps a <see cref="Vector2"/> value between min and max.
+            /// </summary>
+            /// <param name="value"></param>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <returns></returns>
+            public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
+            {
+                return new Vector2(Clamp(value.X, min.X, max.X), Clamp(value.Y, min.Y, max.Y));
             }
         }
 
