@@ -47,18 +47,21 @@ namespace Ascension.Utility
             /// <param name="alpha"></param>
             /// <param name="scale"></param>
             /// <param name="onCreate"></param>
-            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, Color color, float speedX = 0f, float speedY = 0f, int alpha = 0, float scale = 1f, Action<Dust> onCreate = null)
+            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, Color color, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null)
             {
                 int max = amount.GetRandom();
                 for (int i = 0; i < max; i++)
                 {
-                    int dust = Dust.NewDust(position.GetRandom(), width, height, type, speedX, speedY, alpha, color, scale);
+                    int dust = Dust.NewDust(position.GetRandom(), width, height, type, speedX.GetRandom(), speedY.GetRandom(), alpha.GetRandom(), color, scale.GetRandom());
                     onCreate?.Invoke(Main.dust[dust]);
                 }
             }
 
-            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, float speedX = 0f, float speedY = 0f, int alpha = 0, float scale = 1f, Action<Dust> onCreate = null)
+            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null)
                 => CreateDust(type, amount, position, width, height, default, speedX, speedY, alpha, scale, onCreate);
+            
+            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, FloatRange speedX, FloatRange speedY, Action<Dust> onCreate = null)
+                => CreateDust(type, amount, position, width, height, default, speedX, speedY, 0, 1f, onCreate);
 
             /// <summary>
             /// Returns a chance which rolls count times. (0-1 scale)
