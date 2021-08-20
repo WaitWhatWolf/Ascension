@@ -38,21 +38,22 @@ namespace Ascension.Projectiles
 
         public override void Kill(int timeLeft)
         {
-            Hooks.InGame.ApplyModBuffToAllWithin<Buff_Parasites>(this, Projectile.Center, 50f, 70);
-            MakeDust(5);
+            Hooks.InGame.ApplyModBuffToAllWithin<Buff_Parasites>(this, Projectile.Center, 70f, 70);
+            MakeDust(5, 2.5f);
         }
 
         private void MakeDust(int multiplier = 1, float scale = 1f)
         {
-            IntRange range = new(1, 6 * multiplier);
+            IntRange range = new(1 * multiplier, 6 * multiplier);
+            Vector2Range pos = new(Projectile.Top.X - 5f, Projectile.Top.Y - 5f, Projectile.Top.X + 5f, Projectile.Top.Y + 5f);
             
-            Hooks.InGame.CreateDust(DustID.t_Slime, range, new Vector2Range(-5f, -5f, 5f, 5f), 5, 5, onCreate: Event_OnDustCreate);
+            Hooks.InGame.CreateDust(DustID.t_Slime, range, pos, 5, 5, new(-0.1f, 0.1f), scale == 1f ? 1f : 0f, new(0, 100), scale, Event_OnDustCreate);
         }
 
         private void Event_OnDustCreate(Dust dust)
         {
             dust.velocity *= 2f;
-            dust.noGravity = false;
+            dust.noGravity = dust.scale != 1f;
         }
 
         private float counter = 0.2f;
