@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 namespace Ascension.Items
 {
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
-    public sealed class Item_WormedSlimeJavelin : AscensionItem
+    public sealed class Item_ParasiteSlimeJavelin : AscensionItem
     {
         protected override string TooltipDefault { get; } = "Throws Slime Javelins which explode on impact.\nExplosions create worms that lach onto enemies.";
         protected override int JourneyCheatCount { get; } = 1;
@@ -26,7 +26,7 @@ namespace Ascension.Items
             Item.damage = 12;
             Item.consumable = false;
             Item.maxStack = 1;
-            Item.shoot = ModContent.ProjectileType<Projectile_WormedSlimeJavelin>();
+            Item.shoot = ModContent.ProjectileType<Projectile_ParasiteSlimeJavelin>();
 
             Item.rare = ModContent.RarityType<Rarity_Common>();
         }

@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace Ascension.Items
 {
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
-    public sealed class Item_WormedSlimeSample : AscensionItem
+    public sealed class Item_ParasiteSlimeSample : AscensionItem
     {
         protected override string TooltipDefault { get; } = "King Slime's Gel.\nLooks like something lives inside...";
         protected override int JourneyCheatCount { get; } = 20;

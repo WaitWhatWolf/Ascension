@@ -14,7 +14,7 @@ namespace Ascension.Items
         {
             if (arg == ItemID.KingSlimeBossBag)
             {
-                Item.NewItem(player.position, ModContent.ItemType<Item_WormedSlimeSample>(), Hooks.Random.Range(3, 5), noGrabDelay: true);
+                Item.NewItem(player.position, ModContent.ItemType<Item_ParasiteSlimeSample>(), Hooks.Random.Range(3, 5), noGrabDelay: true);
             }
         }
     }
