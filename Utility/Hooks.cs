@@ -46,6 +46,18 @@ namespace Ascension.Utility
         public static class InGame
         {
             /// <summary>
+            /// Returns a damage calculated after applying penetration.
+            /// </summary>
+            /// <param name="damage"></param>
+            /// <param name="pen"></param>
+            /// <param name="for"></param>
+            /// <returns></returns>
+            public static int GetDamageWithPen(int damage, int pen, NPC @for)
+            {
+                return damage + pen >= @for.defense ? @for.defense : pen;
+            }
+
+            /// <summary>
             /// Creates a range of dusts.
             /// </summary>
             /// <param name="type">What dust to create.</param>
@@ -74,6 +86,16 @@ namespace Ascension.Utility
             
             public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, FloatRange speedX, FloatRange speedY, Action<Dust> onCreate = null)
                 => CreateDust(amount, position, width, height, default, speedX, speedY, 0, 1f, onCreate, type);
+
+            public static void CreateGore(IntRange amount, Vector2Range position, Vector2Range velocity, FloatRange scale, Action<Gore> onCreate = null, params int[] types)
+            {
+                int count = amount.GetRandom();
+                for (int i = 0; i < count; i++)
+                {
+                    int gore = Gore.NewGore(position.GetRandom(), velocity.GetRandom(), types.Random(), scale.GetRandom());
+                    onCreate?.Invoke(Main.gore[gore]);
+                }
+            }
 
             /// <summary>
             /// Returns a chance which rolls count times. (0-1 scale)

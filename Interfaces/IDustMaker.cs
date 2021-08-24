@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Microsoft.Xna.Framework;
 
 namespace Ascension.Interfaces
 {
@@ -12,6 +13,6 @@ namespace Ascension.Interfaces
         /// <summary>
         /// **Another one bites the dust**
         /// </summary>
-        void CreateDust();
+        void Create(Vector2 position);
     }
 }

@@ -147,10 +147,11 @@ namespace Ascension.UI
 
         private void Event_OnAbilityUnlock(int index)
         {
-            Append(pv_AbilityImages[index]);
-            pv_AbilityImages[index].Activate();
-
-            Debug.Log("Yeee");
+            if (index < pv_AbilityImages.Length)
+            {
+                Append(pv_AbilityImages[index]);
+                pv_AbilityImages[index].Activate();
+            }
         }
 
         private void UpdateTooltip()

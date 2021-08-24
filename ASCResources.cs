@@ -282,6 +282,20 @@ namespace Ascension
             };
         }
 
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 24),
+            Note(Dev.WaitWhatWolf, "It also contains gores.")]
+        public static class Dusts
+        {
+            internal static void Load()
+            {
+                Gore_Stand_KillerQueen_Explosion = new(new(7, 12), new(-1f,-1f,1f,1f), Vector2.Zero, new(0.8f, 1f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
+                Dust_Stand_KillerQueen_Explosion = new(new(15, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, 0f, 0f, new(0, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
+            }
+
+            public static GoreMaker Gore_Stand_KillerQueen_Explosion { get; private set; }
+            public static DustMaker Dust_Stand_KillerQueen_Explosion { get; private set; }
+        }
+
         /// <summary>
         /// All possible death reasons; Note that they are all initiated during <see cref="Ascension.Load"/> through <see cref="DeathReasons.Load"/>.
         /// </summary>

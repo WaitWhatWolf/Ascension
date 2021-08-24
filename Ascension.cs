@@ -20,6 +20,7 @@ namespace Ascension
         public override void Load()
         {
             ASCResources.DeathReasons.Load();
+            ASCResources.Dusts.Load();
             ASCResources.Reflection.Load();
             ASCResources.Textures.Load(this);
             ASCResources.Input.Load(this);

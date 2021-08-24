@@ -33,13 +33,13 @@ namespace Ascension.Projectiles
         public override void PostAI()
         {
             if (pv_DustCountdown)
-                pv_DustMTravel.CreateDust();
+                pv_DustMTravel.Create(Projectile.position);
         }
 
         public override void Kill(int timeLeft)
         {
             Hooks.InGame.ApplyModBuffToAllWithin<Buff_Parasites>(this, Projectile.Center, 70f, 70, npc => !npc.FullName.ToUpper().Contains("SLIME"));
-            pv_DustMExplosion.CreateDust();
+            pv_DustMExplosion.Create(Projectile.position);
         }
 
         private void Event_OnDustCreate(Dust dust)
@@ -52,8 +52,8 @@ namespace Ascension.Projectiles
 
         public Projectile_ParasiteSlimeJavelin()
         {
-            pv_DustMExplosion = new DustMaker(new(20, 25), Func_DustPos, 5, 5, Color.DodgerBlue, new(-1f, 1f), new(1f, -0.3f), new(0, 100), new(1.2f, 1.6f), Event_OnDustCreate, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
-            pv_DustMTravel = new DustMaker(new(4, 8), Func_DustPos, 5, 5, Color.DodgerBlue, new(-3f, 3f), new(1f, 0.3f), new(0, 100), new(0.9f, 1f), Event_OnDustCreate, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
+            pv_DustMExplosion = new DustMaker(new(20, 25), new(Vector2.Zero, Projectile.Size), 5, 5, Color.DodgerBlue, new(-1f, 1f), new(1f, -0.3f), new(0, 100), new(1.2f, 1.6f), Event_OnDustCreate, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
+            pv_DustMTravel = new DustMaker(new(4, 8), new(Vector2.Zero, Projectile.Size), 5, 5, Color.DodgerBlue, new(-3f, 3f), new(1f, 0.3f), new(0, 100), new(0.9f, 1f), Event_OnDustCreate, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
         }
 
 #pragma warning disable IDE0044

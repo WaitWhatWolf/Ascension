@@ -87,7 +87,7 @@ namespace Ascension.Players
         /// Returns the normal stand projectile of this stand.
         /// </summary>
         /// <returns></returns>
-        public Projectile GetStandProjectile() => pv_InstancedStand.Projectile;
+        public Projectile GetStandProjectile() => pv_InstancedStand?.Projectile;
 
         /// <summary>
         /// Returns the current movement AI used by the stand.
@@ -194,13 +194,19 @@ namespace Ascension.Players
                         Vector2.Zero, ModContent.ProjectileType<StarPlatinum>(), GetStat(STAND_STAT_DAMAGE), 
                         GetSingleStat(STAND_STAT_KNOCKBACK));
                     pv_InstancedStand = (StarPlatinum)Main.projectile[pv_InstancedStandIndex].ModProjectile;
-                    pv_InstancedStand.SetupStand(Owner.Player, this);
-                    
+                    break;
+                case StandID.KILLER_QUEEN:
+                    pv_InstancedStandIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Owner, this), Owner.Player.Center,
+                        Vector2.Zero, ModContent.ProjectileType<KillerQueen>(), GetStat(STAND_STAT_DAMAGE),
+                        GetSingleStat(STAND_STAT_KNOCKBACK));
+
+                    pv_InstancedStand = (KillerQueen)Main.projectile[pv_InstancedStandIndex].ModProjectile;
                     break;
                 default: Active = false; break;
             }
 
 
+            pv_InstancedStand.SetupStand(Owner.Player, this);
             SoundEngine.PlaySound(pv_InstancedStandIndex, Owner.Player.Center);
             StandMenu.ActivateMenu();
         }

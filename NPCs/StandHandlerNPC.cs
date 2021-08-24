@@ -1,6 +1,7 @@
 ﻿using Ascension.Attributes;
 using Ascension.Buffs.StandUnique;
 using Ascension.Enums;
+using Ascension.Interfaces;
 using Ascension.Players;
 using Ascension.World;
 using System;
@@ -23,6 +24,8 @@ namespace Ascension.NPCs
 
         public override bool InstancePerEntity => true;
 
+        public NPC NPC { get; private set; }
+
         public void AddDebuff(StandBuff debuff) 
         {
             if (Debuffs.Contains(debuff))
@@ -32,18 +35,22 @@ namespace Ascension.NPCs
             debuff.Init();
             Debuffs.Add(debuff);
 
-            Debug.Log($"{this.Name} is now debuffed with {debuff.GetType().Name}");
+            if(debuff is IDebuggable)
+                Debug.Log($"{this.Name} is now debuffed with {debuff.GetType().Name}");
         }
 
         public override bool PreAI(NPC npc)
         {
             bool toReturn = true;
 
+            NPC = npc;
+
             for (int i = 0; i < Debuffs.Count; i++)
             {
                 if (Debuffs[i].AllowRemove())
                 {
-                    Debug.Log($"{npc.FullName} is no longer debuffed with {Debuffs[i].GetType().Name}");
+                    if(Debuffs[i] is IDebuggable)
+                        Debug.Log($"{npc.FullName} is no longer debuffed with {Debuffs[i].GetType().Name}");
                     
                     Debuffs.RemoveAt(i);
                     continue;

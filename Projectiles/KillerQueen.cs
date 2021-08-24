@@ -4,8 +4,11 @@ using Terraria;
 
 namespace Ascension.Projectiles
 {
+    /// <summary>
+    /// Stand projectile for Killer Queen.
+    /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
-    public sealed class StarPlatinum : StandProjectile
+    public sealed class KillerQueen : StandProjectile
     {
         /// <inheritdoc/> //Not sure what to put as desc here lol
         public override void SetStaticDefaults()
@@ -21,6 +24,8 @@ namespace Ascension.Projectiles
             Projectile.DamageType = Terraria.ModLoader.DamageClass.Melee;
             base.SetDefaults();
         }
+
+        public override bool MinionContactDamage() => false;
 
         public override bool CloneNewInstances => true;
 
