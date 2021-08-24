@@ -37,6 +37,11 @@ namespace Ascension.Utility
         /// <param name="event"></param>
         public void AddEvent(Action @event) => pv_Event += @event;
 
+        public void Reset()
+        {
+            pv_CurCountdown = Countdown;
+        }
+
         /// <summary>
         /// Creates a new <see cref="ReturnCountdown"/>.
         /// </summary>

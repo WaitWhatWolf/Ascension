@@ -45,14 +45,8 @@ namespace Ascension.Players
         /// </summary>
         public virtual void Update() 
         {
-            if (!CooldownReady)
-            {
-                pr_CurrentCooldown -= ASCResources.FLOAT_PER_FRAME;
-                if(pr_CurrentCooldown <= 0)
-                {
-                    CooldownReady = true;
-                }
-            }
+            if (!CountdownReady && Countdown.CooldownDone())
+                CountdownReady = true;
         }
 
         /// <summary>
@@ -106,13 +100,13 @@ namespace Ascension.Players
         /// Returns the cooldown of this ability.
         /// </summary>
         /// <returns></returns>
-        public float GetCooldown(int truncate = 2) => Cooldown.Truncate(truncate);
+        public float GetCooldown(int truncate = 2) => Countdown.Countdown.Truncate(truncate);
 
         /// <summary>
         /// Returns the current cooldown of this ability.
         /// </summary>
         /// <returns></returns>
-        public float GetCurrentCooldown() => pr_CurrentCooldown;
+        public float GetCurrentCountdown() => Countdown.GetCurrentCountdown();
 
         /// <summary>
         /// Invoked by <see cref="AscendedPlayer.OnNewBossDefeated"/> and when the ability is created.
@@ -141,27 +135,21 @@ namespace Ascension.Players
         protected abstract bool DeactivateCondition();
 
         /// <summary>
-        /// When invoked, the cooldown timer is reset and <see cref="CooldownReady"/> is set to false.
+        /// When invoked, the cooldown timer is reset and <see cref="CountdownReady"/> is set to false.
         /// </summary>
         protected void ResetCooldown()
         {
-            pr_CurrentCooldown = Cooldown;
-            CooldownReady = false;
+            Countdown.Reset();
         }
 
         /// <summary>
         /// The cooldown of this ability.
         /// </summary>
-        protected abstract float Cooldown { get; }
+        protected abstract ReturnCountdown Countdown { get; }
 
         /// <summary>
         /// Returns true if the cooldown is off; Handled in base <see cref="Update"/>.
         /// </summary>
-        protected bool CooldownReady { get; set; }
-
-        /// <summary>
-        /// The current cooldown timer of this ability.
-        /// </summary>
-        protected float pr_CurrentCooldown;
+        protected bool CountdownReady { get; set; }
     }
 }

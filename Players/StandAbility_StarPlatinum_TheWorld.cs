@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
+using static Ascension.ASCResources.Textures;
 
 namespace Ascension.Players
 {
@@ -24,11 +25,11 @@ namespace Ascension.Players
             + "stored damage.\n"
             + Hooks.Colors.GetColoredTooltipText($"Cooldown: {GetCooldown()}", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
-        public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_TheWorld;
+        public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_STARPLATINUM_ULTIMATE);
 
-        protected override float Cooldown { get; } = 60f;
+        protected override ReturnCountdown Countdown { get; } = 60f;
 
-        protected override bool ActivateCondition() => CooldownReady;
+        protected override bool ActivateCondition() => CountdownReady;
 
         protected override bool DeactivateCondition() => pv_Duration < 0f;
 

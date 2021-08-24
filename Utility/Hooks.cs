@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,6 +17,17 @@ namespace Ascension.Utility
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 04)]
     public static class Hooks
     {
+        public static class Reflection
+        {
+            public static FieldInfo[] GetConstants(Type type)
+            {
+                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
+                     BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+                return fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToArray();
+            }
+        }
+
         public static class Collections
         {
             /// <summary>
@@ -204,9 +216,22 @@ namespace Ascension.Utility
             /// </summary>
             /// <param name="for"></param>
             /// <returns></returns>
-            public static string GetFormatClassName(IModType @for)
+            public static string GetFormatName<T>() => GetFormatName(typeof(T).Name);
+
+            /// <summary>
+            /// Returns a formatted string which separates capital letters with a space.
+            /// </summary>
+            /// <param name="for"></param>
+            /// <returns></returns>
+            public static string GetFormatName(object obj) => GetFormatName(obj.GetType().Name);
+
+            /// <summary>
+            /// Returns a formatted string which separates capital letters with a space.
+            /// </summary>
+            /// <param name="for"></param>
+            /// <returns></returns>
+            public static string GetFormatName(string name)
             {
-                string name = @for.GetType().Name;
                 int classTypeIndex = name.IndexOf('_'); //This looks if a class starts with "Item_", "Projectile_", "Tile_", etc...
                 if (classTypeIndex != -1)
                     name = name[(classTypeIndex + 1)..];
@@ -218,7 +243,7 @@ namespace Ascension.Utility
 
                 string toReturn = name;
 
-                foreach(Match match in matches)
+                foreach (Match match in matches)
                 {
                     toReturn = toReturn.Insert(match.Index + 1, " ");
                 }
@@ -407,6 +432,10 @@ namespace Ascension.Utility
             /// Color used to refer to debuffs.
             /// </summary>
             public static readonly Color Tooltip_Debuff = Color.OrangeRed;
+            /// <summary>
+            /// Color used to refer to either delays or non-standard countdown.
+            /// </summary>
+            public static readonly Color Tooltip_Delay = Color.DeepPink;
             #endregion
 
             /// <summary>
@@ -419,6 +448,35 @@ namespace Ascension.Utility
             {
                 //[c/FF0000:Colors ]
                 return $"[c/{color.Hex3()}:{text}]";
+            }
+
+            /// <summary>
+            /// Returns a colored text for item tooltips, which supports multi-line strings.
+            /// </summary>
+            /// <param name="text">The original text.</param>
+            /// <param name="color">Color used for the text.</param>
+            /// <returns></returns>
+            public static string GetColoredTooltipMultilineText(string text, Color color)
+            {
+                if (!text.Contains('\n'))
+                    return GetColoredTooltipText(text, color);
+
+                string toReturn = string.Empty;
+                Regex regex = new(@"(\n|^).*");
+                Match match = regex.Match(text);
+
+                while(true)
+                {
+                    toReturn += $"[c/{color.Hex3()}:{match.Value.Replace("\n", string.Empty)}]";
+                    Match nextMatch = match.NextMatch();
+                    if (!nextMatch.Success)
+                        break;
+
+                    toReturn += '\n';
+                    match = nextMatch;
+                }
+
+                return toReturn;
             }
 
             /// <summary>

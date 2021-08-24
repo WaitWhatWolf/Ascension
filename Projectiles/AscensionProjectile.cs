@@ -34,6 +34,6 @@ namespace Ascension.Projectiles
         /// <summary>
         /// The default display name of this projectile; Points to <see cref="Hooks.Text.GetFormatClassName(IModType)"/> by default.
         /// </summary>
-        protected virtual string DisplayNameDefault => Hooks.Text.GetFormatClassName(this);
+        protected virtual string DisplayNameDefault => Hooks.Text.GetFormatName(this);
     }
 }

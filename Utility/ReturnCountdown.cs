@@ -26,6 +26,11 @@ namespace Ascension.Utility
         /// <inheritdoc/>
         public float GetCurrentCountdown() => pv_CurCountdown;
 
+        public void Reset()
+        {
+            pv_CurCountdown = Countdown;
+        }
+
         /// <summary>
         /// Creates a new <see cref="ReturnCountdown"/>.
         /// </summary>

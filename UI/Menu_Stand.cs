@@ -9,6 +9,7 @@ using System.Linq;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+using static Ascension.ASCResources.Textures;
 
 namespace Ascension.UI
 {
@@ -49,7 +50,7 @@ namespace Ascension.UI
             {
                 StandAbility ability = pv_Stand.Abilities[i];
 
-                float abilityCurrentCooldown = ability.GetCurrentCooldown();
+                float abilityCurrentCooldown = ability.GetCurrentCountdown();
                 pv_AbilityCooldowns[i - 1].SetText(abilityCurrentCooldown <= 0 ? string.Empty : abilityCurrentCooldown.Truncate(1).ToString());
             }
         }
@@ -63,7 +64,7 @@ namespace Ascension.UI
             pv_AbilityKeys = new UIText[pv_Stand.Abilities.Length];
             pv_AbilityCooldowns = new UIText[pv_Stand.Abilities.Length];
 
-            pv_BackgroundImage = new UIImage(ASCResources.Textures.Stand_Menu_Background);
+            pv_BackgroundImage = new UIImage(GetTexture(STAND_MENU_BACKGROUND));
             pv_BackgroundImage.Left.Set(0, 0f);
             pv_BackgroundImage.Width.Set(DimensionWidth, 0f);
             pv_BackgroundImage.Top.Set(0, 0f);

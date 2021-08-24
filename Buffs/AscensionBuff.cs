@@ -38,7 +38,7 @@ namespace Ascension.Buffs
         /// <summary>
         /// The default display name of this item; Points to <see cref="Hooks.Text.GetFormatClassName(IModType)"/> by default.
         /// </summary>
-        protected virtual string DisplayNameDefault => Hooks.Text.GetFormatClassName(this);
+        protected virtual string DisplayNameDefault => Hooks.Text.GetFormatName(this);
         /// <summary>
         /// The default tooltip of this item.
         /// </summary>

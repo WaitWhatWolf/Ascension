@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using static Ascension.ASCResources.Players;
 using static Ascension.ASCResources.Stats;
+using static Ascension.ASCResources.Textures;
 
 namespace Ascension.Players
 {
@@ -135,9 +136,6 @@ namespace Ascension.Players
         {
             int toReturn = 1;
 
-            if(Level <= 1)
-                Level++;
-
             if(debugUpgrade)
             {
                 Debug.Log($"{Name} has leveled up! (Current Level: {Level})");
@@ -166,6 +164,12 @@ namespace Ascension.Players
         /// <param name="debugUnlock"></param>
         public void UnlockAbility(int index, bool debugUnlock = true)
         {
+            if (index >= Owner.UnlockedStandAbility.Length)
+            {
+                Debug.LogWarning($"There is no ability at index {index}.");
+                return;
+            }
+
             if (!Owner.UnlockedStandAbility[index])
             {
                 Owner.UnlockedStandAbility[index] = true;
@@ -195,6 +199,7 @@ namespace Ascension.Players
                     break;
                 default: Active = false; break;
             }
+
 
             SoundEngine.PlaySound(pv_InstancedStandIndex, Owner.Player.Center);
             StandMenu.ActivateMenu();
@@ -289,8 +294,21 @@ namespace Ascension.Players
                     AIrange.Value = 200f;
                     movespeed.Value = 20f;
 
-                    pv_InvokeSoundIndex = ASCResources.Sound.Stand_StarPlatinum_Invoke_Index;
-                    Portrait = ASCResources.Textures.Stand_Portrait_StarPlatinum;
+                    pv_InvokeSoundIndex = ASCResources.Sound.Stand_Invoke_Index_StarPlatinum;
+                    Portrait = GetTexture(STAND_PORTRAIT_STARPLATINUM);
+                    break;
+
+                case StandID.KILLER_QUEEN:
+                    damage.Value = 5f;
+                    attackrange.Value = 40;
+                    armorpen.Value = 20;
+                    attackspeed.Value = 30;
+                    knockback.Value = 5f;
+                    AIrange.Value = 500f;
+                    movespeed.Value = 10f;
+
+                    pv_InvokeSoundIndex = ASCResources.Sound.Stand_Invoke_Index_KillerQueen;
+                    Portrait = GetTexture(STAND_PORTRAIT_KILLERQUEEN);
                     break;
             }
 
@@ -318,6 +336,12 @@ namespace Ascension.Players
                         new StandAbility_StarPlatinum_ORA(this),
                         new StandAbility_StarPlatinum_Receipt(this),
                         new StandAbility_StarPlatinum_TheWorld(this),
+                    };
+                    break;
+                case StandID.KILLER_QUEEN:
+                    Abilities = new StandAbility[]
+                    {
+                        new StandAbility_KillerQueen_BombTransmutation(this),
                     };
                     break;
             }

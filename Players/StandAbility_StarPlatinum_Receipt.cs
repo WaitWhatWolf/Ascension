@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Terraria;
 using static Ascension.ASCResources;
 using static Ascension.ASCResources.Stats;
+using static Ascension.ASCResources.Textures;
 
 namespace Ascension.Players
 {
@@ -27,16 +28,16 @@ namespace Ascension.Players
             + "\n\n"
             + Hooks.Colors.GetColoredTooltipText("Here's Your Receipt.", Hooks.Colors.Tooltip_Quote);
 
-        public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_Receipt;
+        public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_STARPLATINUM_ABILITY2);
 
         public StandAbility_StarPlatinum_Receipt(Stand stand) : base(stand)
         {
 
         }
 
-        protected override float Cooldown { get; } = 12f;
+        protected override ReturnCountdown Countdown { get; } = 12f;
 
-        protected override bool ActivateCondition() => CooldownReady;
+        protected override bool ActivateCondition() => CountdownReady;
 
         protected override bool DeactivateCondition() => pv_CurrentDuration <= 0f && Active;
 

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
@@ -146,6 +147,7 @@ namespace Ascension
                 {
                     StandID.STAR_PLATINUM => "Star Platinum",
                     StandID.THE_WORLD => "The World",
+                    StandID.KILLER_QUEEN => "Killer Queen",
                     StandID.MAGICIANS_RED => "Magician's Red",
                     _ => string.Empty
                 };
@@ -153,9 +155,33 @@ namespace Ascension
             public static string GetStandDescription(StandID id)
                 => id switch
                 {
-                    StandID.STAR_PLATINUM => "Star Platinum, a stand which excels at\neverything outside of range.\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.Tooltip_Class) + "\n\n" + Hooks.Colors.GetColoredTooltipText("Good grief.", Hooks.Colors.Tooltip_Quote),
+                    StandID.STAR_PLATINUM => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) 
+                    + ", a stand which excels at\neverything outside of range.\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.Tooltip_Class) 
+                    + "\n\n" 
+                    + Hooks.Colors.GetColoredTooltipText("Good grief.", Hooks.Colors.Tooltip_Quote),
                     StandID.THE_WORLD => "The World",
                     StandID.MAGICIANS_RED => "Magician's Red",
+                    StandID.KILLER_QUEEN => Hooks.Colors.GetColoredTooltipText("Killer Queen", Hooks.Colors.Tooltip_Stand_Title) 
+                    + " is a stand which focuses primarily on the offensive,\nusing utility for defense rather than tough skin."
+                    + "\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.Tooltip_Class)
+                    + "\n\n"
+                    + Hooks.Colors.GetColoredTooltipMultilineText("My name is Yoshikage Kira. I'm 33 years old." 
+                    + "\nMy house is in the northeast section of Morioh," 
+                    + "\nwhere all the villas are, and I am not married." 
+                    + "\nI work as an employee for the Kame Yu department stores," 
+                    + "\nand I get home every day by 8 PM at the latest."
+                    + "\nI don't smoke, but I occasionally drink."
+                    + "\nI'm in bed by 11 PM, and make sure I get eight hours of sleep, no matter what."
+                    + "\nAfter having a glass of warm milk"
+                    + "\nand doing about twenty minutes of stretches before going to bed,"
+                    + "\nI usually have no problems sleeping until morning."
+                    + "\nJust like a baby, I wake up without any fatigue or stress in the morning."
+                    + "\nI was told there were no issues at my last check-up."
+                    + "\nI'm trying to explain that I'm a person who wishes to live a very quiet life."
+                    + "\nI take care not to trouble myself with any enemies," 
+                    + "\nlike winning and losing, that would cause me to lose sleep at night."
+                    + "\nThat is how I deal with society, and I know that is what brings me happiness."
+                    + "\nAlthough, if I were to fight I wouldn't lose to anyone.", Hooks.Colors.Tooltip_Quote),
                     _ => string.Empty
                 };
 
@@ -169,6 +195,13 @@ namespace Ascension
                         s.Owner.Player.GetKnockback<MeleeDamageClass>() += (0.2f * s.Level);
                         s.Owner.Player.GetCritChance<MeleeDamageClass>() += (5 * s.Level);
                         s.Owner.Player.statDefense += (5 * s.Level);
+                    },
+                    StandID.KILLER_QUEEN => (s) =>
+                    {
+                        s.Owner.Player.GetDamage<MeleeDamageClass>() += (0.15f * s.Level);
+                        s.Owner.Player.GetKnockback<MeleeDamageClass>() += (0.25f * s.Level);
+                        s.Owner.Player.GetCritChance<MeleeDamageClass>() += (7 * s.Level);
+                        s.Owner.Player.statDefense -= (2 * s.Level);
                     }
                     ,
                     _ => throw new Exception("Cannot set stat updater for a undefined stand."),
@@ -198,6 +231,15 @@ namespace Ascension
                 return toUse;
             }
 
+            /// <summary>
+            /// This is here so that the player doesn't break when he rolls an unfinished/experimental stand.
+            /// </summary>
+            public static readonly StandID[] UsableStands = new StandID[]
+            {
+                StandID.STAR_PLATINUM,
+                StandID.KILLER_QUEEN
+            };
+
             private static bool CreateStand(AscendedPlayer player, StandID id, bool debugStandName)
             {
                 if (player.in_IsStandUser)
@@ -215,7 +257,7 @@ namespace Ascension
 
                 if (id == StandID.NEWBIE) //Randomizes the stand if none were passed
                 {
-                    id = (StandID)GlobalRandom.Next(0, (int)StandID.HIEROPHANT_GREEN);
+                    id = UsableStands.Random();
                 }
 
                 player.in_Stand = new Stand(player, id);
@@ -361,39 +403,39 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
         public static class Textures
         {
-            public static Asset<Texture2D> Stand_Ability_StarPlatinum_Punch { get; private set; }
-            public static Asset<Texture2D> Stand_Ability_StarPlatinum_ORA { get; private set; }
-            public static Asset<Texture2D> Stand_Ability_StarPlatinum_Receipt { get; private set; }
-            public static Asset<Texture2D> Stand_Ability_StarPlatinum_TheWorld { get; private set; }
-            public static Asset<Texture2D> Stand_Portrait_StarPlatinum { get; private set; }
-            public static Asset<Texture2D> Stand_Menu_Background { get; private set; }
+            public static Asset<Texture2D> GetTexture(string path) => pv_Textures[path];
 
             public static void Load(Ascension ascension)
             {
-                Stand_Ability_StarPlatinum_Punch = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_PUNCH);
-                Stand_Ability_StarPlatinum_ORA = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_ORA);
-                Stand_Ability_StarPlatinum_Receipt = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_RECEIPT);
-                Stand_Ability_StarPlatinum_TheWorld = ascension.Assets.Request<Texture2D>(STAND_ABILITY_STARPLATINUM_THEWORLD);
-                Stand_Portrait_StarPlatinum = ascension.Assets.Request<Texture2D>(STAND_PORTRAIT_STARPLATINUM);
-                Stand_Menu_Background = ascension.Assets.Request<Texture2D>(STAND_MENU_BACKGROUND);
+                FieldInfo[] properties = Hooks.Reflection.GetConstants(typeof(Textures));
+                foreach(FieldInfo property in properties)
+                {
+                    if (property.Name.Any(char.IsLower))
+                        continue;
+
+                    string val = (string)property.GetValue(null);
+                    System.Diagnostics.Debug.WriteLine(val);
+                    Asset<Texture2D> texture = ascension.Assets.Request<Texture2D>(val);
+                    pv_Textures.Add(val, texture);
+                }
             }
 
             public static void Unload()
             {
-                Stand_Ability_StarPlatinum_Punch = null;
-                Stand_Ability_StarPlatinum_ORA = null;
-                Stand_Ability_StarPlatinum_Receipt = null;
-                Stand_Ability_StarPlatinum_TheWorld = null;
-                Stand_Portrait_StarPlatinum = null;
-                Stand_Menu_Background = null;
+                pv_Textures.Clear();
             }
 
-            private const string STAND_ABILITY_STARPLATINUM_PUNCH = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
-            private const string STAND_ABILITY_STARPLATINUM_ORA = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
-            private const string STAND_ABILITY_STARPLATINUM_RECEIPT = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Receipt";
-            private const string STAND_ABILITY_STARPLATINUM_THEWORLD = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_TheWorld";
-            private const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
-            private const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
+            public const string STAND_ABILITY_STARPLATINUM_BASIC = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
+            public const string STAND_ABILITY_STARPLATINUM_ABILITY1 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
+            public const string STAND_ABILITY_STARPLATINUM_ABILITY2 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Receipt";
+            public const string STAND_ABILITY_STARPLATINUM_ULTIMATE = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_TheWorld";
+            public const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
+
+            public const string STAND_ABILITY_KILLERQUEEN_BASIC = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_BombTransmutation";
+            public const string STAND_PORTRAIT_KILLERQUEEN = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_KillerQueen";
+            public const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
+
+            private static readonly Dictionary<string, Asset<Texture2D>> pv_Textures = new();
         }
 
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 06)]
@@ -500,17 +542,21 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
         public static class Sound
         {
-            public const string STAND_STARPLATINUM_INVOKE = ASSETS_PATH_SOUND_CUSTOM + "Stand_StarPlatinum_Invoke";
+            public const string STAND_INVOKE_STARPLATINUM = ASSETS_PATH_SOUND_CUSTOM + "Stand_Invoke_StarPlatinum";
+            public const string STAND_INVOKE_KILLERQUEEN = ASSETS_PATH_SOUND_CUSTOM + "Stand_Invoke_KillerQueen";
 
-            public static int Stand_StarPlatinum_Invoke_Index { get; private set; }
+            public static int Stand_Invoke_Index_StarPlatinum { get; private set; }
+            public static int Stand_Invoke_Index_KillerQueen { get; private set; }
 
             public static Dictionary<int, AscensionSound> Sounds { get; } = new();
 
             public static void Load(Ascension ascension)
             {
                 //AscensionSound as_StarPlatinum_Invoke;
-                ascension.AddSound(SoundType.Custom, STAND_STARPLATINUM_INVOKE);
-                Stand_StarPlatinum_Invoke_Index = SoundLoader.GetSoundSlot(SoundType.Custom, STAND_STARPLATINUM_INVOKE);
+                ascension.AddSound(SoundType.Custom, STAND_INVOKE_STARPLATINUM);
+                ascension.AddSound(SoundType.Custom, STAND_INVOKE_KILLERQUEEN);
+                Stand_Invoke_Index_StarPlatinum = SoundLoader.GetSoundSlot(SoundType.Custom, STAND_INVOKE_STARPLATINUM);
+                Stand_Invoke_Index_KillerQueen = SoundLoader.GetSoundSlot(SoundType.Custom, STAND_INVOKE_KILLERQUEEN);
                 //Sounds.Add(Stand_StarPlatinum_Invoke_Index, as_StarPlatinum_Invoke);
             }
 

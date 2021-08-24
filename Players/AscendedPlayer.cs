@@ -127,7 +127,7 @@ namespace Ascension.Players
         public override void UpdateDead()
         {
             base.UpdateDead();
-            in_Stand.Recall();
+            if(in_IsStandUser) in_Stand.Recall();
         }
 
         public override void OnRespawn(Player player)

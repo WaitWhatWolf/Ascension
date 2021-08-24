@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Terraria;
 using static Ascension.ASCResources.Stats;
 using static Ascension.ASCResources;
+using static Ascension.ASCResources.Textures;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Ascension.Attributes;
@@ -22,11 +23,11 @@ namespace Ascension.Players
         public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) + " quicky rushes to it's stand user\nand punches any nearby enemy with massive damage & knockback.\n"
             + Hooks.Colors.GetColoredTooltipText($"Cooldown: {GetCooldown()}", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
-        protected override float Cooldown { get; } = 10f;
+        protected override ReturnCountdown Countdown { get; } = 10f;
 
-        public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_ORA;
+        public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_STARPLATINUM_ABILITY1);
 
-        protected override bool ActivateCondition() => CooldownReady;
+        protected override bool ActivateCondition() => CountdownReady;
 
         protected override bool DeactivateCondition() => pv_DeactivateReady;
 

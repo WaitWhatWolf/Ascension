@@ -19,5 +19,9 @@ namespace Ascension.Interfaces
         /// The amount of time that the countdown will be counted down for.
         /// </summary>
         float Countdown { get; }
+        /// <summary>
+        /// Resets the cooldown and makes it start over.
+        /// </summary>
+        void Reset();
     }
 }

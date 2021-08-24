@@ -7,6 +7,7 @@ using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
 using static Ascension.ASCResources.Stats;
+using static Ascension.ASCResources.Textures;
 
 namespace Ascension.Players
 {
@@ -18,7 +19,7 @@ namespace Ascension.Players
         public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) + "'s bread & butter: Just punching.\nAttacks all nearby enemies repeatedly.\n"
             + Hooks.Colors.GetColoredTooltipText($"Attacks every {GetCooldown()}s.", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
-        public override Asset<Texture2D> Icon => ASCResources.Textures.Stand_Ability_StarPlatinum_Punch;
+        public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_STARPLATINUM_BASIC);
 
         public StandAbility_StarPlatinum_Punch(Stand stand) : base(stand)
         {
@@ -27,9 +28,9 @@ namespace Ascension.Players
             stand.SetBaseMovementAI(MovementAI);
         }
 
-        protected override float Cooldown => pv_UTDCooldown;
+        protected override ReturnCountdown Countdown => pv_UTDCooldown;
 
-        protected override bool ActivateCondition() => CooldownReady && pv_Target != null && pv_DistFromTarget <= pv_StandAttackRange;
+        protected override bool ActivateCondition() => CountdownReady && pv_Target != null && pv_DistFromTarget <= pv_StandAttackRange;
 
         protected override bool DeactivateCondition() => Active;
 
