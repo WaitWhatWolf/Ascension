@@ -9,6 +9,7 @@ using Terraria.DataStructures;
 using Ascension.Enums;
 using Ascension.Attributes;
 using static Ascension.ASCResources;
+using Ascension.Internal;
 
 namespace Ascension.Items.Weapons
 {
@@ -29,7 +30,7 @@ namespace Ascension.Items.Weapons
         public override void SetDefaults()
         {
             Item.damage = 24;
-            Item.DamageType = DamageClass.Throwing;
+            Item.DamageType = ModContent.GetInstance<UmbralDamageClass>();
             Item.width = 40;
             Item.height = 40;
             Item.useTime = 40;

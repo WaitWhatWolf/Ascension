@@ -2,6 +2,7 @@
 using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Items;
+using Ascension.Items.Weapons;
 using Ascension.Players;
 using Ascension.Sound;
 using Ascension.Utility;
@@ -43,7 +44,7 @@ namespace Ascension
         /// <summary>
         /// Float value which would amount to 1f if called every frame. (Assuming the game runs at a smooth 60fps)
         /// </summary>
-        public const float FLOAT_PER_FRAME = 1f / 60f;
+        public const float FLOAT_PER_FRAME = 0.0166666f;
 
         /// <summary>
         /// Returns the mouse position in vector value.
@@ -106,6 +107,12 @@ namespace Ascension
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             };
         
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 24)]
+        public static class Items
+        {
+            public const string TOOLTIP_PARASITESLIMEWEAPON = "\nParasites do not attack slimes.";
+        }
+
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
         public static class Reflection
         {
@@ -293,44 +300,62 @@ namespace Ascension
             /// <summary>
             /// Loads all repices.
             /// </summary>
-            public static void Load() //Add any recipe-adding in this method
+            internal static void Load() //Add any recipe-adding in this method
             {
-                Item_RedHotChiliPepper redHotChiliPepper = ModContent.GetInstance<Item_RedHotChiliPepper>();
+                PropertyInfo[] properties = typeof(Recipes).GetProperties(BindingFlags.NonPublic | BindingFlags.Static);
 
-                redHotChiliPepper.CreateRecipe(1)
-                    .AddRecipeGroup(RECIPE_GROUP_DEMONBARS, 10)
-                    .AddRecipeGroup(RECIPE_GROUP_DEMONFRAGMENTS, 15)
-                    .AddTile(TileID.DemonAltar)
-                    .Register();
+                foreach(PropertyInfo property in properties)
+                {
+                    if(!property.Name.StartsWith("RC_"))
+                        continue;
+
+                    object rc = property.GetValue(null);
+                    FieldInfo field = rc.GetType().GetField("Recipe");
+                    Recipe recipe = field.GetValue(rc) as Recipe;
+                    recipe.Register();
+                }
             }
 
-            public static void LoadRecipeGroups()
+            internal static void LoadRecipeGroups()
             {
-                RecipeGroup demonFragments = new (() => Language.GetTextValue("LegacyMisc.37") + " Demon Fragment", new int[]
-                {
-                    ItemID.ShadowScale,
-                    ItemID.TissueSample
-                });
-                
-                RecipeGroup demonBars = new (() => Language.GetTextValue("LegacyMisc.37") + " Demonic Bar", new int[]
-                {
-                    ItemID.DemoniteBar,
-                    ItemID.CrimtaneBar
-                });
+                PropertyInfo[] properties = typeof(Recipes).GetProperties(BindingFlags.Static | BindingFlags.NonPublic);
 
-                RecipeGroup.RegisterGroup(RECIPE_GROUP_DEMONFRAGMENTS, demonFragments);
-                RecipeGroup.RegisterGroup(RECIPE_GROUP_DEMONBARS, demonBars);
+                foreach(PropertyInfo property in properties)
+                {
+                    if (!property.Name.StartsWith("RGC_"))
+                        continue;
+
+                    RecipeGroupCreator rgc = (RecipeGroupCreator)property.GetValue(null);
+                    RecipeGroup.RegisterGroup(rgc.CodeName, rgc.Recipe);
+                }
             }
 
             /// <summary>
             /// Opposite of <see cref="Load"/> lol
             /// </summary>
-            public static void Unload() //If you added anything in Load(), you should add an unloading of the same thing here
+            internal static void Unload() //If you added anything in Load(), you should add an unloading of the same thing here
             {
             }
 
-            public const string RECIPE_GROUP_DEMONFRAGMENTS = "Ascension:DemonFragments";
-            public const string RECIPE_GROUP_DEMONBARS = "Ascension:DemonBars";
+            private static RecipeGroup CreateRecipeGroup(string name, params int[] IDs)
+                => new(() => Language.GetTextValue("LegacyMisc.37") + ' ' + name, IDs);
+
+            public const string GROUP_DEMONFRAGMENTS = "Ascension:DemonFragments";
+            public const string GROUP_DEMONBARS = "Ascension:DemonBars";
+            public const string GROUP_GOLDBARS = "Ascension:GoldBars";
+
+#pragma warning disable IDE0051
+            private static RecipeCreator<Item_RedHotChiliPepper> RC_RedHotChiliPepper => new(1, (r) => r.AddRecipeGroup(GROUP_DEMONBARS, 10)
+                    .AddRecipeGroup(GROUP_DEMONFRAGMENTS, 15)
+                    .AddTile(TileID.DemonAltar));
+
+            private static RecipeCreator<Item_ParasiteSlimeBar> RC_ParasiteSlimeBar => new(4, (r) => r.AddRecipeGroup(GROUP_GOLDBARS, 4).AddIngredient<Item_ParasiteSlimeSample>(1).AddTile(TileID.Solidifier));
+            private static RecipeCreator<Item_ParasiteSlimeJavelin> RC_ParasiteSlime => new(1, (r) => r.AddIngredient<Item_ParasiteSlimeBar>(10).AddTile(TileID.Solidifier));
+
+            private static RecipeGroupCreator RGC_DemonFragments => new(GROUP_DEMONFRAGMENTS, CreateRecipeGroup("Demon Fragment", ItemID.ShadowScale, ItemID.TissueSample));
+            private static RecipeGroupCreator RGC_DemonBars => new(GROUP_DEMONBARS, CreateRecipeGroup("Demon Bar", ItemID.DemoniteBar, ItemID.CrimtaneBar));
+            private static RecipeGroupCreator RGC_GoldBars => new(GROUP_GOLDBARS, CreateRecipeGroup("Gold Bar", ItemID.GoldBar, ItemID.PlatinumBar));
+#pragma warning restore IDE0051
         }
 
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]

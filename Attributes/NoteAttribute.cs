@@ -7,7 +7,7 @@ namespace Ascension.Attributes
     /// <summary>
     /// Used as a "note" in attribute form.
     /// </summary>
-    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10), AttributeUsage(AttributeTargets.All)]
+    [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10), AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
     public sealed class NoteAttribute : Attribute, IMadeBy
     {
         public Dev Dev { get; }

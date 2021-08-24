@@ -47,21 +47,21 @@ namespace Ascension.Utility
             /// <param name="alpha"></param>
             /// <param name="scale"></param>
             /// <param name="onCreate"></param>
-            public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, Color color, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null)
+            public static void CreateDust(IntRange amount, Vector2Range position, int width, int height, Color color, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null, params int[] types)
             {
                 int max = amount.GetRandom();
                 for (int i = 0; i < max; i++)
                 {
-                    int dust = Dust.NewDust(position.GetRandom(), width, height, type, speedX.GetRandom(), speedY.GetRandom(), alpha.GetRandom(), color, scale.GetRandom());
+                    int dust = Dust.NewDust(position.GetRandom(), width, height, Hooks.Collections.Random(types), speedX.GetRandom(), speedY.GetRandom(), alpha.GetRandom(), color, scale.GetRandom());
                     onCreate?.Invoke(Main.dust[dust]);
                 }
             }
 
             public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null)
-                => CreateDust(type, amount, position, width, height, default, speedX, speedY, alpha, scale, onCreate);
+                => CreateDust(amount, position, width, height, default, speedX, speedY, alpha, scale, onCreate, type);
             
             public static void CreateDust(int type, IntRange amount, Vector2Range position, int width, int height, FloatRange speedX, FloatRange speedY, Action<Dust> onCreate = null)
-                => CreateDust(type, amount, position, width, height, default, speedX, speedY, 0, 1f, onCreate);
+                => CreateDust(amount, position, width, height, default, speedX, speedY, 0, 1f, onCreate, type);
 
             /// <summary>
             /// Returns a chance which rolls count times. (0-1 scale)
@@ -132,11 +132,40 @@ namespace Ascension.Utility
                 return toReturn;
             }
 
+            public static void ApplyModBuffToAllWithin(int type, object attacker, Vector2 center, float within, int duration)
+            {
+                foreach (NPC npc in Hooks.InGame.GetAllWithin(attacker, center, within))
+                {
+                    npc.AddBuff(type, duration);
+                }
+            }
+
+            public static void ApplyModBuffToAllWithin(int type, object attacker, Vector2 center, float within, int duration, Predicate<NPC> match)
+            {
+                if (match == null)
+                    throw new ArgumentNullException("Cannot pass a null match to ApplyModBuffToAllWithin; Use the method without a Predicate instead.");
+                
+                foreach (NPC npc in Hooks.InGame.GetAllWithin(attacker, center, within))
+                {
+                    if (match(npc)) npc.AddBuff(type, duration);
+                }
+            }
+
             public static void ApplyModBuffToAllWithin<T>(object attacker, Vector2 center, float within, int duration) where T : ModBuff
             {
                 foreach (NPC npc in Hooks.InGame.GetAllWithin(attacker, center, within))
                 {
                     npc.AddBuff(ModContent.BuffType<T>(), duration);
+                }
+            }
+
+            public static void ApplyModBuffToAllWithin<T>(object attacker, Vector2 center, float within, int duration, Predicate<NPC> match) where T : ModBuff
+            {
+                if (match == null)
+                    throw new ArgumentNullException("Cannot pass a null match to ApplyModBuffToAllWithin; Use the method without a Predicate instead.");
+                foreach (NPC npc in Hooks.InGame.GetAllWithin(attacker, center, within))
+                {
+                    if(match(npc)) npc.AddBuff(ModContent.BuffType<T>(), duration);
                 }
             }
         }
