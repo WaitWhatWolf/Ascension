@@ -3,16 +3,16 @@ using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Items.Rarities;
 using Ascension.Projectiles;
-using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Ascension.ASCResources.Items;
 
-namespace Ascension.Items
+namespace Ascension.Items.Weapons
 {
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
     public sealed class Item_ParasiteSlimeJavelin : AscensionItem
     {
-        protected override string TooltipDefault { get; } = "Throws Slime Javelins which explode on impact.\nExplosions create worms that lach onto enemies.";
+        protected override string TooltipDefault { get; } = "Throws Slime Javelins which explode on impact.\nExplosions create worms that lach onto enemies." + TOOLTIP_PARASITESLIMEWEAPON;
         protected override int JourneyCheatCount { get; } = 1;
         protected override string TextureSubFolder { get; } = ASCResources.ASSETS_SUBPATH_WEAPONS;
 
