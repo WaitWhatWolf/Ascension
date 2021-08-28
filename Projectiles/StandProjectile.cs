@@ -71,8 +71,8 @@ namespace Ascension.Projectiles
         /// </summary>
         protected virtual void OnBossDefeated(string name)
         {
-			Projectile.damage = pv_Stand.GetStat(STAND_STAT_DAMAGE);
-			Projectile.knockBack = pv_Stand.GetSingleStat(STAND_STAT_KNOCKBACK);
+			Projectile.damage = pv_Stand.GetDamage();
+			Projectile.knockBack = pv_Stand.GetKnockback();
 		}
 
 		protected Player pv_Owner;

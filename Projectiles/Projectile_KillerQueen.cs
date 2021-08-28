@@ -8,7 +8,7 @@ namespace Ascension.Projectiles
     /// Stand projectile for Killer Queen.
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
-    public sealed class KillerQueen : StandProjectile
+    public sealed class Projectile_KillerQueen : StandProjectile
     {
         /// <inheritdoc/> //Not sure what to put as desc here lol
         public override void SetStaticDefaults()

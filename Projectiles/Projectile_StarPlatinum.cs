@@ -5,7 +5,7 @@ using Terraria;
 namespace Ascension.Projectiles
 {
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
-    public sealed class StarPlatinum : StandProjectile
+    public sealed class Projectile_StarPlatinum : StandProjectile
     {
         /// <inheritdoc/> //Not sure what to put as desc here lol
         public override void SetStaticDefaults()

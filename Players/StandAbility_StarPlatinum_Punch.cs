@@ -27,7 +27,7 @@ namespace Ascension.Players
 
         protected override ReturnCountdown Countdown => pv_UTDCooldown;
 
-        protected override bool ActivateCondition() => CountdownReady && StandMoveTarget != null && StandMoveTargetDist <= pv_StandAttackRange;
+        protected override bool ActivateCondition() => CountdownReady && StandMoveTarget != null && StandMoveTargetDist(true) <= pv_StandAttackRange;
 
         protected override bool DeactivateCondition() => Active;
 
@@ -48,11 +48,12 @@ namespace Ascension.Players
 
         protected override void Event_OnNewBossDefeated(string obj)
         {
-            pv_UTDCooldown = 60f / Stand.GetSingleStat(STAND_STAT_ATTACKSPEED);
-            pv_StandArmorPen = Stand.GetStat(STAND_STAT_ARMORPEN);
-            pv_StandAttackRange = Stand.GetSingleStat(STAND_STAT_ATTACKRANGE);
-            pv_StandMoveSpeed = Stand.GetSingleStat(STAND_STAT_MOVESPEED);
-            pv_StandNPCDetectionRange = Stand.GetSingleStat(STAND_STAT_AIRANGE);
+            pv_UTDCooldown = 60f / Stand.GetAttackSpeed();
+            Debug.Log(pv_UTDCooldown.Countdown);
+            pv_StandArmorPen = Stand.GetArmorPen();
+            pv_StandAttackRange = Stand.GetRange();
+            pv_StandMoveSpeed = Stand.GetSpeed();
+            pv_StandNPCDetectionRange = Stand.GetAIRange();
         }
 
         protected override float StandMoveAttackRange => pv_StandAttackRange;

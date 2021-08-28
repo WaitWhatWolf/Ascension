@@ -3,6 +3,7 @@ using Ascension.Enums;
 using Ascension.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ascension.Internal
 {
@@ -46,11 +47,11 @@ namespace Ascension.Internal
         /// <param name="value"></param>
         /// <param name="stacking"></param>
         /// <param name="affections"></param>
-        public Stat(float value, int stacking, params int[] affections)
+        public Stat(float value, int stacking, params object[] affections)
         {
-            this.pv_Value = value;
-            this.pv_Stacking = stacking;
-            this.pv_Affections = affections;
+            pv_Value = value;
+            pv_Stacking = stacking;
+            pv_Affections = affections.OfType<int>().ToArray();
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Ascension.Internal
         /// <param name="value"></param>
         public Stat(Stat stat, float value)
         {
-            this.pv_Value = value;
+            pv_Value = value;
             pv_Stacking = stat.pv_Stacking;
             pv_Affections = stat.pv_Affections;
         }
@@ -123,17 +124,16 @@ namespace Ascension.Internal
                    EqualityComparer<int[]>.Default.Equals(Affections, other.Affections);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <returns></returns>
         public override int GetHashCode()
         {
-            int hashCode = -1432848062;
-            hashCode = hashCode * -1521134295 + Value.GetHashCode();
-            hashCode = hashCode * -1521134295 + Stacking.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<int[]>.Default.GetHashCode(Affections);
-            return hashCode;
+            return HashCode.Combine(Value, Stacking, Affections);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Stat);
         }
     }
 }

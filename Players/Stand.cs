@@ -3,18 +3,17 @@ using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Projectiles;
 using Ascension.UI;
+using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Terraria;
 using Terraria.Audio;
-using Terraria.ModLoader;
 using Terraria.UI;
-using static Ascension.ASCResources.Players;
 using static Ascension.ASCResources.Stats;
-using static Ascension.ASCResources.Textures;
 
 namespace Ascension.Players
 {
@@ -22,8 +21,38 @@ namespace Ascension.Players
     /// Core class for Stands.
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
-    public sealed class Stand
+    public abstract class Stand
     {
+        /// <summary>
+        /// Standard constructor for the <see cref="Stand"/> class.
+        /// </summary>
+        /// <param name="player">The player reference to be passed in this stand.</param>
+        public Stand(AscendedPlayer player)
+        {
+            if (player == null)
+                return;
+
+            Owner = player;
+            Active = false;
+            Level = 1;
+
+            Portrait = Init_Portrait;
+            Abilities = Init_Abilities;
+            
+            if(base_stats_other != null)
+                foreach(var pair in base_stats_other)
+                {
+                    pv_Stats.Add(pair.Key, pair.Value);
+                }
+
+            if (pv_BaseMovementAI == null)
+                throw new Exception("The stand couldn't be created as there was no ability which set the base movement AI.");
+
+            StandMenuUI = new UserInterface();
+            StandMenu = new Menu_Stand(this);
+            StandMenuUI.SetState(StandMenu);
+        }
+
         /// <summary>
         /// Invoked when <see cref="UnlockAbility(int)"/> is successfully called.
         /// </summary>
@@ -40,17 +69,17 @@ namespace Ascension.Players
         /// <summary>
         /// The name of the stand.
         /// </summary>
-        public string Name { get; }
+        public abstract string Name { get; }
 
         /// <summary>
         /// The tooltip of the stand.
         /// </summary>
-        public string Description { get; }
+        public abstract string Description { get; }
 
         /// <summary>
         /// The identity of the stand.
         /// </summary>
-        public StandID ID { get; }
+        public abstract StandID ID { get; }
 
         /// <summary>
         /// The current level of the stand.
@@ -187,24 +216,9 @@ namespace Ascension.Players
         {
             Active = true;
 
-            switch (ID)
-            {
-                case StandID.STAR_PLATINUM:
-                    pv_InstancedStandIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Owner, this), Owner.Player.Center, 
-                        Vector2.Zero, ModContent.ProjectileType<StarPlatinum>(), GetStat(STAND_STAT_DAMAGE), 
-                        GetSingleStat(STAND_STAT_KNOCKBACK));
-                    pv_InstancedStand = (StarPlatinum)Main.projectile[pv_InstancedStandIndex].ModProjectile;
-                    break;
-                case StandID.KILLER_QUEEN:
-                    pv_InstancedStandIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Owner, this), Owner.Player.Center,
-                        Vector2.Zero, ModContent.ProjectileType<KillerQueen>(), GetStat(STAND_STAT_DAMAGE),
-                        GetSingleStat(STAND_STAT_KNOCKBACK));
-
-                    pv_InstancedStand = (KillerQueen)Main.projectile[pv_InstancedStandIndex].ModProjectile;
-                    break;
-                default: Active = false; break;
-            }
-
+            pv_InstancedStandIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Owner, this), Owner.Player.Center,
+                Vector2.Zero, StandProjectileType, GetDamage(), GetKnockback());
+            pv_InstancedStand = (StandProjectile)Main.projectile[pv_InstancedStandIndex].ModProjectile;
 
             pv_InstancedStand.SetupStand(Owner.Player, this);
             SoundEngine.PlaySound(pv_InstancedStandIndex, Owner.Player.Center);
@@ -230,7 +244,7 @@ namespace Ascension.Players
             if (Active)
                 pv_InstancedStand.Projectile.timeLeft = int.MaxValue;
 
-            for(int i = 0; i < Abilities.Length; i++) //i < Level <---- to revert to this
+            for(int i = 0; i < Abilities.Length; i++)
             {
                 if (!Owner.UnlockedStandAbility[i])
                     continue;
@@ -254,7 +268,7 @@ namespace Ascension.Players
         public void UpdateStats()
         {
             if (Active)
-                pv_StatUpdater(this);
+                StatUpdater();
         }
 
         /// <summary>
@@ -262,106 +276,60 @@ namespace Ascension.Players
         /// </summary>
         /// <param name="statName"></param>
         /// <returns></returns>
-        public int GetStat(string statName) => (int)Owner.Stats.CalculatedValue(pv_Stats[statName]);
+        public int GetOtherStat(string statName) => (int)Owner.Stats.CalculatedValue(pv_Stats[statName]);
 
         /// <summary>
         /// Returns a calculated float value using the owner's stats.
         /// </summary>
         /// <param name="statName"></param>
         /// <returns></returns>
-        public float GetSingleStat(string statName) => Owner.Stats.CalculatedValue(pv_Stats[statName]);
+        public float GetOtherSingleStat(string statName) => Owner.Stats.CalculatedValue(pv_Stats[statName]);
 
-        public Stand(AscendedPlayer player, StandID id)
-        {
-            Owner = player;
-            Active = false;
-            ID = id;
-            Name = GetStandName(ID);
-            Description = GetStandDescription(ID);
-            pv_StatUpdater = GetStandStatUpdater(ID);
-            Level = 1;
+        /// <summary>Returns the calculated damage of the stand.</summary><returns></returns>
+        public int GetDamage() => (int)Owner.Stats.CalculatedValue(base_stat_damage);
+        /// <summary>Returns the calculated armor penetration of the stand.</summary><returns></returns>
+        public int GetArmorPen() => (int)Owner.Stats.CalculatedValue(base_stat_armorpen);
+        /// <summary>Returns the calculated attack speed (in RPM) of the stand.</summary><returns></returns>
+        public float GetAttackSpeed() => (int)Owner.Stats.CalculatedValue(base_stat_attackspeed);
+        /// <summary>Returns the calculated knockback of the stand.</summary><returns></returns>
+        public float GetKnockback() => (int)Owner.Stats.CalculatedValue(base_stat_knockback);
+        /// <summary>Returns the attack range of the stand.</summary><returns></returns>
+        public float GetRange() => (int)Owner.Stats.CalculatedValue(base_stat_range);
+        /// <summary>Returns the calculated AI-based range of the stand.</summary><returns></returns>
+        public float GetAIRange() => (int)Owner.Stats.CalculatedValue(base_stat_airange);
+        /// <summary>Returns the calculated movement speed of the stand..</summary><returns></returns>
+        public float GetSpeed() => (int)Owner.Stats.CalculatedValue(base_stat_movespeed);
 
-            Stat damage = new(0f, STATS_STACKING_BASE, (int)Affection.Damage);
-            Stat attackrange = new(0f, STATS_STACKING_BASE, (int)Affection.Range);
-            Stat armorpen = new(0f, STATS_STACKING_BASE, (int)Affection.ArmorPen);
-            Stat attackspeed = new(0f, STATS_STACKING_BASE, (int)Affection.AttackSpeed);
-            Stat knockback = new(0f, STATS_STACKING_BASE, (int)Affection.Knockback);
-            Stat AIrange = new(0f, STATS_STACKING_BASE, (int)Affection.MovementRange);
-            Stat movespeed = new(0f, STATS_STACKING_BASE, (int)Affection.MovementSpeed);
+        /// <summary>
+        /// Use this method to update the stats which this stand affects on the player.
+        /// </summary>
+        protected abstract void StatUpdater();
 
-            switch (ID) //Add stats here
-            {
-                case StandID.STAR_PLATINUM:
-                    damage.Value = 5f;
-                    attackrange.Value = 40f;
-                    armorpen.Value = 10f;
-                    attackspeed.Value = 180f;
-                    knockback.Value = 2f;
-                    AIrange.Value = 200f;
-                    movespeed.Value = 20f;
+        /// <summary>
+        /// The identity of the projectile to spawn on <see cref="Invoke"/>.
+        /// </summary>
+        protected abstract int StandProjectileType { get; }
 
-                    pv_InvokeSoundIndex = ASCResources.Sound.Stand_Invoke_Index_StarPlatinum;
-                    Portrait = GetTexture(STAND_PORTRAIT_STARPLATINUM);
-                    break;
-
-                case StandID.KILLER_QUEEN:
-                    damage.Value = 5f;
-                    attackrange.Value = 40;
-                    armorpen.Value = 20;
-                    attackspeed.Value = 30;
-                    knockback.Value = 5f;
-                    AIrange.Value = 500f;
-                    movespeed.Value = 10f;
-
-                    pv_InvokeSoundIndex = ASCResources.Sound.Stand_Invoke_Index_KillerQueen;
-                    Portrait = GetTexture(STAND_PORTRAIT_KILLERQUEEN);
-                    break;
-            }
-
-            pv_Stats.Add(STAND_STAT_DAMAGE, damage);
-            pv_Stats.Add(STAND_STAT_ATTACKRANGE, attackrange);
-            pv_Stats.Add(STAND_STAT_ARMORPEN, armorpen);
-            pv_Stats.Add(STAND_STAT_ATTACKSPEED, attackspeed);
-            pv_Stats.Add(STAND_STAT_KNOCKBACK, knockback);
-            pv_Stats.Add(STAND_STAT_MOVESPEED, movespeed);
-            pv_Stats.Add(STAND_STAT_AIRANGE, AIrange);
-            Owner.Stats.AddStat(damage);
-            Owner.Stats.AddStat(attackrange);
-            Owner.Stats.AddStat(armorpen);
-            Owner.Stats.AddStat(attackspeed);
-            Owner.Stats.AddStat(knockback);
-            Owner.Stats.AddStat(movespeed);
-            Owner.Stats.AddStat(AIrange);
-
-            switch (ID) //Add abilities here
-            {
-                case StandID.STAR_PLATINUM:
-                    Abilities = new StandAbility[]
-                    {
-                        new StandAbility_StarPlatinum_Punch(this),
-                        new StandAbility_StarPlatinum_ORA(this),
-                        new StandAbility_StarPlatinum_Receipt(this),
-                        new StandAbility_StarPlatinum_TheWorld(this),
-                    };
-                    break;
-                case StandID.KILLER_QUEEN:
-                    Abilities = new StandAbility[]
-                    {
-                        new StandAbility_KillerQueen_BombTransmutation(this),
-                    };
-                    break;
-            }
-
-            if (pv_BaseMovementAI == null)
-                throw new Exception("The stand couldn't be created as there was no ability which set the base movement AI.");
-
-            StandMenuUI = new UserInterface();
-            StandMenu = new Menu_Stand(this);
-            StandMenuUI.SetState(StandMenu);
-        }
+        protected abstract StandAbility[] Init_Abilities { get; }
+#pragma warning disable IDE1006
+        protected abstract Stat base_stat_damage { get; }
+        protected abstract Stat base_stat_armorpen { get; }
+        protected abstract Stat base_stat_attackspeed { get; }
+        protected abstract Stat base_stat_knockback { get; }
+        protected abstract Stat base_stat_range { get; }
+        protected abstract Stat base_stat_airange { get; }
+        protected abstract Stat base_stat_movespeed { get; }
+        /// <summary>
+        /// You can add additional base stats in here.
+        /// </summary>
+        /// <remarks>
+        /// These will be added to an internal list which is then used by <see cref="GetOtherStat(string)"/> and <see cref="GetOtherSingleStat(string)"/>.
+        /// </remarks>
+        protected virtual KeyValuePair<string, Stat>[] base_stats_other { get; }
+#pragma warning restore IDE1006
+        protected abstract Asset<Texture2D> Init_Portrait { get; }
 
         private Action pv_BaseMovementAI;
-        private Action<Stand> pv_StatUpdater;
         private Dictionary<string, Stat> pv_Stats = new();
         private List<Action> pv_MovementAIs = new();
         private StandProjectile pv_InstancedStand = null;

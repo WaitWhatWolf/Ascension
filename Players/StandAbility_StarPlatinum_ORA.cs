@@ -33,7 +33,7 @@ namespace Ascension.Players
 
         protected override void OnActivate()
         {
-            pv_StarPlatinum = Stand.GetStandModProjectile() as StarPlatinum;
+            pv_StarPlatinum = Stand.GetStandModProjectile() as Projectile_StarPlatinum;
             pv_StandProjectile = Stand.GetStandProjectile();
             pv_Owner = Stand.Owner.Player;
 
@@ -57,8 +57,8 @@ namespace Ascension.Players
                 List<NPC> npcs = Hooks.InGame.GetAllWithin(projectile, projectile.Center, 250f);
                 foreach (NPC npc in npcs)
                 {
-                    float knock = Stand.GetSingleStat(STAND_STAT_KNOCKBACK);
-                    npc.StrikeNPC(Stand.GetStat(STAND_STAT_DAMAGE) * 10, knock, -npc.direction);
+                    float knock = Stand.GetKnockback();
+                    npc.StrikeNPC(Stand.GetDamage() * 5, knock, -npc.direction);
                     Vector2 direction = npc.Center - projectile.Center;
                     direction.Normalize();
                     direction -= new Vector2(0f, 0.2f); //Makes enemies tend to get knocked upwards
@@ -74,7 +74,7 @@ namespace Ascension.Players
         protected override void Event_OnNewBossDefeated(string obj)
         {
             //Multiplied cause it will use a reduced float based on frame speed; Basically unity's version of Time.deltaTime.
-            pv_StandMoveSpeed = Stand.GetSingleStat(STAND_STAT_MOVESPEED) * 40f;
+            pv_StandMoveSpeed = Stand.GetSpeed() * 40f;
         }
 
         private void MovementAI()
@@ -103,7 +103,7 @@ namespace Ascension.Players
         private float pv_StandMoveSpeed;
         private bool pv_DeactivateReady;
         private bool pv_WithinORARange;
-        private StarPlatinum pv_StarPlatinum;
+        private Projectile_StarPlatinum pv_StarPlatinum;
         private Projectile pv_StandProjectile;
         private Player pv_Owner;
     }

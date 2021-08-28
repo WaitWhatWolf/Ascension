@@ -34,16 +34,9 @@ namespace Ascension.Players
 
         public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_KILLERQUEEN_BASIC);
 
-        public override void Update()
-        {
-            base.Update();
-
-
-        }
-
         protected override ReturnCountdown Countdown => pv_Countdown;
 
-        protected override bool ActivateCondition() => CountdownReady && StandMoveTarget != null && StandMoveTargetDist <= pv_StandAttackRange;
+        protected override bool ActivateCondition() => CountdownReady && StandMoveTargetFound && StandMoveTargetDist(true) <= pv_StandAttackRange;
         protected override bool DeactivateCondition() => Active;
 
         protected override void OnActivate()
@@ -63,14 +56,14 @@ namespace Ascension.Players
 
         protected override void Event_OnNewBossDefeated(string obj)
         {
-            pv_Countdown = 60f / Stand.GetSingleStat(STAND_STAT_ATTACKSPEED);
+            pv_Countdown = 60f / Stand.GetAttackSpeed();
             pv_DetonateCountdown = pv_Countdown.Countdown / 2f;
-            pv_StandDamage = Stand.GetStat(STAND_STAT_DAMAGE);
-            pv_BombPen = Stand.GetStat(STAND_STAT_ARMORPEN);
-            pv_StandAttackRange = Stand.GetSingleStat(STAND_STAT_ATTACKRANGE);
-            pv_StandMoveSpeed = Stand.GetSingleStat(STAND_STAT_MOVESPEED);
-            pv_StandNPCDetectionRange = Stand.GetSingleStat(STAND_STAT_AIRANGE);
-            pv_BombKnockback = Stand.GetSingleStat(STAND_STAT_KNOCKBACK);
+            pv_StandDamage = Stand.GetDamage();
+            pv_BombPen = Stand.GetArmorPen();
+            pv_StandAttackRange = Stand.GetRange();
+            pv_StandMoveSpeed = Stand.GetSpeed();
+            pv_StandNPCDetectionRange = Stand.GetAIRange();
+            pv_BombKnockback = Stand.GetKnockback();
         }
 
         protected override float StandMoveAttackRange => pv_StandAttackRange;

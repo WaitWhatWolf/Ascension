@@ -1,6 +1,7 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 
 namespace Ascension.Players
@@ -16,22 +17,50 @@ namespace Ascension.Players
             pr_Owner = stand.Owner.Player;
 
             stand.SetBaseMovementAI(MovementAI);
+            stand.Owner.OnSetTarget += Event_OnSetTarget;
+            stand.Owner.OnSameTarget += Event_OnSetTarget;
+            stand.Owner.OnRemoveTarget += Event_OnRemoveTarget;
+        }
+
+        protected Player pr_Owner;
+        protected NPC StandMoveTarget;
+        protected bool StandMoveTargetFound;
+        protected abstract float StandMoveAttackRange { get; }
+        protected abstract float StandMoveNPCDetectionRange { get; }
+        protected abstract float StandMoveSpeed { get; }
+        protected float StandMoveTargetDist(bool fromProjectile) => StandMoveTargetFound ? StandMoveTarget.Center.Distance(fromProjectile ? Stand.GetStandProjectile().Center : pr_Owner.Center) : float.PositiveInfinity;
+
+        private void Event_OnSetTarget(NPC obj)
+        {
+            float dist = obj.Center.Distance(Stand.GetStandProjectile().Center);
+            if (dist <= StandMoveTargetDist(false))
+            {
+                StandMoveTarget = obj;
+                StandMoveTargetFound = true;
+            }
+        }
+
+        private void Event_OnRemoveTarget(NPC obj)
+        {
+            StandMoveTarget = null;
+            StandMoveTargetFound = false;
         }
 
         private void MovementAI()
         {
             Projectile projectile = Stand.GetStandProjectile();
-            SearchForTargets(projectile, out bool foundTarget, out StandMoveTargetDist, out StandMoveTarget);
-            FinalizeAI(foundTarget, StandMoveTargetDist, StandMoveTarget?.Center ?? pr_Owner.Center, projectile);
+
+            FinalizeAI(StandMoveTargetDist(true), StandMoveTarget?.Center ?? pr_Owner.Center, projectile);
         }
 
-        private void FinalizeAI(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, Projectile projectile)
+        private void FinalizeAI(float distanceFromTarget, Vector2 targetCenter, Projectile projectile)
         {
             float speed;
             float inertia;
             Vector2 finalPos;
-
-            if (foundTarget)
+            bool goesToTarget = StandMoveTargetFound && StandMoveTargetDist(false) <= StandMoveNPCDetectionRange;
+            
+            if (goesToTarget)
             {
                 finalPos = targetCenter;
                 speed = distanceFromTarget <= StandMoveAttackRange ? StandMoveSpeed / 4f : StandMoveSpeed;
@@ -55,7 +84,7 @@ namespace Ascension.Players
             Vector2 directionToTargetFromOwner = destination - pr_Owner.Center;
             directionToTargetFromOwner.Normalize();
             directionToTargetFromOwner *= (StandMoveAttackRange / 3f);
-            if (foundTarget) destination -= directionToTargetFromOwner;
+            if (StandMoveTargetFound) destination -= directionToTargetFromOwner;
 
             Vector2 destDir = destination - projectile.Center;
             destDir.Normalize();
@@ -63,40 +92,8 @@ namespace Ascension.Players
             projectile.velocity = (projectile.velocity * (inertia - 1) + destDir) / inertia;
 
 
-            projectile.spriteDirection = foundTarget ? directionToTargetFromOwner.X > 0f ? -1 : 1 : -pr_Owner.direction;
+            projectile.spriteDirection = goesToTarget ? directionToTargetFromOwner.X > 0f ? -1 : 1 : -pr_Owner.direction;
 
         }
-
-        private void SearchForTargets(Projectile projectile, out bool foundTarget, out float distanceFromTarget, out NPC target)
-        {
-            distanceFromTarget = StandMoveNPCDetectionRange;
-            foundTarget = false;
-            target = null;
-
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                NPC npc = Main.npc[i];
-
-                if (npc.CanBeChasedBy(this, true))
-                {
-                    float between = Vector2.Distance(npc.Center, projectile.Center);
-                    bool inRange = between < distanceFromTarget;
-
-                    if (inRange)
-                    {
-                        distanceFromTarget = between;
-                        foundTarget = true;
-                        target = npc;
-                    }
-                }
-            }
-        }
-
-        protected Player pr_Owner;
-        protected abstract float StandMoveAttackRange { get; }
-        protected abstract float StandMoveNPCDetectionRange { get; }
-        protected abstract float StandMoveSpeed { get; }
-        protected float StandMoveTargetDist;
-        protected NPC StandMoveTarget;
     }
 }

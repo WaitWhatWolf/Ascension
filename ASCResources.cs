@@ -142,16 +142,6 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 05)]
         public static class Players
         {
-            public static string GetStandName(StandID id)
-                => id switch
-                {
-                    StandID.STAR_PLATINUM => "Star Platinum",
-                    StandID.THE_WORLD => "The World",
-                    StandID.KILLER_QUEEN => "Killer Queen",
-                    StandID.MAGICIANS_RED => "Magician's Red",
-                    _ => string.Empty
-                };
-            
             public static string GetStandDescription(StandID id)
                 => id switch
                 {
@@ -183,28 +173,6 @@ namespace Ascension
                     + "\nThat is how I deal with society, and I know that is what brings me happiness."
                     + "\nAlthough, if I were to fight I wouldn't lose to anyone.", Hooks.Colors.Tooltip_Quote),
                     _ => string.Empty
-                };
-
-            public static Action<Stand> GetStandStatUpdater(StandID id)
-                => id switch
-                {
-                    StandID.STAR_PLATINUM => (s) => 
-                    {
-                        s.Owner.Player.GetDamage<MeleeDamageClass>() += (0.1f * s.Level);
-                        s.Owner.Player.meleeSpeed *= (1.1f * s.Level);
-                        s.Owner.Player.GetKnockback<MeleeDamageClass>() += (0.2f * s.Level);
-                        s.Owner.Player.GetCritChance<MeleeDamageClass>() += (5 * s.Level);
-                        s.Owner.Player.statDefense += (5 * s.Level);
-                    },
-                    StandID.KILLER_QUEEN => (s) =>
-                    {
-                        s.Owner.Player.GetDamage<MeleeDamageClass>() += (0.15f * s.Level);
-                        s.Owner.Player.GetKnockback<MeleeDamageClass>() += (0.25f * s.Level);
-                        s.Owner.Player.GetCritChance<MeleeDamageClass>() += (7 * s.Level);
-                        s.Owner.Player.statDefense -= (2 * s.Level);
-                    }
-                    ,
-                    _ => throw new Exception("Cannot set stat updater for a undefined stand."),
                 };
 
             /// <summary>
@@ -260,8 +228,19 @@ namespace Ascension
                     id = UsableStands.Random();
                 }
 
-                player.in_Stand = new Stand(player, id);
-                player.in_IsStandUser = true;
+                var types = Hooks.Reflection.GetInheritingTypes(typeof(Stand));
+                
+                foreach(Type type in types)
+                {
+                    Stand tempStand = (Stand)Activator.CreateInstance(type, (AscendedPlayer)null);
+
+                    if (tempStand.ID == id)
+                    {
+                        player.in_Stand = (Stand)Activator.CreateInstance(type, player);
+                        player.in_IsStandUser = true;
+                        break;
+                    }
+                }
 
                 if (debugStandName)
                     Debug.Log($"{playerName}'s will manifested as {player.in_Stand.Name}!");

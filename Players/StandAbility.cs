@@ -139,6 +139,7 @@ namespace Ascension.Players
         /// </summary>
         protected void ResetCooldown()
         {
+            CountdownReady = false;
             Countdown.Reset();
         }
 

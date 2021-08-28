@@ -23,6 +23,10 @@ namespace Ascension.Players
     {
         public bool ConsumedRedHotChiliPepper;
         
+        /// <summary>
+        /// The current target of the player.
+        /// </summary>
+        public NPC Target { get; private set; }
         public bool[] UnlockedStandAbility { get; private set; } = new bool[4];
         public List<string> DefeatedBosses { get; private set; }
 
@@ -40,6 +44,21 @@ namespace Ascension.Players
         /// Invoked when the player manifests his stand.
         /// </summary>
         public event Action<Stand, int> OnManifestStand;
+
+        /// <summary>
+        /// Invoked when the player has set a new target.
+        /// </summary>
+        public event Action<NPC> OnSetTarget;
+        
+        /// <summary>
+        /// Invoked when the player has removed it's current target.
+        /// </summary>
+        public event Action<NPC> OnRemoveTarget;
+
+        /// <summary>
+        /// Invoked when the same target is set to <see cref="SetTarget(NPC)"/>.
+        /// </summary>
+        public event Action<NPC> OnSameTarget;
 
         /// <inheritdoc/>
         public override TagCompound Save()
@@ -61,6 +80,50 @@ namespace Ascension.Players
             pv_LoadedStandID = (StandID)tag.GetInt(nameof(StandID));
             DefeatedBosses = new(tag.GetList<string>(nameof(DefeatedBosses)));
             ConsumedRedHotChiliPepper = tag.GetBool(nameof(ConsumedRedHotChiliPepper));
+        }
+
+        /// <summary>
+        /// Sets a new <see cref="Target"/>.
+        /// </summary>
+        /// <param name="npc"></param>
+        public void SetTarget(NPC npc)
+        {
+            if (npc == Target)
+            {
+                OnSameTarget?.Invoke(npc);
+                return;
+            }
+            RemoveTarget(npc);
+            Debug.Log($"New Target: {npc.FullName}");
+            Target = npc;
+            OnSetTarget?.Invoke(npc);
+        }
+
+        /// <summary>
+        /// Removes the current <see cref="Target"/> if given npc value is the same as the target.
+        /// </summary>
+        /// <param name="npc"></param>
+        /// <returns></returns>
+        public bool RemoveTarget(NPC npc)
+        {
+            if (npc == Target)
+            {
+                Debug.Log($"Removed Target: {npc.FullName}");
+                OnRemoveTarget?.Invoke(npc);
+                Target = null;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Forcefully removes the <see cref="Target"/>.
+        /// </summary>
+        public void ForceRemoveTarget()
+        {
+            OnRemoveTarget?.Invoke(Target);
+            Target = null;
         }
 
         public void AddDefeatedBoss(string name)
@@ -134,6 +197,16 @@ namespace Ascension.Players
         {
             base.OnRespawn(player);
             if(in_IsStandUser) in_Stand.Invoke();
+        }
+
+        public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+        {
+            SetTarget(target);
+        }
+
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+        {
+            SetTarget(target);
         }
 
         private void OnManifestCall(int val)

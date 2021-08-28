@@ -3,10 +3,7 @@ using Ascension.Enums;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace Ascension.Buffs.StandUnique
 {
@@ -31,7 +28,7 @@ namespace Ascension.Buffs.StandUnique
 
                 foreach(NPC npc in NPCs)
                 {
-                    npc.StrikeNPC(Damage / 2, 0f, 0);
+                    npc.StrikeNPC(Hooks.InGame.GetDamageWithPen(Damage / 2, Pen, Parent.NPC), 0f, 0);
                     Vector2 dir = (npc.Center - Parent.NPC.Center);
                     dir.Normalize();
                     npc.velocity = dir * Knockback;

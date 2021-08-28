@@ -19,12 +19,33 @@ namespace Ascension.Utility
     {
         public static class Reflection
         {
+            /// <summary>
+            /// Returns a list of all constants inside a type.
+            /// </summary>
+            /// <param name="type"></param>
+            /// <returns></returns>
             public static FieldInfo[] GetConstants(Type type)
             {
                 FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
                      BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
                 return fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToArray();
+            }
+
+            /// <summary>
+            /// Returns a collection of types which are inheriting from the given type.
+            /// </summary>
+            /// <param name="inheritsFrom"></param>
+            /// <returns></returns>
+            public static IEnumerable<Type> GetInheritingTypes(Type inheritsFrom)
+            {
+                return typeof(Ascension).Assembly.GetTypes().Where(t => t != inheritsFrom && inheritsFrom.IsAssignableFrom(t));
+            }
+
+            public static IEnumerable<FieldInfo> GetFieldsOfType<T>(Type from, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance)
+            {
+                FieldInfo[] fields = from.GetFields(flags);
+                return from type in fields where type.FieldType == typeof(T) select type;
             }
         }
 

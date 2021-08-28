@@ -45,7 +45,7 @@ namespace Ascension.Players
         {
             pv_CurrentDuration = pv_Duration;
 
-            pv_StarPlatinum = Stand.GetStandModProjectile() as StarPlatinum;
+            pv_StarPlatinum = Stand.GetStandModProjectile() as Projectile_StarPlatinum;
             pv_StandProjectile = Stand.GetStandProjectile();
             pv_Owner = Stand.Owner.Player;
 
@@ -71,10 +71,10 @@ namespace Ascension.Players
 
         protected override void Event_OnNewBossDefeated(string obj)
         {
-            pv_StandMovementSpeed = Stand.GetSingleStat(STAND_STAT_MOVESPEED) * 0.5f;
-            pv_StandDamage = (int)(Stand.GetSingleStat(STAND_STAT_DAMAGE) * .75f);
-            pv_StandKnock = Stand.GetSingleStat(STAND_STAT_KNOCKBACK);
-            pv_StandRange = Stand.GetSingleStat(STAND_STAT_ATTACKRANGE) * 1.2f;
+            pv_StandMovementSpeed = Stand.GetSpeed() * 0.5f;
+            pv_StandDamage = (int)(Stand.GetDamage() * .75f);
+            pv_StandKnock = Stand.GetKnockback();
+            pv_StandRange = Stand.GetRange() * 1.2f;
         }
 
         private void MovementAI()
@@ -110,7 +110,7 @@ namespace Ascension.Players
         private float pv_CurrentDuration;
         private float pv_AttackCountdown = 0.05f;
         private float pv_AttackCurrentCountdown;
-        private StarPlatinum pv_StarPlatinum;
+        private Projectile_StarPlatinum pv_StarPlatinum;
         private Projectile pv_StandProjectile;
         private Player pv_Owner;
         private Vector2 pv_Direction;
