@@ -54,7 +54,7 @@ namespace Ascension.Players
             pv_Direction = new(pv_Owner.direction * pv_StandMovementSpeed, 0f);
 
             Stand.AddMovementAI(MovementAI);
-            ResetCooldown();
+            ResetCountdown();
         }
 
         protected override void OnDeactivate()

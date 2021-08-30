@@ -16,6 +16,7 @@ namespace Ascension.Enums
         Range = 103,
         ArmorPen = 104,
         Knockback = 105,
+        ProjectileSpeed = 106,
 
         MovementSpeed = 201,
         MovementRange = 202,

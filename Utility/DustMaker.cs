@@ -32,35 +32,6 @@ namespace Ascension.Utility
             Hooks.InGame.CreateDust(Amount, position + PosVariation.GetRandom(), Width, Height, Color, SpeedX, SpeedY, Alpha, Scale, OnCreate, Types);
         }
 
-        public DustMaker(int type, IntRange amount, Vector2Range posVariation, int width, int height, Color color, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null)
-        {
-            Types = new int[] { type };
-            Amount = amount;
-            PosVariation = posVariation;
-            Width = width;
-            Height = height;
-            Color = color;
-            SpeedX = speedX;
-            SpeedY = speedY;
-            Alpha = alpha;
-            Scale = scale;
-            OnCreate = onCreate;
-        }
-
-        public DustMaker(int type, IntRange amount, Vector2Range posVariation, int width, int height, Color color, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale)
-        {
-            Types = new int[] { type };
-            Amount = amount;
-            PosVariation = posVariation;
-            Width = width;
-            Height = height;
-            Color = color;
-            SpeedX = speedX;
-            SpeedY = speedY;
-            Alpha = alpha;
-            Scale = scale;
-        }
-
         public DustMaker(IntRange amount, Vector2Range posVariation, int width, int height, Color color, FloatRange speedX, FloatRange speedY, IntRange alpha, FloatRange scale, Action<Dust> onCreate = null, params int[] types)
         {
             Types = types;

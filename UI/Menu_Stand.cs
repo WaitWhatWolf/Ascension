@@ -39,20 +39,38 @@ namespace Ascension.UI
             ResetDimensions();
         }
 
-        public override void OnInitialize()
-        {
-            base.OnInitialize();
-        }
-
         protected override void OnActiveDrawSelf(SpriteBatch spriteBatch)
         {
             for (int i = 1; i < pv_Stand.Abilities.Length; i++)
             {
+                if (!pv_Stand.Owner.UnlockedStandAbility[i])
+                    continue;
+
                 StandAbility ability = pv_Stand.Abilities[i];
 
                 float abilityCurrentCooldown = ability.GetCurrentCountdown();
                 pv_AbilityCooldowns[i - 1].SetText(abilityCurrentCooldown <= 0 ? string.Empty : abilityCurrentCooldown.Truncate(1).ToString());
             }
+        }
+
+        [Obsolete("Not needed for now", true)]
+        public void Deinit()
+        {
+            RemoveAllChildren();
+            Remove();
+            Recalculate();
+            
+            if (pv_Stand)
+            {
+                pv_Stand.OnAbilityUnlock -= Event_OnAbilityUnlock;
+                pv_Stand = null;
+            }
+            pv_AbilityCooldowns = null;
+            pv_AbilityImages = null;
+            pv_AbilityKeys = null;
+            pv_BackgroundImage = null;
+            pv_PortraitImage = null;
+            pv_TooltipText = null;
         }
 
         public Menu_Stand(Stand stand) : base()
@@ -73,7 +91,7 @@ namespace Ascension.UI
             pv_BackgroundImage.IgnoresMouseInteraction = true;
             Append(pv_BackgroundImage);
 
-            pv_PortraitImage = new UIImage(stand.Portrait);
+            pv_PortraitImage = new UIImage(pv_Stand.Portrait);
             pv_PortraitImage.Left.Set(2, 0f);
             pv_PortraitImage.Width.Set(64, 0f);
             pv_PortraitImage.Top.Set(2, 0f);

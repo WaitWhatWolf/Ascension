@@ -50,6 +50,8 @@ namespace Ascension.Players
         protected override Stat base_stat_airange { get; } = new(200f, STATS_STACKING_BASE, Affection.MovementRange);
         protected override Stat base_stat_movespeed { get; } = new(20f, STATS_STACKING_BASE, Affection.MovementSpeed);
 
+        protected override string StandInvokeSoundPath => "Stand_Invoke_StarPlatinum.wav";
+
         protected override void StatUpdater()
         {
             Owner.Player.GetDamage<MeleeDamageClass>() += (0.1f * Level);

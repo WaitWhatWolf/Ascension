@@ -46,7 +46,7 @@ namespace Ascension.Players
                 standHandler.AddDebuff(new SB_KillerQueen_Bomb(Stand, pv_DetonateCountdown, pv_StandDamage, pv_BombPen, pv_BombKnockback));
             }
 
-            ResetCooldown();
+            ResetCountdown();
         }
 
         protected override void OnDeactivate()

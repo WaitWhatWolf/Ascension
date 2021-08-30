@@ -94,7 +94,7 @@ namespace Ascension.Players
                 return;
             }
             RemoveTarget(npc);
-            Debug.Log($"New Target: {npc.FullName}");
+            //Debug.Log($"New Target: {npc.FullName}");
             Target = npc;
             OnSetTarget?.Invoke(npc);
         }
@@ -108,7 +108,7 @@ namespace Ascension.Players
         {
             if (npc == Target)
             {
-                Debug.Log($"Removed Target: {npc.FullName}");
+                //Debug.Log($"Removed Target: {npc.FullName}");
                 OnRemoveTarget?.Invoke(npc);
                 Target = null;
                 return true;

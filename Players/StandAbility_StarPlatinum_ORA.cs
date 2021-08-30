@@ -38,7 +38,7 @@ namespace Ascension.Players
             pv_Owner = Stand.Owner.Player;
 
             Stand.AddMovementAI(MovementAI);
-            ResetCooldown();
+            ResetCountdown();
         }
 
         protected override void OnDeactivate() 

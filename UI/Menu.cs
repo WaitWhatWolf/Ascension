@@ -15,43 +15,6 @@ namespace Ascension.UI
     [CreatedBy(Dev.WaitWhatWolf, 2019, 12, 16), Note(Dev.WaitWhatWolf, "Yes, it's that old.")]
     public abstract class Menu : UIState
     {
-        #region Static
-        /// <summary>
-        /// All menus currently initiated.
-        /// </summary>
-        internal static List<Menu> AllMenus { get; } = new List<Menu>();
-
-        /// <summary>
-        /// Returns the first menu found of the given generic type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T GetMenu<T>() where T : Menu
-        {
-            return AllMenus.Find(m => m is T) as T;
-        }
-
-        /// <summary>
-        /// Activates the first menu found of the given generic type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public static void ActivateMenu<T>() where T : Menu
-        {
-            T toUse = GetMenu<T>();
-            toUse.ActivateMenu();
-        }
-
-        /// <summary>
-        /// Deactivates the first menu found of the given generic type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public static void DeactivateMenu<T>() where T : Menu
-        {
-            T toUse = GetMenu<T>();
-            toUse.DeactivateMenu();
-        }
-        #endregion
-
         /// <summary>
         /// Returns the active state of this menu.
         /// </summary>
@@ -191,7 +154,6 @@ namespace Ascension.UI
         /// </summary>
         public Menu() : base()
         {
-            AllMenus.Add(this);
             ResetDimensions();
         }
 

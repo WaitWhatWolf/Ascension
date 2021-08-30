@@ -5,7 +5,7 @@ using Ascension.Projectiles;
 using Ascension.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
+using System.Collections.Generic;
 using Terraria.ModLoader;
 using static Ascension.ASCResources.Stats;
 
@@ -50,17 +50,24 @@ namespace Ascension.Players
         protected override StandAbility[] Init_Abilities => new StandAbility[]
         {
             new StandAbility_KillerQueen_BombTransmutation(this),
+            new StandAbility_KillerQueen_StrayCatBombing(this),
         };
 
         protected override Asset<Texture2D> Init_Portrait => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_PORTRAIT_KILLERQUEEN);
 
-        protected override Stat base_stat_damage { get; } = new(5f, STATS_STACKING_BASE, Affection.Damage);
+        protected override Stat base_stat_damage { get; } = new(8f, STATS_STACKING_BASE, Affection.Damage);
         protected override Stat base_stat_armorpen { get; } = new(20f, STATS_STACKING_BASE, Affection.ArmorPen);
         protected override Stat base_stat_attackspeed { get; } = new(30f, STATS_STACKING_BASE, Affection.AttackSpeed);
         protected override Stat base_stat_knockback { get; } = new(5f, STATS_STACKING_BASE, Affection.Knockback);
         protected override Stat base_stat_range { get; } = new(40f, STATS_STACKING_BASE, Affection.Range);
         protected override Stat base_stat_airange { get; } = new(500f, STATS_STACKING_BASE, Affection.MovementRange);
         protected override Stat base_stat_movespeed { get; } = new(10f, STATS_STACKING_BASE, Affection.MovementSpeed);
+        protected override KeyValuePair<string, Stat>[] base_stats_other => new KeyValuePair<string, Stat>[]
+        {
+            new KeyValuePair<string, Stat>(STAND_STAT_PROJECTILE_VELOCITY, new Stat(5f, STATS_STACKING_BASE, Affection.ProjectileSpeed))
+        };
+
+        protected override string StandInvokeSoundPath => "Stand_Invoke_KillerQueen.wav";
 
         protected override void StatUpdater()
         {

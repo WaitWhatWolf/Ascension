@@ -1,6 +1,7 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Players;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using static Ascension.ASCResources.Stats;
@@ -40,6 +41,24 @@ namespace Ascension.Projectiles
 
 		public override bool? CanCutTiles() => true;
 		public override bool MinionContactDamage() => true;
+
+		/// <summary>
+		/// Returns the position in front of the stand.
+		/// </summary>
+		public virtual Vector2 Front
+		{
+			get { return Projectile.spriteDirection == -1 ? Projectile.Right : Projectile.Left; }
+			set
+            {
+				if (Projectile.spriteDirection == -1)
+					Projectile.Right = value;
+				else Projectile.Left = value;
+            }
+		}
+		/// <summary>
+		/// Returns the normalized direction the stand is facing.
+		/// </summary>
+		public virtual Vector2 Direction =>  new(Projectile.spriteDirection == -1 ? 1f : -1f, 0f);
 
 		internal void SetupStand(Player owner, Stand stand)
         {

@@ -75,7 +75,7 @@ namespace Ascension.Utility
             /// <returns></returns>
             public static int GetDamageWithPen(int damage, int pen, NPC @for)
             {
-                return damage + pen >= @for.defense ? @for.defense : pen;
+                return damage + (pen >= @for.defense ? @for.defense : pen);
             }
 
             /// <summary>

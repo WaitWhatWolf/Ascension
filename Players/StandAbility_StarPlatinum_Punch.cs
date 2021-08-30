@@ -41,7 +41,7 @@ namespace Ascension.Players
                 npc.StrikeNPC(projectile.damage + damageAdder, projectile.knockBack, projectile.direction);
             }
 
-            ResetCooldown();
+            ResetCountdown();
         }
 
         protected override void OnDeactivate() { }
@@ -49,7 +49,6 @@ namespace Ascension.Players
         protected override void Event_OnNewBossDefeated(string obj)
         {
             pv_UTDCooldown = 60f / Stand.GetAttackSpeed();
-            Debug.Log(pv_UTDCooldown.Countdown);
             pv_StandArmorPen = Stand.GetArmorPen();
             pv_StandAttackRange = Stand.GetRange();
             pv_StandMoveSpeed = Stand.GetSpeed();

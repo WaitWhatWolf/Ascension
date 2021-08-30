@@ -39,7 +39,7 @@ namespace Ascension.Players
 
             AscensionWorld world = ModContent.GetInstance<AscensionWorld>();
             world.SetTheWorld(Stand, new SB_TheWorld(world, Stand));
-            ResetCooldown();
+            ResetCountdown();
         }
 
         protected override void OnDeactivate()

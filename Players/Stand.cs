@@ -3,17 +3,14 @@ using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Projectiles;
 using Ascension.UI;
-using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.IO;
 using Terraria;
-using Terraria.Audio;
 using Terraria.UI;
-using static Ascension.ASCResources.Stats;
 
 namespace Ascension.Players
 {
@@ -36,17 +33,25 @@ namespace Ascension.Players
             Active = false;
             Level = 1;
 
-            Portrait = Init_Portrait;
-            Abilities = Init_Abilities;
-            
-            if(base_stats_other != null)
-                foreach(var pair in base_stats_other)
+            if (base_stats_other != null)
+                foreach (var pair in base_stats_other)
                 {
                     pv_Stats.Add(pair.Key, pair.Value);
                 }
 
+            Portrait = Init_Portrait;
+            Abilities = Init_Abilities;
+
+            /*foreach (StandAbility ability in Abilities)
+            {
+                typeof(StandAbility).GetMethod("Event_OnNewBossDefeated", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .Invoke(ability, new object[] { string.Empty });
+            }*/
+
             if (pv_BaseMovementAI == null)
                 throw new Exception("The stand couldn't be created as there was no ability which set the base movement AI.");
+
+            pv_InvokeSound = new(Path.Combine(Path.GetDirectoryName(Terraria.ModLoader.ModLoader.ModPath), @"Mod Sources\Ascension\Assets\Sound\Custom", StandInvokeSoundPath));
 
             StandMenuUI = new UserInterface();
             StandMenu = new Menu_Stand(this);
@@ -137,7 +142,7 @@ namespace Ascension.Players
             pv_MovementAIs.Insert(0, action);
             return true;
         }
-        
+
         /// <summary>
         /// Removes a given MovementAI; If no more custom movement AI's are present, the movement AI will return to the base movement AI.
         /// </summary>
@@ -165,7 +170,7 @@ namespace Ascension.Players
         {
             int toReturn = 1;
 
-            if(debugUpgrade)
+            if (debugUpgrade)
             {
                 Debug.Log($"{Name} has leveled up! (Current Level: {Level})");
             }
@@ -179,7 +184,7 @@ namespace Ascension.Players
         public void TryUnlockAbilities(bool debugUnlocks = true)
         {
             UnlockAbility(0, false);
-            if(Owner.ConsumedRedHotChiliPepper)
+            if (Owner.ConsumedRedHotChiliPepper)
                 UnlockAbility(1, debugUnlocks);
 
             //UnlockAbility(2, debugUnlocks);
@@ -202,7 +207,7 @@ namespace Ascension.Players
             if (!Owner.UnlockedStandAbility[index])
             {
                 Owner.UnlockedStandAbility[index] = true;
-                if(debugUnlock)
+                if (debugUnlock)
                     Debug.Log($"{Name} has unlocked {Abilities[index].Name}!");
 
                 OnAbilityUnlock?.Invoke(index);
@@ -221,7 +226,8 @@ namespace Ascension.Players
             pv_InstancedStand = (StandProjectile)Main.projectile[pv_InstancedStandIndex].ModProjectile;
 
             pv_InstancedStand.SetupStand(Owner.Player, this);
-            SoundEngine.PlaySound(pv_InstancedStandIndex, Owner.Player.Center);
+            
+            pv_InvokeSound.Play();
             StandMenu.ActivateMenu();
         }
 
@@ -244,7 +250,7 @@ namespace Ascension.Players
             if (Active)
                 pv_InstancedStand.Projectile.timeLeft = int.MaxValue;
 
-            for(int i = 0; i < Abilities.Length; i++)
+            for (int i = 0; i < Abilities.Length; i++)
             {
                 if (!Owner.UnlockedStandAbility[i])
                     continue;
@@ -309,6 +315,7 @@ namespace Ascension.Players
         /// The identity of the projectile to spawn on <see cref="Invoke"/>.
         /// </summary>
         protected abstract int StandProjectileType { get; }
+        protected abstract string StandInvokeSoundPath { get; }
 
         protected abstract StandAbility[] Init_Abilities { get; }
 #pragma warning disable IDE1006
@@ -335,6 +342,8 @@ namespace Ascension.Players
         private StandProjectile pv_InstancedStand = null;
         private int pv_InstancedStandIndex = -1;
         private int pv_InvokeSoundIndex = -1;
+        [Note(Dev.WaitWhatWolf, "This is only temporary while tModLoader hasn't merged the soundfix branch.")]
+        private System.Media.SoundPlayer pv_InvokeSound;
 
         public static implicit operator bool(Stand stand) => stand != null && stand.ID != StandID.NEWBIE;
     }

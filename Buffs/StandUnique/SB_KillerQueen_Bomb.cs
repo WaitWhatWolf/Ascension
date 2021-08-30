@@ -23,8 +23,11 @@ namespace Ascension.Buffs.StandUnique
                 NPCs.Remove(Parent.NPC);
                 Parent.NPC.StrikeNPC(Hooks.InGame.GetDamageWithPen(Damage, Pen, Parent.NPC), 0f, 0);
                 Parent.NPC.velocity = new(0f, -2f);
-                ASCResources.Dusts.Gore_Stand_KillerQueen_Explosion.Create(Parent.NPC.position);
-                ASCResources.Dusts.Dust_Stand_KillerQueen_Explosion.Create(Parent.NPC.position);
+                CreateParticlesAt(Parent.NPC.Center);
+                CreateParticlesAt(Parent.NPC.Left);
+                CreateParticlesAt(Parent.NPC.Right);
+                CreateParticlesAt(Parent.NPC.Top);
+                CreateParticlesAt(Parent.NPC.Bottom);
 
                 foreach(NPC npc in NPCs)
                 {
@@ -49,6 +52,13 @@ namespace Ascension.Buffs.StandUnique
         }
 
         public ReturnCountdown Countdown { get; }
+
+        private void CreateParticlesAt(Vector2 position)
+        {
+            ASCResources.Dusts.Gore_Stand_KillerQueen_Explosion.Create(position);
+            ASCResources.Dusts.Dust_Stand_KillerQueen_Explosion.Create(position);
+        }
+
         private int Damage;
         private int Pen;
         private float Knockback;

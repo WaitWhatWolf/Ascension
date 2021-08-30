@@ -28,16 +28,12 @@ namespace Ascension.Players
         protected abstract float StandMoveAttackRange { get; }
         protected abstract float StandMoveNPCDetectionRange { get; }
         protected abstract float StandMoveSpeed { get; }
-        protected float StandMoveTargetDist(bool fromProjectile) => StandMoveTargetFound ? StandMoveTarget.Center.Distance(fromProjectile ? Stand.GetStandProjectile().Center : pr_Owner.Center) : float.PositiveInfinity;
+        protected float StandMoveTargetDist(bool fromProjectile) => StandMoveTargetFound ? StandMoveTarget.Center.Distance(fromProjectile ? Stand.GetStandModProjectile().Front : pr_Owner.Center) : float.PositiveInfinity;
 
         private void Event_OnSetTarget(NPC obj)
         {
-            float dist = obj.Center.Distance(Stand.GetStandProjectile().Center);
-            if (dist <= StandMoveTargetDist(false))
-            {
-                StandMoveTarget = obj;
-                StandMoveTargetFound = true;
-            }
+            StandMoveTarget = obj;
+            StandMoveTargetFound = true;
         }
 
         private void Event_OnRemoveTarget(NPC obj)
@@ -63,7 +59,7 @@ namespace Ascension.Players
             if (goesToTarget)
             {
                 finalPos = targetCenter;
-                speed = distanceFromTarget <= StandMoveAttackRange ? StandMoveSpeed / 4f : StandMoveSpeed;
+                speed = distanceFromTarget <= StandMoveAttackRange ? StandMoveSpeed / 2f : StandMoveSpeed;
                 inertia = speed * 2f;
             }
             else
@@ -86,7 +82,7 @@ namespace Ascension.Players
             directionToTargetFromOwner *= (StandMoveAttackRange / 3f);
             if (StandMoveTargetFound) destination -= directionToTargetFromOwner;
 
-            Vector2 destDir = destination - projectile.Center;
+            Vector2 destDir = destination - Stand.GetStandModProjectile().Front;
             destDir.Normalize();
             destDir *= speed;
             projectile.velocity = (projectile.velocity * (inertia - 1) + destDir) / inertia;

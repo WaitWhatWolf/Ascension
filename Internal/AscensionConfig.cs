@@ -11,7 +11,7 @@ namespace Ascension.Internal
     /// Config manager of the <see cref="Ascension"/> mod.
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
-    public sealed class AscensionConfig : ModConfig
+    internal sealed class AscensionConfig : ModConfig
     {
         public override ConfigScope Mode { get; } = ConfigScope.ClientSide;
 
@@ -20,9 +20,5 @@ namespace Ascension.Internal
         [DefaultValue(26), Tooltip("The Y position the stand menu will appear in."), Range(0, 1080), Slider]
         public int StandMenuPosY;
 
-        public override void OnChanged()
-        {
-            Menu.GetMenu<Menu_Stand>()?.SetDefaultPosition(StandMenuPosX, StandMenuPosY);
-        }
     }
 }

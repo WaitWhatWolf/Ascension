@@ -137,7 +137,7 @@ namespace Ascension.Players
         /// <summary>
         /// When invoked, the cooldown timer is reset and <see cref="CountdownReady"/> is set to false.
         /// </summary>
-        protected void ResetCooldown()
+        protected void ResetCountdown()
         {
             CountdownReady = false;
             Countdown.Reset();

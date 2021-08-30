@@ -19,17 +19,17 @@ namespace Ascension
 
         public static void Log(object message)
         {
-            Main.NewTextMultiline(message.ToString(), c: Color.LightCyan);
+            Main.NewTextMultiline(message?.ToString() ?? string.Empty, c: Color.LightCyan);
         }
 
         public static void LogWarning(object message)
         {
-            Main.NewTextMultiline(message.ToString(), c: Color.DarkOrange);
+            Main.NewTextMultiline(message?.ToString() ?? string.Empty, c: Color.DarkOrange);
         }
 
         public static void LogError(object message)
         {
-            Main.NewTextMultiline(message.ToString(), c: Color.Crimson);
+            Main.NewTextMultiline(message?.ToString() ?? string.Empty, c: Color.Crimson);
         }
 
         public static void LogEnumerable<T>(IEnumerable<T> list)

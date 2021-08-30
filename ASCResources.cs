@@ -232,6 +232,9 @@ namespace Ascension
                 
                 foreach(Type type in types)
                 {
+                    //Constructor hack; When no player is passed only properties are initialized.
+                    //This isn't a very optimal approach, but it only triggers once when you enter a world so it's not
+                    //the end of the world (no pun intended)
                     Stand tempStand = (Stand)Activator.CreateInstance(type, (AscendedPlayer)null);
 
                     if (tempStand.ID == id)
@@ -267,12 +270,14 @@ namespace Ascension
         {
             internal static void Load()
             {
-                Gore_Stand_KillerQueen_Explosion = new(new(7, 12), new(-1f,-1f,1f,1f), Vector2.Zero, new(0.8f, 1f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
-                Dust_Stand_KillerQueen_Explosion = new(new(15, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, 0f, 0f, new(0, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
+                Gore_Stand_KillerQueen_Explosion = new(new(1, 4), new(-1f,-1f,1f,1f), new(-0.3f, -2f, 0.3f, -0.7f), new(0.8f, 1f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
+                Dust_Stand_KillerQueen_Explosion = new(new(25, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, new(-5f, 5f), new(-5f, 5f), new(0, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
+                Dust_Stand_KillerQueen_Bubble = new(new(5, 10), Vector2.Zero, 8, 8, Color.White, 0f, 0f, new(0, 50), new(0.8f, 1f), DustID.BubbleBurst_Blue, DustID.BubbleBurst_Purple);
             }
 
             public static GoreMaker Gore_Stand_KillerQueen_Explosion { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Explosion { get; private set; }
+            public static DustMaker Dust_Stand_KillerQueen_Bubble { get; private set; }
         }
 
         /// <summary>
@@ -425,6 +430,7 @@ namespace Ascension
             public const string STAND_PORTRAIT_STARPLATINUM = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_StarPlatinum";
 
             public const string STAND_ABILITY_KILLERQUEEN_BASIC = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_BombTransmutation";
+            public const string STAND_ABILITY_KILLERQUEEN_ABILITY1 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_StrayCatBombing";
             public const string STAND_PORTRAIT_KILLERQUEEN = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_KillerQueen";
             public const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
 
@@ -521,13 +527,14 @@ namespace Ascension
 
             }
 
-            public const string STAND_STAT_DAMAGE = "Stand Damage";
-            public const string STAND_STAT_ATTACKRANGE = "Stand Attack Range";
-            public const string STAND_STAT_ARMORPEN = "Stand ArmorPen";
-            public const string STAND_STAT_KNOCKBACK = "Stand Knock";
-            public const string STAND_STAT_ATTACKSPEED = "Stand AS";
-            public const string STAND_STAT_MOVESPEED = "Stand MS";
-            public const string STAND_STAT_AIRANGE = "Stand Range AI";
+            public const string STAND_STAT_DAMAGE = "Stand:Damage";
+            public const string STAND_STAT_ATTACKRANGE = "Stand:Atk:Range";
+            public const string STAND_STAT_ARMORPEN = "Stand:Atk:Pen";
+            public const string STAND_STAT_KNOCKBACK = "Stand:Atk:Knock";
+            public const string STAND_STAT_ATTACKSPEED = "Stand:Atk:RPM";
+            public const string STAND_STAT_MOVESPEED = "Stand:Atk:MS";
+            public const string STAND_STAT_AIRANGE = "Stand:AI:Range";
+            public const string STAND_STAT_PROJECTILE_VELOCITY = "Stand:Proj:Vel";
             public const float UMBRAL_CRIT_BASE = 4f;
             public static DamageClass DamageClass_Umbral { get; } = new UmbralDamageClass();
         }
