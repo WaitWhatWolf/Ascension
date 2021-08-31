@@ -13,7 +13,7 @@ namespace Ascension.Utility
     ///
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/24 15:51:48")]
-    public class GoreMaker : IDustMaker
+    public record GoreMaker : IDustMaker
     {
         public int[] Types;
         public IntRange Amount;

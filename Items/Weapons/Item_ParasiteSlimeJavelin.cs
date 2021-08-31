@@ -12,7 +12,7 @@ namespace Ascension.Items.Weapons
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
     public sealed class Item_ParasiteSlimeJavelin : AscensionItem
     {
-        protected override string TooltipDefault { get; } = "Throws Slime Javelins which explode on impact.\nExplosions create worms that lach onto enemies." + TOOLTIP_PARASITESLIMEWEAPON;
+        protected override string TooltipDefault { get; } = "Throws Slime Javelins which explode on impact.\nExplosions create parasites that drain the enemy's health." + TOOLTIP_PARASITESLIMEWEAPON;
         protected override int JourneyCheatCount { get; } = 1;
         protected override string TextureSubFolder { get; } = ASCResources.ASSETS_SUBPATH_WEAPONS;
 
@@ -23,7 +23,7 @@ namespace Ascension.Items.Weapons
             Item.height = 35;
             Item.width = 35;
             Item.DamageType = ModContent.GetInstance<UmbralDamageClass>();
-            Item.damage = 12;
+            Item.damage = 3;
             Item.consumable = false;
             Item.maxStack = 1;
             Item.shoot = ModContent.ProjectileType<Projectile_ParasiteSlimeJavelin>();

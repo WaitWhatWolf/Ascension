@@ -1,9 +1,10 @@
 ﻿using Ascension.Attributes;
 using Ascension.Buffs;
 using Ascension.Enums;
-using Ascension.Internal;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,20 +13,26 @@ using static Ascension.ASCResources.Trademark;
 namespace Ascension.Projectiles
 {
     /// <summary>
-    /// Thrown by <see cref="Item_ParasiteSlimeJavelin"/>.
+    ///
     /// </summary>
-    [CreatedBy(Dev.WaitWhatWolf, "2021/08/11 18:06:15")]
-    public class Projectile_ParasiteSlimeJavelin : AscensionProjectile
+    [CreatedBy(Dev.WaitWhatWolf, "2021/08/31 6:22:26")]
+    public class Projectile_ParasiteSlimeArrow : AscensionProjectile
     {
         public override void SetDefaults()
         {
-            Projectile.CloneDefaults(ProjectileID.JavelinFriendly);
-
-            Projectile.width = 60;
-            Projectile.height = 20;
+            Projectile.CloneDefaults(ProjectileID.WoodenArrowFriendly);
+            Projectile.width = 14;
+            Projectile.height = 32;
+            Projectile.arrow = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.ignoreWater = false;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 600;
             Projectile.penetrate = 1;
 
-            Projectile.DamageType = ModContent.GetInstance<UmbralDamageClass>();
+            AIType = ProjectileID.WoodenArrowFriendly;
         }
 
         public override void PostDraw(Color lightColor)
@@ -35,8 +42,8 @@ namespace Ascension.Projectiles
 
         public override void Kill(int timeLeft)
         {
+            ASCResources.Dusts.Dust_ParasiteSlime_Explode.Create(Projectile.Center);
             Hooks.InGame.ApplyModBuffToAllWithin<Buff_Parasites>(Projectile, Projectile.Center, PARASITESLIME_EXP_RANGE, PARASITESLIME_BUFF_DURATION, ASCResources.Delegates.IsNotSlime);
-            ASCResources.Dusts.Dust_ParasiteSlime_Explode.Create(Projectile.position);
         }
     }
 }

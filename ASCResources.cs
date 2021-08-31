@@ -2,6 +2,7 @@
 using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Items;
+using Ascension.Items.Consumables;
 using Ascension.Items.Weapons;
 using Ascension.Players;
 using Ascension.Sound;
@@ -72,6 +73,7 @@ namespace Ascension
 
         public const string ASSETS_SUBPATH_MINIONS = "Minions/";
         public const string ASSETS_SUBPATH_WEAPONS = "Weapons/";
+        public const string ASSETS_SUBPATH_CONSUMABLES = "Consumables/";
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
@@ -108,10 +110,39 @@ namespace Ascension
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             };
         
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 31)]
+        public static class Delegates
+        {
+            public static Predicate<NPC> IsSlime { get; private set; }
+            public static Predicate<NPC> IsNotSlime { get; private set; }
+
+            internal static void Load()
+            {
+                IsSlime = (npc) => npc.drippingSlime || npc.FullName.ToUpper().Contains("SLIME");
+                IsNotSlime = (npc) => !npc.drippingSlime && !npc.FullName.ToUpper().Contains("SLIME");
+            }
+
+            internal static void Unload()
+            {
+                IsSlime = null;
+                IsNotSlime = null;
+            }
+        }
+
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 24)]
         public static class Items
         {
             public const string TOOLTIP_PARASITESLIMEWEAPON = "\nParasites do not attack slimes.";
+        }
+
+        /// <summary>
+        /// Contains any information necessary for general systems like armor sets, item sets, etc...
+        /// </summary>
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 31), Note(Dev.WaitWhatWolf, "I had no idea how to name this class ok")]
+        public static class Trademark
+        {
+            public const float PARASITESLIME_EXP_RANGE = 60f;
+            public const int PARASITESLIME_BUFF_DURATION = 80;
         }
 
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
@@ -273,11 +304,24 @@ namespace Ascension
                 Gore_Stand_KillerQueen_Explosion = new(new(1, 4), new(-1f,-1f,1f,1f), new(-0.3f, -2f, 0.3f, -0.7f), new(0.8f, 1f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
                 Dust_Stand_KillerQueen_Explosion = new(new(25, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, new(-5f, 5f), new(-5f, 5f), new(0, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
                 Dust_Stand_KillerQueen_Bubble = new(new(5, 10), Vector2.Zero, 8, 8, Color.White, 0f, 0f, new(0, 50), new(0.8f, 1f), DustID.BubbleBurst_Blue, DustID.BubbleBurst_Purple);
+                pv_Dust_ParasiteSlime_ProjTravel = new DustMaker(new(1, 3), Vector2.Zero, 5, 5, Color.Cyan, 0f, 0f, new(0, 100), new(0.9f, 1f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime);
+                Dust_ParasiteSlime_Explode = new DustMaker(new(20, 25), Vector2.Zero, 5, 5, Color.Cyan, new(-1f, 1f), new(1f, -0.3f), new(0, 100), new(0.8f, 1.4f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
             }
 
             public static GoreMaker Gore_Stand_KillerQueen_Explosion { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Explosion { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Bubble { get; private set; }
+            public static DustMaker Dust_ParasiteSlime_Explode { get; private set; }
+            public static DustMaker Dust_ParasiteSlime_ProjTravel(Projectile @for) 
+                => pv_Dust_ParasiteSlime_ProjTravel with { PosVariation = new(Vector2.Zero, @for.Size) };
+
+            private static DustMaker pv_Dust_ParasiteSlime_ProjTravel;
+
+            private static void Event_ParasiteSlime(Dust dust)
+            {
+                dust.velocity *= 1.4f;
+                dust.noGravity = dust.scale != 1f;
+            }
         }
 
         /// <summary>
@@ -391,6 +435,7 @@ namespace Ascension
 
             private static RecipeCreator<Item_ParasiteSlimeBar> RC_ParasiteSlimeBar => new(4, (r) => r.AddRecipeGroup(GROUP_GOLDBARS, 4).AddIngredient<Item_ParasiteSlimeSample>(1).AddTile(TileID.Solidifier));
             private static RecipeCreator<Item_ParasiteSlimeJavelin> RC_ParasiteSlime => new(1, (r) => r.AddIngredient<Item_ParasiteSlimeBar>(10).AddTile(TileID.Solidifier));
+            private static RecipeCreator<Item_ParasiteSlimeArrow> RC_ParasiteSlimeArrow => new(100, (r) => r.AddIngredient<Item_ParasiteSlimeSample>().AddIngredient(ItemID.WoodenArrow, 100).AddTile(TileID.Solidifier));
 
             private static RecipeGroupCreator RGC_DemonFragments => new(GROUP_DEMONFRAGMENTS, CreateRecipeGroup("Demon Fragment", ItemID.ShadowScale, ItemID.TissueSample));
             private static RecipeGroupCreator RGC_DemonBars => new(GROUP_DEMONBARS, CreateRecipeGroup("Demon Bar", ItemID.DemoniteBar, ItemID.CrimtaneBar));

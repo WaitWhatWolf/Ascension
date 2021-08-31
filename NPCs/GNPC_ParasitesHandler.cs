@@ -24,10 +24,8 @@ namespace Ascension.NPCs
             if(pv_Countdown <= 0)
             {
                 pv_Countdown = 0.2f;
-                int damage = 3;
-                damage += Math.Min(npc.defense, 2);
                 for(int i = 0; i < pv_ParasiteCount; i++)
-                    npc.StrikeNPC(damage, 0, 0);
+                    npc.StrikeNPC(1, 0, 0);
                 pv_CountRemover++;
                 if(pv_CountRemover >= 4)
                 {

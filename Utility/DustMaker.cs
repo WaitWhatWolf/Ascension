@@ -13,7 +13,7 @@ namespace Ascension.Utility
     /// Makes a dust "explosion".
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/23 20:44:35")]
-    public sealed class DustMaker : IDustMaker
+    public sealed record DustMaker : IDustMaker
     {
         public int[] Types;
         public IntRange Amount;

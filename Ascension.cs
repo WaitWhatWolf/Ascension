@@ -19,6 +19,7 @@ namespace Ascension
 
         public override void Load()
         {
+            ASCResources.Delegates.Load();
             ASCResources.DeathReasons.Load();
             ASCResources.Dusts.Load();
             ASCResources.Reflection.Load();
@@ -30,6 +31,7 @@ namespace Ascension
 
         public override void Unload()
         {
+            ASCResources.Delegates.Unload();
             ASCResources.DeathReasons.Unload();
             ASCResources.Reflection.Unload();
             ASCResources.Recipes.Unload();
