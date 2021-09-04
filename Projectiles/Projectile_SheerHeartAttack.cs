@@ -9,6 +9,7 @@ using Ascension.Buffs;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
+using Ascension.Dusts;
 
 namespace Ascension.Projectiles
 {
@@ -50,14 +51,17 @@ namespace Ascension.Projectiles
         public void Init(Stand stand)
         {
             pv_Stand = stand;
-
-            pv_DirCountdown = new(Event_OnDirChange, 4f, Hooks.Random.Range(0, 2) == 0);
+            pv_Animation = new(2, (r) => Projectile.frame = r.Min, ASCResources.FLOAT_PER_FRAME * 3f);
+            pv_DirCountdown = new(Event_OnDirChange, 4f);
             pv_JumpHeight = pv_Stand.GetSpeed();
             pv_Speed = pv_JumpHeight / 5f;
             pv_CanSeekCountdown = new(60f / (pv_Stand.GetAttackSpeed() / 5f), true);
             
             pv_Stand.Owner.Player.AddBuff(ModContent.BuffType<Buff_SheerHeartAttack>(), 2);
+            Projectile.netImportant = true;
             Event_OnDirChange();
+            if (Hooks.Random.Range(0, 2) == 0) //Makes it spawn on random directions
+                Event_OnDirChange();
         }
 
         public void Deinit()
@@ -69,13 +73,21 @@ namespace Ascension.Projectiles
         public override void Kill(int timeLeft)
         {
             pv_TargetsHit.Clear();
+            DeleteLineDrawer();
         }
+
+        public override bool? CanCutTiles() => true;
 
         public override void PostDraw(Color lightColor)
         {
+            Lighting.AddLight(Projectile.Center, 0.5f, 0.5f, 0.5f);
+            
             if(pv_Target != null)
             {
-                ASCResources.Dusts.Dust_SheerHeartAttack_EyeLight.Create(Projectile.TopLeft + pv_EyeLocalPos);
+                Vector2 pos = Projectile.TopLeft + pv_EyeLocalPos;
+                
+                ASCResources.Dusts.Dust_SheerHeartAttack_EyeLight.Create(pos);
+                Lighting.AddLight(pos, 3f, 3f, 0f); //Essentially, Yellow
             }
         }
 
@@ -85,6 +97,7 @@ namespace Ascension.Projectiles
                 return;
 
             pv_DirCountdown.UpdateCountdown();
+            pv_Animation?.UpdateAnimation();
 
             if (pv_CanSeekTarget)
                 SeekTarget();
@@ -139,7 +152,7 @@ namespace Ascension.Projectiles
                 }
             }
 
-            //Debug.Log(Hooks.InGame.BlockExistsWithin(Projectile.Center + pv_WallScanLocalPos, 3, 4, t => Main.tileSolid[t.type]));
+            SetLineDrawerData();
         }
 
         public override bool PreAI() => true;
@@ -152,6 +165,7 @@ namespace Ascension.Projectiles
             pv_TargetsHit.Add(new(1f, target));
             pv_Target = null;
             pv_CanSeekTarget = false;
+            DeleteLineDrawer();
         }
 
         private void ExplodeTarget(NPC target)
@@ -177,10 +191,17 @@ namespace Ascension.Projectiles
 
             foreach(NPC npc in Hooks.InGame.GetAllWithin(Projectile, Projectile.Center, 2000f))
             {
-                if(previous < npc.life && pv_TargetsHit.FindIndex(i => i.Value == npc) == -1)
+                if (previous < npc.life && pv_TargetsHit.FindIndex(i => i.Value == npc) == -1)
                 {
                     target = npc;
                     previous = npc.life;
+                    if (pv_LineDrawer == null)
+                    {
+                        pv_LineDrawer = Main.dust[Dust.NewDust(Projectile.Center, 1, 1, ModContent.DustType<Dust_LineDrawer>(), newColor: Color.Yellow, Alpha: 200)];
+                        SetLineDrawerData();
+                    }
+
+                    Event_OnDirChange(); //Updates the sprite & physics direction
                 }
             }
 
@@ -204,6 +225,23 @@ namespace Ascension.Projectiles
             return true;
         }
 
+        private void SetLineDrawerData()
+        {
+            if (pv_LineDrawer != null)
+            {
+                Vector2 eyePos = Projectile.TopLeft + pv_EyeLocalPos;
+                Vector2 safeTargetPos = (pv_Target?.position ?? eyePos);
+                pv_LineDrawer.customData = (eyePos, safeTargetPos.DirectionFrom(eyePos).ToRotation(), Math.Min((int)safeTargetPos.Distance(eyePos), 150), 2);
+            }
+        }
+
+        private void DeleteLineDrawer()
+        {
+            if(pv_LineDrawer != null)
+                pv_LineDrawer.active = false;
+            pv_LineDrawer = null;
+        }
+
         private void Event_OnDirChange()
         {
             Projectile.netUpdate = true;
@@ -213,13 +251,14 @@ namespace Ascension.Projectiles
                 pv_MoveRight = (pv_Target.Center.X > Projectile.Center.X);
 
             Projectile.spriteDirection = !pv_MoveRight ? 1 : -1;
-            pv_EyeLocalPos = pv_MoveRight ? new(63, 29) : new(13, 29);
+            pv_EyeLocalPos = pv_MoveRight ? new(63, 30) : new(13, 30);
             pv_WallScanLocalPos = new Vector2(pv_MoveRight ? 56f : -24f, -16f);
             pv_DirCountdown.ForceSetCountdown(Hooks.Random.Range(4f, 8f));
         }
 
         private readonly List<KeyValuePair<ReturnCountdown, NPC>> pv_TargetsHit = new();
 
+        private SimpleAnimation pv_Animation;
         private EventCountdown pv_DirCountdown = 10f;
         private readonly ReturnCountdown pv_JumpCountdown = 1f;
         private ReturnCountdown pv_CanSeekCountdown;
@@ -230,6 +269,7 @@ namespace Ascension.Projectiles
         private NPC pv_Target;
         private Vector2 pv_WallScanLocalPos;
         private Vector2 pv_EyeLocalPos;
+        private Dust pv_LineDrawer;
 
         private float pv_Speed;
         private float pv_JumpHeight;

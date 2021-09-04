@@ -59,6 +59,15 @@ namespace Ascension.Players
         }
 
         /// <summary>
+        /// Invoked when <see cref="Invoke"/> is successfully called.
+        /// </summary>
+        public event Action OnStandInvoke;
+        /// <summary>
+        /// Invoked when <see cref="Recall"/> is successfully called.
+        /// </summary>
+        public event Action OnStandRecall;
+
+        /// <summary>
         /// Invoked when <see cref="UnlockAbility(int)"/> is successfully called.
         /// </summary>
         public event Action<int> OnAbilityUnlock;
@@ -229,6 +238,8 @@ namespace Ascension.Players
             
             pv_InvokeSound.Play();
             StandMenu.ActivateMenu();
+
+            OnStandInvoke?.Invoke();
         }
 
         /// <summary>
@@ -240,6 +251,7 @@ namespace Ascension.Players
             Active = false;
             pv_InstancedStand = null;
             StandMenu.DeactivateMenu();
+            OnStandRecall?.Invoke();
         }
 
         /// <summary>
@@ -262,8 +274,8 @@ namespace Ascension.Players
                     //Tries to activate this ability if it's either the basic attack or the correct key was pressed.
                     if (i == 0 || ASCResources.Input.GetStandAbilityKey(i).JustPressed)
                         Abilities[i].TryActivate();
-
-                    Abilities[i].TryDeactivate();
+                    else
+                        Abilities[i].TryDeactivate();
                 }
             }
         }

@@ -30,9 +30,9 @@ namespace Ascension.Buffs
 
         [Note(Dev.WaitWhatWolf, "Yes, the dot at the end is necessary...I have OCD, pls help")]
         protected override string DescriptionDefault => 
-            Hooks.Colors.GetColoredTooltipText("Killer Queen", Hooks.Colors.Tooltip_Stand_Title) 
+            "Killer Queen" 
             + " has called "
-            + Hooks.Colors.GetColoredTooltipText("Sheer Heart Attack", Hooks.Colors.Tooltip_Stand_Ability)
+            + "Sheer Heart Attack"
             + '.';
 
         protected override bool DisplayBuffTimer => false;

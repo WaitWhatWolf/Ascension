@@ -3,6 +3,7 @@ using Ascension.Enums;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
+using static Ascension.ASCResources;
 
 namespace Ascension
 {
@@ -19,17 +20,17 @@ namespace Ascension
 
         public static void Log(object message)
         {
-            Main.NewTextMultiline(message?.ToString() ?? string.Empty, c: Color.LightCyan);
+            Main.NewTextMultiline(message?.ToString() ?? STRING_NULL, c: Color.LightCyan);
         }
 
         public static void LogWarning(object message)
         {
-            Main.NewTextMultiline(message?.ToString() ?? string.Empty, c: Color.DarkOrange);
+            Main.NewTextMultiline(message?.ToString() ?? STRING_NULL, c: Color.DarkOrange);
         }
 
         public static void LogError(object message)
         {
-            Main.NewTextMultiline(message?.ToString() ?? string.Empty, c: Color.Crimson);
+            Main.NewTextMultiline(message?.ToString() ?? STRING_NULL, c: Color.Crimson);
         }
 
         public static void LogEnumerable<T>(IEnumerable<T> list)

@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Interfaces;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
@@ -41,7 +42,7 @@ namespace Ascension.UI
 
         protected override void OnActiveDrawSelf(SpriteBatch spriteBatch)
         {
-            for (int i = 1; i < pv_Stand.Abilities.Length; i++)
+            for (int i = 0; i < pv_Stand.Abilities.Length; i++)
             {
                 if (!pv_Stand.Owner.UnlockedStandAbility[i])
                     continue;
@@ -49,7 +50,11 @@ namespace Ascension.UI
                 StandAbility ability = pv_Stand.Abilities[i];
 
                 float abilityCurrentCooldown = ability.GetCurrentCountdown();
-                pv_AbilityCooldowns[i - 1].SetText(abilityCurrentCooldown <= 0 ? string.Empty : abilityCurrentCooldown.Truncate(1).ToString());
+                pv_AbilityCooldowns[i].SetText(ability is IAbilityHideCountdown hide && hide.HideCountdown() 
+                    ? string.Empty 
+                    : abilityCurrentCooldown <= 0 
+                    ? string.Empty 
+                    : abilityCurrentCooldown.Truncate(1).ToString());
             }
         }
 
@@ -123,16 +128,16 @@ namespace Ascension.UI
                     textKey.IgnoresMouseInteraction = true;
                     image.Append(textKey);
 
-                    UIText textCooldown = new(string.Empty, 0.4f, true);
-                    textCooldown.Left.Set(0, 0.5f);
-                    textCooldown.Top.Set(0, 0.25f);
-                    textCooldown.TextColor = Color.WhiteSmoke;
-                    textCooldown.IgnoresMouseInteraction = true;
-                    image.Append(textCooldown);
-
                     pv_AbilityKeys[i - 1] = textKey;
-                    pv_AbilityCooldowns[i - 1] = textCooldown;
                 }
+
+                UIText textCooldown = new(string.Empty, 0.4f, true);
+                textCooldown.Left.Set(0, 0.5f);
+                textCooldown.Top.Set(0, 0.25f);
+                textCooldown.TextColor = Color.WhiteSmoke;
+                textCooldown.IgnoresMouseInteraction = true;
+                image.Append(textCooldown);
+                pv_AbilityCooldowns[i] = textCooldown;
 
                 pv_AbilityImages[i] = image;
             }

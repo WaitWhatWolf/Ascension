@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Interfaces;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -10,7 +11,7 @@ namespace Ascension.Players
     ///
     /// </summary>
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/24 13:34:03")]
-    public abstract class StandAbility_DefaultMovement : StandAbility
+    public abstract class StandAbility_DefaultMovement : StandAbility, IAbilityHideCountdown
     {
         public StandAbility_DefaultMovement(Stand stand) : base(stand)
         {
@@ -91,5 +92,7 @@ namespace Ascension.Players
             projectile.spriteDirection = goesToTarget ? directionToTargetFromOwner.X > 0f ? -1 : 1 : -pr_Owner.direction;
 
         }
+
+        bool IAbilityHideCountdown.HideCountdown() => true;
     }
 }

@@ -49,6 +49,8 @@ namespace Ascension
         /// </summary>
         public const float FLOAT_PER_FRAME = 0.0166666f;
 
+        public const string STRING_NULL = "null";
+
         /// <summary>
         /// Returns the mouse position in vector value.
         /// </summary>
@@ -304,8 +306,8 @@ namespace Ascension
             {
                 Gore_Stand_KillerQueen_Explosion = new(new(1, 4), new(-1f,-1f,1f,1f), new(-0.3f, -2f, 0.3f, -0.7f), new(0.8f, 1f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
                 Gore_SheerHeartAttack_Explosion = new(new(4, 8), new(-5f,-5f,5f,5f), new(-3f, -2f, 3f, -0.7f), new(0.8f, 2f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
-                Dust_SheerHeartAttack_EyeLight = new(new(1, 4), Vector2.Zero, 4, 4, Color.Yellow, new(-1f, 1f), new(-0.1f, 0.1f), new(25, 100), new(0.5f, 1f), Event_DisableDustGrav, DustID.MinecartSpark, DustID.AncientLight);
-                Dust_Stand_KillerQueen_Explosion = new(new(25, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, new(-5f, 5f), new(-5f, 5f), new(0, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
+                Dust_SheerHeartAttack_EyeLight = new(new(6, 12), new(-Vector2.One * 3f, Vector2.One * 3f), 4, 4, Color.Yellow, new(-4f, 4f), new(-0.1f, 0.1f), new(25, 100), new(0.5f, 1f), Event_DisableDustGrav, DustID.MinecartSpark, DustID.AncientLight);
+                Dust_Stand_KillerQueen_Explosion = new(new(25, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, new(-5f, 5f), new(-5f, 5f), new(25, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
                 Dust_Stand_KillerQueen_Bubble = new(new(5, 10), Vector2.Zero, 8, 8, Color.White, 0f, 0f, new(0, 50), new(0.8f, 1f), DustID.BubbleBurst_Blue, DustID.BubbleBurst_Purple);
                 Dust_ParasiteSlime_Explode = new(new(30, 45), Vector2.Zero, 5, 5, Color.Cyan, new(-2f, 2f), new(-2f, 0.5f), new(0, 100), new(0.6f, 1.4f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
             

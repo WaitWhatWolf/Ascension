@@ -75,6 +75,11 @@ namespace Ascension.Players
             Owner.Player.GetDamage<MeleeDamageClass>() += (0.15f * Level);
             Owner.Player.GetKnockback<MeleeDamageClass>() += (0.25f * Level);
             Owner.Player.GetCritChance<MeleeDamageClass>() += (7 * Level);
+            if (Abilities[2].Active) //Reduces swing speed while Sheer Heart Attack is active
+            {
+                Owner.Player.meleeSpeed *= 0.5f;
+                Owner.Player.pickSpeed *= 0.5f;
+            }
             Owner.Player.statDefense -= (2 * Level);
         }
     }

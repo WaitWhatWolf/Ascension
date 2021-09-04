@@ -432,6 +432,9 @@ namespace Ascension.Utility
 
         public static class MathF
         {
+            public const float Rad2Deg = 360f / (System.MathF.PI * 2f);
+            public const float Deg2Rad = (System.MathF.PI * 2f) / 360f;
+
             /// <summary>
             /// Processes a countdown and returns true if the countdown reached it's destination.
             /// </summary>
