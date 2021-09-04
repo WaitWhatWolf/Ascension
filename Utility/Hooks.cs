@@ -280,7 +280,7 @@ namespace Ascension.Utility
                     for (; y <= maxY; y++)
                     {
                         Tile tile = Main.tile[x, y];
-                        Dust.NewDust(new Vector2(x, y).ToWorldCoordinates(), 8, 8, DustID.CoralTorch);
+                        //Dust.NewDust(new Vector2(x, y).ToWorldCoordinates(), 8, 8, DustID.CoralTorch);
                         if (tile.IsActive && match(tile))
                             toReturn.Add(tile);
                     }
