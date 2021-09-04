@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Ascension.Utility
@@ -186,6 +187,137 @@ namespace Ascension.Utility
 
                 return toReturn;
             }
+
+            /// <summary>
+            /// Returns a 0 index-based tile grid within a given area.
+            /// </summary>
+            /// <param name="center"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <returns></returns>
+            public static Tile[,] GetTileGridWithin(Vector2 center, int width, int height)
+            {
+                Tile[,] toReturn = new Tile[width, height];
+
+                Point centerPoint = center.ToTileCoordinates();
+
+                int halfWidth = (width / 2);
+                int halfHeight = (height / 2);
+                int x = centerPoint.X - halfWidth;
+                int y = centerPoint.Y - halfHeight;
+                int maxX = x + width;
+                int maxY = y + height;
+
+                int xCount = 0;
+                int yCount = 0;
+                for (; x <= maxX; x++)
+                {
+                    for (; y <= maxY; y++)
+                    {
+                        toReturn[xCount, yCount] = Main.tile[x, y];
+                        yCount++;
+                    }
+                    xCount++;
+                }
+
+                return toReturn;
+            }
+
+            /// <summary>
+            /// Returns all active tiles within the given area.
+            /// </summary>
+            /// <param name="center"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <returns></returns>
+            public static List<Tile> GetAllTilesWithin(Vector2 center, int width, int height)
+            {
+                List<Tile> toReturn = new();
+
+                Point centerPoint = center.ToTileCoordinates();
+
+                int halfWidth = (width / 2);
+                int halfHeight = (height / 2);
+                int x = centerPoint.X - halfWidth;
+                int y = centerPoint.Y - halfHeight;
+                int maxX = x + width;
+                int maxY = y + height;
+
+                for (; x <= maxX; x++)
+                    for (; y <= maxY; y++)
+                    {
+                        Tile tile = Main.tile[x, y];
+                        if (tile.IsActive)
+                            toReturn.Add(tile);
+                    }
+
+                return toReturn;
+            }
+
+            /// <summary>
+            /// Returns all active blocks within the area that match the given predicate.
+            /// </summary>
+            /// <param name="center"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <param name="match"></param>
+            /// <returns></returns>
+            public static List<Tile> GetAllTilesWithin(Vector2 center, int width, int height, Predicate<Tile> match)
+            {
+                List<Tile> toReturn = new();
+
+                Point centerPoint = center.ToTileCoordinates();
+
+                int halfWidth = (width / 2);
+                int halfHeight = (height / 2);
+                int x = centerPoint.X - halfWidth;
+                int y = centerPoint.Y - halfHeight;
+                int maxX = x + width;
+                int maxY = y + height;
+
+                for (; x <= maxX; x++)
+                {
+                    for (; y <= maxY; y++)
+                    {
+                        Tile tile = Main.tile[x, y];
+                        Dust.NewDust(new Vector2(x, y).ToWorldCoordinates(), 8, 8, DustID.CoralTorch);
+                        if (tile.IsActive && match(tile))
+                            toReturn.Add(tile);
+                    }
+                }
+
+                return toReturn;
+            }
+
+            /// <summary>
+            /// Checks if there is one or more blocks within a given area.
+            /// </summary>
+            /// <param name="center"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <returns>True if there is one or more blocks within the given area.</returns>
+            public static bool BlockExistsWithin(Vector2 center, int width, int height)
+                => GetAllTilesWithin(center, width, height).Count > 0;
+
+            /// <summary>
+            /// Checks if there is one or more blocks within a given area.
+            /// </summary>
+            /// <param name="center"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <returns>True if there is one or more blocks within the given area.</returns>
+            public static bool BlockExistsWithin(Vector2 center, int width, int height, Predicate<Tile> match)
+                => GetAllTilesWithin(center, width, height, match).Count > 0;
+
+            /// <summary>
+            /// Checks if all blocks within the given area are filled.
+            /// </summary>
+            /// <param name="center"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <returns>True if all slots of the given area are filled with blocks.</returns>
+            public static bool BlocksExistWithin(Vector2 center, int width, int height)
+                => GetAllTilesWithin(center, width, height).Count == width + height;
 
             public static void ApplyModBuffToAllWithin(int type, object attacker, Vector2 center, float within, int duration)
             {
@@ -441,6 +573,11 @@ namespace Ascension.Utility
             public static readonly Color Tangelo = new Color(0.976f, 0.302f, 0f);
 
             /// <summary>
+            /// Color used to refer to a player's name.
+            /// </summary>
+            public static readonly Color Tooltip_Player_Title = Color.Purple;
+
+            /// <summary>
             /// Color used to refer to a stand title.
             /// </summary>
             public static readonly Color Tooltip_Stand_Title = Color.MediumPurple;
@@ -474,11 +611,15 @@ namespace Ascension.Utility
             /// <summary>
             /// Color used to refer to debuffs.
             /// </summary>
-            public static readonly Color Tooltip_Debuff = Color.OrangeRed;
+            public static readonly Color Tooltip_Debuff = Color.MediumVioletRed;
             /// <summary>
             /// Color used to refer to either delays or non-standard countdown.
             /// </summary>
             public static readonly Color Tooltip_Delay = Color.DeepPink;
+            /// <summary>
+            /// Color used to refer to base stats of abilities and/or entities.
+            /// </summary>
+            public static readonly Color Tooltip_Stat = Color.DodgerBlue;
             #endregion
 
             /// <summary>
@@ -494,6 +635,32 @@ namespace Ascension.Utility
             }
 
             /// <summary>
+            /// Returns a text with all color references removed.
+            /// </summary>
+            /// <param name="text"></param>
+            /// <returns></returns>
+            public static string GetUncoloredTooltipText(string text)
+            {
+                string toReturn = text;
+                Match match = pv_Regex_CustomTooltipColor.Match(text);
+
+                while(match.Success)
+                {
+                    toReturn = toReturn.Remove(match.Index, match.Length);
+
+                    string toInsert = match.Value;
+                    toInsert = toInsert.Remove(match.Value.IndexOf(']'));
+                    toInsert = toInsert.Remove(0, match.Value.IndexOf(':') + 1);
+
+                    toReturn = toReturn.Insert(match.Index, toInsert);
+
+                    match = match.NextMatch();
+                }
+
+                return toReturn;
+            }
+
+            /// <summary>
             /// Returns a colored text for item tooltips, which supports multi-line strings.
             /// </summary>
             /// <param name="text">The original text.</param>
@@ -505,8 +672,7 @@ namespace Ascension.Utility
                     return GetColoredTooltipText(text, color);
 
                 string toReturn = string.Empty;
-                Regex regex = new(@"(\n|^).*");
-                Match match = regex.Match(text);
+                Match match = pv_Regex_IsNewLine.Match(text);
 
                 while(true)
                 {
@@ -543,6 +709,12 @@ namespace Ascension.Utility
                     _ => Color.DarkSlateGray
                 };
             }
+
+            /// <summary>
+            /// Matches any string which look similar to this: [c/(hexcode):(text)]
+            /// </summary>
+            private static Regex pv_Regex_CustomTooltipColor = new(@"\[c\/[a-zA-Z0-9]{6}:.+\]", RegexOptions.RightToLeft);
+            private static Regex pv_Regex_IsNewLine = new(@"(\n|^).*");
         }
     }
 }

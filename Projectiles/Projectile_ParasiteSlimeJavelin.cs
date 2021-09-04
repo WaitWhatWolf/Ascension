@@ -35,6 +35,7 @@ namespace Ascension.Projectiles
 
         public override void Kill(int timeLeft)
         {
+            ASCResources.Sound.Play_ParasiteSlime_Explosion(Projectile.position);
             Hooks.InGame.ApplyModBuffToAllWithin<Buff_Parasites>(Projectile, Projectile.Center, PARASITESLIME_EXP_RANGE, PARASITESLIME_BUFF_DURATION, ASCResources.Delegates.IsNotSlime);
             ASCResources.Dusts.Dust_ParasiteSlime_Explode.Create(Projectile.position);
         }

@@ -187,7 +187,7 @@ namespace Ascension.Players
             if (Owner.ConsumedRedHotChiliPepper)
                 UnlockAbility(1, debugUnlocks);
 
-            //UnlockAbility(2, debugUnlocks);
+            UnlockAbility(2, debugUnlocks);
             //UnlockAbility(3, debugUnlocks);
         }
 

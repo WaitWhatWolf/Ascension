@@ -21,7 +21,7 @@ namespace Ascension.Items.Consumables
 
         public override void SetDefaults()
         {
-            Item.width = 14;
+            Item.width = 13;
             Item.height = 32;
             Item.DamageType = DamageClass.Ranged;
             Item.maxStack = 1337;

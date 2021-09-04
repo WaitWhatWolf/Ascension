@@ -214,7 +214,7 @@ namespace Ascension.UI
                 _ => string.Empty
             };
 
-            Vector2 size = FontAssets.MouseText.Value.MeasureString(text);
+            Vector2 size = FontAssets.MouseText.Value.MeasureString(Hooks.Colors.GetUncoloredTooltipText(text));
 
             pv_TooltipText.SetText(text);
             pv_TooltipText.Left.Set(left, 0f);

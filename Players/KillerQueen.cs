@@ -51,6 +51,7 @@ namespace Ascension.Players
         {
             new StandAbility_KillerQueen_BombTransmutation(this),
             new StandAbility_KillerQueen_StrayCatBombing(this),
+            new StandAbility_KillerQueen_SheerHeartAttack(this),
         };
 
         protected override Asset<Texture2D> Init_Portrait => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_PORTRAIT_KILLERQUEEN);

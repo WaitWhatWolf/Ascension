@@ -15,7 +15,7 @@ namespace Ascension.Utility
         /// <summary>
         /// The length of this <see cref="EventCountdown"/>.
         /// </summary>
-        public float Countdown { get; }
+        public float Countdown { get; private set; }
 
         /// <summary>
         /// Handles the countdown; Must be called every frame in an update method.
@@ -24,7 +24,8 @@ namespace Ascension.Utility
         {
             if(Hooks.MathF.ProcessCountdown(ref pv_CurCountdown, Countdown))
             {
-                pv_Event();
+                pv_Event?.Invoke();
+                Reset();
             }
         }
 
@@ -42,6 +43,12 @@ namespace Ascension.Utility
             pv_CurCountdown = Countdown;
         }
 
+        public void ForceSetCountdown(float to, bool reset = true)
+        {
+            Countdown = to;
+            if (reset) Reset();
+        }
+
         /// <summary>
         /// Creates a new <see cref="ReturnCountdown"/>.
         /// </summary>
@@ -54,10 +61,14 @@ namespace Ascension.Utility
             pv_CurCountdown = !startAsTrue ? countdown : 0;
         }
 
-        public EventCountdown(Action @event, float countdown, bool startsAsTrue = false)
+        public EventCountdown(Action @event, float countdown, bool startAsTrue = false)
         {
             if (@event == null)
                 throw new ArgumentNullException("Event passed in an EventCountdown constructor cannot be null.");
+
+            Countdown = countdown;
+            pv_CurCountdown = !startAsTrue ? countdown : 0;
+            pv_Event = @event;
         }
 
         /// <summary>
@@ -65,7 +76,7 @@ namespace Ascension.Utility
         /// </summary>
         /// <param name="val"></param>
         public static implicit operator EventCountdown(float val)
-            => val;
+            => new(val);
 
         private float pv_CurCountdown;
 

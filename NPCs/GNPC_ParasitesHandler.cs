@@ -43,7 +43,7 @@ namespace Ascension.NPCs
 
         public void AddParasite()
         {
-            pv_ParasiteCount++;
+            pv_ParasiteCount = Math.Min(pv_ParasiteCount + 1, 10);
             pv_CountRemover = 0;
         }
 

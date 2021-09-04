@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
@@ -141,7 +142,7 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 31), Note(Dev.WaitWhatWolf, "I had no idea how to name this class ok")]
         public static class Trademark
         {
-            public const float PARASITESLIME_EXP_RANGE = 60f;
+            public const float PARASITESLIME_EXP_RANGE = 120f;
             public const int PARASITESLIME_BUFF_DURATION = 80;
         }
 
@@ -302,25 +303,39 @@ namespace Ascension
             internal static void Load()
             {
                 Gore_Stand_KillerQueen_Explosion = new(new(1, 4), new(-1f,-1f,1f,1f), new(-0.3f, -2f, 0.3f, -0.7f), new(0.8f, 1f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
+                Gore_SheerHeartAttack_Explosion = new(new(4, 8), new(-5f,-5f,5f,5f), new(-3f, -2f, 3f, -0.7f), new(0.8f, 2f), GoreID.Smoke1, GoreID.Smoke2, GoreID.Smoke3);
+                Dust_SheerHeartAttack_EyeLight = new(new(1, 4), Vector2.Zero, 4, 4, Color.Yellow, new(-1f, 1f), new(-0.1f, 0.1f), new(25, 100), new(0.5f, 1f), Event_DisableDustGrav, DustID.MinecartSpark, DustID.AncientLight);
                 Dust_Stand_KillerQueen_Explosion = new(new(25, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, new(-5f, 5f), new(-5f, 5f), new(0, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
                 Dust_Stand_KillerQueen_Bubble = new(new(5, 10), Vector2.Zero, 8, 8, Color.White, 0f, 0f, new(0, 50), new(0.8f, 1f), DustID.BubbleBurst_Blue, DustID.BubbleBurst_Purple);
-                pv_Dust_ParasiteSlime_ProjTravel = new DustMaker(new(1, 3), Vector2.Zero, 5, 5, Color.Cyan, 0f, 0f, new(0, 100), new(0.9f, 1f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime);
-                Dust_ParasiteSlime_Explode = new DustMaker(new(20, 25), Vector2.Zero, 5, 5, Color.Cyan, new(-1f, 1f), new(1f, -0.3f), new(0, 100), new(0.8f, 1.4f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
+                Dust_ParasiteSlime_Explode = new(new(30, 45), Vector2.Zero, 5, 5, Color.Cyan, new(-2f, 2f), new(-2f, 0.5f), new(0, 100), new(0.6f, 1.4f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
+            
+                pv_Dust_ParasiteSlime_ProjTravel = new(new(1, 3), Vector2.Zero, 5, 5, Color.Cyan, 0f, 0f, new(0, 100), new(0.2f, 0.5f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime);
+                pv_Dust_SheerHeartAttack_Explode = new(new(100, 125), Vector2.Zero, 5, 5, Color.Yellow, new(-8f, 8f), new(-8f, 8f), new(0, 50), new(1f, 10f), Event_DisableDustGrav, DustID.MinecartSpark, DustID.SparksMech);
             }
 
             public static GoreMaker Gore_Stand_KillerQueen_Explosion { get; private set; }
+            public static GoreMaker Gore_SheerHeartAttack_Explosion { get; private set; }
+            public static DustMaker Dust_SheerHeartAttack_EyeLight { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Explosion { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Bubble { get; private set; }
             public static DustMaker Dust_ParasiteSlime_Explode { get; private set; }
             public static DustMaker Dust_ParasiteSlime_ProjTravel(Projectile @for) 
                 => pv_Dust_ParasiteSlime_ProjTravel with { PosVariation = new(Vector2.Zero, @for.Size) };
+            public static DustMaker Dust_SheerHeartAttack_Explode(NPC target)
+                => pv_Dust_SheerHeartAttack_Explode with { PosVariation = new(-target.Size, target.Size) };
 
             private static DustMaker pv_Dust_ParasiteSlime_ProjTravel;
+            private static DustMaker pv_Dust_SheerHeartAttack_Explode;
 
             private static void Event_ParasiteSlime(Dust dust)
             {
                 dust.velocity *= 1.4f;
-                dust.noGravity = dust.scale != 1f;
+                dust.noGravity = false;
+            }
+
+            private static void Event_DisableDustGrav(Dust dust)
+            {
+                dust.noGravity = true;
             }
         }
 
@@ -335,11 +350,9 @@ namespace Ascension
             /// </summary>
             public static void Load()
             {
-                PDRV_STANDARROW = new[] { "{0} couldn't handle the arrow's power.", "The power of the arrow ripped {0} to shreds.", "{0} wasn't worthy of the arrow's power." };
-
                 pv_Reasons = new SortedDictionary<string, IEnumerable<string>>();
-                FieldInfo[] fields = typeof(DeathReasons).GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.CreateInstance);
-                foreach(FieldInfo field in fields)
+                PropertyInfo[] fields = typeof(DeathReasons).GetProperties(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.CreateInstance);
+                foreach(PropertyInfo field in fields)
                 {
                     if(field.Name.StartsWith("PDRV_"))
                     {
@@ -352,7 +365,6 @@ namespace Ascension
 
             public static void Unload()
             {
-                PDRV_STANDARROW = null;
                 pv_Reasons = null;
             }
 
@@ -367,10 +379,21 @@ namespace Ascension
                 return PlayerDeathReason.ByCustomReason(string.Format(pv_Reasons[name].Random(), args));
             }
 
-#pragma warning disable IDE0052 //Put the PDRV_ variables in here
+#pragma warning disable IDE0051 //Put the PDRV_ variables in here
             /// <summary> Killed by <see cref="Item_StandArrow"/>. </summary>
-            private static string[] PDRV_STANDARROW;
-#pragma warning restore IDE0052
+            private static string[] PDRV_STANDARROW => new[] 
+            { 
+                "{0} couldn't handle the arrow's power.", 
+                "The power of the arrow ripped {0} to shreds.", 
+                "{0} wasn't worthy of the arrow's power." 
+            };
+            private static string[] PDRV_SHEERHEARTATTACKDRAWBACK => new[]
+            {
+                Hooks.Colors.GetColoredTooltipText("{0}", Hooks.Colors.Tooltip_Stand_Ability) + "turned {1}'s \'insides\' into \'outsides\'.",
+                "{1} couldn't handle " + Hooks.Colors.GetColoredTooltipText("{0}", Hooks.Colors.Tooltip_Stand_Ability) + "'s drawbacks.",
+                Hooks.Colors.GetColoredTooltipText("{0}", Hooks.Colors.Tooltip_Stand_Ability) + " made {0} lose more than just his hand...",
+            };
+#pragma warning restore IDE0051
 
             private static SortedDictionary<string, IEnumerable<string>> pv_Reasons;
         }
@@ -476,6 +499,7 @@ namespace Ascension
 
             public const string STAND_ABILITY_KILLERQUEEN_BASIC = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_BombTransmutation";
             public const string STAND_ABILITY_KILLERQUEEN_ABILITY1 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_StrayCatBombing";
+            public const string STAND_ABILITY_KILLERQUEEN_ABILITY2 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_SheerHeartAttack";
             public const string STAND_PORTRAIT_KILLERQUEEN = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_KillerQueen";
             public const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
 
@@ -499,6 +523,7 @@ namespace Ascension
             {
                 return index switch
                 {
+                    0 => default,
                     1 => Keybind_Stand_Ability_First,
                     2 => Keybind_Stand_Ability_Second,
                     _ => Keybind_Stand_Ability_Ultimate
@@ -587,6 +612,12 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
         public static class Sound
         {
+            public static void Play_ParasiteSlime_Explosion(Vector2 position)
+            {
+                SoundEngine.PlaySound(SoundID.Item54, position);
+                SoundEngine.PlaySound(SoundID.Item85, position);
+            }
+
             public const string STAND_INVOKE_STARPLATINUM = ASSETS_PATH_SOUND_CUSTOM + "Stand_Invoke_StarPlatinum";
             public const string STAND_INVOKE_KILLERQUEEN = ASSETS_PATH_SOUND_CUSTOM + "Stand_Invoke_KillerQueen";
 
@@ -598,10 +629,10 @@ namespace Ascension
             public static void Load(Ascension ascension)
             {
                 //AscensionSound as_StarPlatinum_Invoke;
-                ascension.AddSound(SoundType.Custom, STAND_INVOKE_STARPLATINUM);
-                ascension.AddSound(SoundType.Custom, STAND_INVOKE_KILLERQUEEN);
-                Stand_Invoke_Index_StarPlatinum = SoundLoader.GetSoundSlot(SoundType.Custom, STAND_INVOKE_STARPLATINUM);
-                Stand_Invoke_Index_KillerQueen = SoundLoader.GetSoundSlot(SoundType.Custom, STAND_INVOKE_KILLERQUEEN);
+                ascension.AddSound(Terraria.ModLoader.SoundType.Custom, STAND_INVOKE_STARPLATINUM);
+                ascension.AddSound(Terraria.ModLoader.SoundType.Custom, STAND_INVOKE_KILLERQUEEN);
+                Stand_Invoke_Index_StarPlatinum = SoundLoader.GetSoundSlot(Terraria.ModLoader.SoundType.Custom, STAND_INVOKE_STARPLATINUM);
+                Stand_Invoke_Index_KillerQueen = SoundLoader.GetSoundSlot(Terraria.ModLoader.SoundType.Custom, STAND_INVOKE_KILLERQUEEN);
                 //Sounds.Add(Stand_StarPlatinum_Invoke_Index, as_StarPlatinum_Invoke);
             }
 
