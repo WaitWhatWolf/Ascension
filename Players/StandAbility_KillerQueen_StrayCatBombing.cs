@@ -20,7 +20,7 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/29 6:32:10")]
     public class StandAbility_KillerQueen_StrayCatBombing : StandAbility
     {
-        public StandAbility_KillerQueen_StrayCatBombing(Stand stand) : base(stand)
+        public StandAbility_KillerQueen_StrayCatBombing(Stand stand, int index) : base(stand, index)
         {
 
         }

@@ -39,6 +39,13 @@ namespace Ascension.Buffs.StandUnique
 
                 pv_Executed = true;
             }
+
+            if (!pv_PlayedAnim && Countdown.GetCurrentCountdown() <= Stand.GetStandModProjectile().StandAnimator.GetAnimation(ASCResources.Animations.NAME_STAND_KILLERQUEEN_TRIGGERBOMB).TotalPlayback / 2f)
+            {
+                pv_PlayedAnim = true;
+                Stand.GetStandModProjectile().StandAnimator.Speed = 1f;
+                Stand.GetStandModProjectile().StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_TRIGGERBOMB);
+            }
         }
 
         public override bool StopsAI() => false;
@@ -59,6 +66,7 @@ namespace Ascension.Buffs.StandUnique
             ASCResources.Dusts.Dust_Stand_KillerQueen_Explosion.Create(position);
         }
 
+        private bool pv_PlayedAnim;
         private int Damage;
         private int Pen;
         private float Knockback;

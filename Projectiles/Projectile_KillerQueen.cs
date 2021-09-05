@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Utility;
 using Terraria;
 
 namespace Ascension.Projectiles
@@ -14,16 +15,20 @@ namespace Ascension.Projectiles
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
+
+            Main.projFrames[Projectile.type] = 5;
         }
 
         public override void SetDefaults()
         {
             Projectile.width = 64;
             Projectile.height = 64;
-
+           
             Projectile.DamageType = Terraria.ModLoader.DamageClass.Melee;
             base.SetDefaults();
         }
+
+        public override Animator StandAnimator { get; } = new(ASCResources.Animations.Stand_KillerQueen);
 
         public override bool MinionContactDamage() => false;
 

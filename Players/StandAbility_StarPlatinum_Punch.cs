@@ -13,17 +13,17 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class StandAbility_StarPlatinum_Punch : StandAbility_DefaultMovement
     {
+        public StandAbility_StarPlatinum_Punch(Stand stand, int index) : base(stand, index)
+        {
+
+        }
+
         public override string Name { get; } = "Ora! Ora! Ora!";
 
         public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) + "'s bread & butter: Just punching.\nAttacks all nearby enemies repeatedly.\n"
             + Hooks.Colors.GetColoredTooltipText($"Attacks every {GetCooldown()}s.", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
 
         public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_STARPLATINUM_BASIC);
-
-        public StandAbility_StarPlatinum_Punch(Stand stand) : base(stand)
-        {
-
-        }
 
         protected override ReturnCountdown Countdown => pv_UTDCooldown;
 

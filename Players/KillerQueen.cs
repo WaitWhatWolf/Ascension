@@ -49,9 +49,10 @@ namespace Ascension.Players
 
         protected override StandAbility[] Init_Abilities => new StandAbility[]
         {
-            new StandAbility_KillerQueen_BombTransmutation(this),
-            new StandAbility_KillerQueen_StrayCatBombing(this),
-            new StandAbility_KillerQueen_SheerHeartAttack(this),
+            new StandAbility_KillerQueen_BombTransmutation(this, 0),
+            new StandAbility_KillerQueen_StrayCatBombing(this, 1),
+            new StandAbility_KillerQueen_SheerHeartAttack(this, 2),
+            new StandAbility_KillerQueen_BitesTheDust(this, 3),
         };
 
         protected override Asset<Texture2D> Init_Portrait => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_PORTRAIT_KILLERQUEEN);

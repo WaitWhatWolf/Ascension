@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Utility;
 using Terraria;
 
 namespace Ascension.Projectiles
@@ -21,6 +22,8 @@ namespace Ascension.Projectiles
             Projectile.DamageType = Terraria.ModLoader.DamageClass.Melee;
             base.SetDefaults();
         }
+
+        public override Animator StandAnimator { get; } = new(ASCResources.Animations.Stand_StarPlatinum);
 
         public override bool CloneNewInstances => true;
 

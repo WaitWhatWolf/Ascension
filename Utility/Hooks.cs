@@ -141,6 +141,16 @@ namespace Ascension.Utility
             }
 
             /// <summary>
+            /// Returns true if an npc exists.
+            /// </summary>
+            /// <param name="npc"></param>
+            /// <returns></returns>
+            public static bool NPCExists(NPC npc)
+            {
+                return npc != null && npc.life > 0 && npc.active;
+            }
+
+            /// <summary>
             /// Returns all NPCs within a given range of center.
             /// </summary>
             /// <param name="attacker"></param>
@@ -154,6 +164,9 @@ namespace Ascension.Utility
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     NPC npc = Main.npc[i];
+
+                    if (!npc.active)
+                        continue;
 
                     if (npc.CanBeChasedBy(attacker, true))
                     {
@@ -182,7 +195,8 @@ namespace Ascension.Utility
                 {
                     NPC npc = Main.npc[i];
 
-                    toReturn.Add(npc);
+                    if(npc.active)
+                        toReturn.Add(npc);
                 }
 
                 return toReturn;

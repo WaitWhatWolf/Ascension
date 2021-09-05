@@ -26,6 +26,15 @@ namespace Ascension.Utility
         /// <inheritdoc/>
         public float GetCurrentCountdown() => pv_CurCountdown;
 
+        /// <summary>
+        /// Sets the current countdown to the given value.
+        /// </summary>
+        /// <param name="to"></param>
+        public void SetCurrentCountdown(float to)
+        {
+            pv_CurCountdown = to;
+        }
+
         public void Reset()
         {
             pv_CurCountdown = Countdown;

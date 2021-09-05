@@ -48,20 +48,22 @@ namespace Ascension.Projectiles
             Projectile.aiStyle = 0;
         }
 
-        public void Init(Stand stand)
+        public void Init(Stand stand, StandAbility_KillerQueen_SheerHeartAttack ability)
         {
             pv_Stand = stand;
+            pv_Ability = ability;
             pv_Animation = new(2, (r) => Projectile.frame = r.Min, ASCResources.FLOAT_PER_FRAME * 3f);
             pv_DirCountdown = new(Event_OnDirChange, 4f);
             pv_JumpHeight = pv_Stand.GetSpeed();
             pv_Speed = pv_JumpHeight / 5f;
-            pv_CanSeekCountdown = new(60f / (pv_Stand.GetAttackSpeed() / 5f), true);
             
             pv_Stand.Owner.Player.AddBuff(ModContent.BuffType<Buff_SheerHeartAttack>(), 2);
             Projectile.netImportant = true;
             Event_OnDirChange();
             if (Hooks.Random.Range(0, 2) == 0) //Makes it spawn on random directions
                 Event_OnDirChange();
+
+            ASCResources.Sound.shaOYYY.Play();
         }
 
         public void Deinit()
@@ -99,11 +101,11 @@ namespace Ascension.Projectiles
             pv_DirCountdown.UpdateCountdown();
             pv_Animation?.UpdateAnimation();
 
-            if (pv_CanSeekTarget)
+            if (CanSeekTarget)
                 SeekTarget();
 
-            if (!pv_CanSeekTarget && pv_CanSeekCountdown)
-                pv_CanSeekTarget = true;
+            if (!CanSeekTarget && CanSeekCountdown)
+                CanSeekTarget = true;
 
             if (!pv_CanJump && pv_JumpCountdown)
                 pv_CanJump = true;
@@ -164,7 +166,7 @@ namespace Ascension.Projectiles
 
             pv_TargetsHit.Add(new(1f, target));
             pv_Target = null;
-            pv_CanSeekTarget = false;
+            CanSeekTarget = false;
             DeleteLineDrawer();
         }
 
@@ -195,17 +197,21 @@ namespace Ascension.Projectiles
                 {
                     target = npc;
                     previous = npc.life;
-                    if (pv_LineDrawer == null)
-                    {
-                        pv_LineDrawer = Main.dust[Dust.NewDust(Projectile.Center, 1, 1, ModContent.DustType<Dust_LineDrawer>(), newColor: Color.Yellow, Alpha: 200)];
-                        SetLineDrawerData();
-                    }
-
-                    Event_OnDirChange(); //Updates the sprite & physics direction
                 }
             }
 
+            if (pv_Target == target)
+                return;
+
             pv_Target = target;
+            if (pv_LineDrawer == null)
+            {
+                pv_LineDrawer = Main.dust[Dust.NewDust(Projectile.Center, 1, 1, ModContent.DustType<Dust_LineDrawer>(), newColor: Color.Yellow, Alpha: 200)];
+                SetLineDrawerData();
+            }
+
+            Event_OnDirChange(); //Updates the sprite & physics direction
+            ASCResources.Sound.kocchiWoMiro.Play();
         }
 
         private bool CheckActive(Player owner)
@@ -251,19 +257,22 @@ namespace Ascension.Projectiles
                 pv_MoveRight = (pv_Target.Center.X > Projectile.Center.X);
 
             Projectile.spriteDirection = !pv_MoveRight ? 1 : -1;
-            pv_EyeLocalPos = pv_MoveRight ? new(63, 30) : new(13, 30);
+            pv_EyeLocalPos = pv_MoveRight ? new(63, 29) : new(13, 29);
             pv_WallScanLocalPos = new Vector2(pv_MoveRight ? 56f : -24f, -16f);
             pv_DirCountdown.ForceSetCountdown(Hooks.Random.Range(4f, 8f));
         }
 
         private readonly List<KeyValuePair<ReturnCountdown, NPC>> pv_TargetsHit = new();
 
+        private StandAbility_KillerQueen_SheerHeartAttack pv_Ability;
+
+        private ReturnCountdown CanSeekCountdown => pv_Ability.CanSeekCountdown;
+        private bool CanSeekTarget { get => pv_Ability.CanSeekTarget; set => pv_Ability.CanSeekTarget = value; }
+
         private SimpleAnimation pv_Animation;
         private EventCountdown pv_DirCountdown = 10f;
         private readonly ReturnCountdown pv_JumpCountdown = 1f;
-        private ReturnCountdown pv_CanSeekCountdown;
         private bool pv_MoveRight;
-        private bool pv_CanSeekTarget;
         private bool pv_CanJump;
         private Stand pv_Stand;
         private NPC pv_Target;

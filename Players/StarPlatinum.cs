@@ -34,10 +34,10 @@ namespace Ascension.Players
 
         protected override StandAbility[] Init_Abilities => new StandAbility[]
             {
-                new StandAbility_StarPlatinum_Punch(this),
-                new StandAbility_StarPlatinum_ORA(this),
-                new StandAbility_StarPlatinum_Receipt(this),
-                new StandAbility_StarPlatinum_TheWorld(this),
+                new StandAbility_StarPlatinum_Punch(this, 0),
+                new StandAbility_StarPlatinum_ORA(this, 1),
+                new StandAbility_StarPlatinum_Receipt(this, 2),
+                new StandAbility_StarPlatinum_TheWorld(this, 3),
             };
 
         protected override Asset<Texture2D> Init_Portrait => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_PORTRAIT_STARPLATINUM);

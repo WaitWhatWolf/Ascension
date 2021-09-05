@@ -19,9 +19,11 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, "2021/09/04 11:31:53")]
     public class StandAbility_KillerQueen_SheerHeartAttack : StandAbility, IAbilityHideCountdown
     {
-        public StandAbility_KillerQueen_SheerHeartAttack(Stand stand) : base(stand) 
+        public StandAbility_KillerQueen_SheerHeartAttack(Stand stand, int index) : base(stand, index) 
         {
             stand.OnStandRecall += Event_OnStandRecall;
+
+            CanSeekCountdown = new(60f / (stand.GetAttackSpeed() / 5f), false);
         }
 
         public override string Name { get; } = "Sheer Heart Attack";
@@ -34,7 +36,9 @@ namespace Ascension.Players
             + " the target with the " + Hooks.Colors.GetColoredTooltipText("highest health", Hooks.Colors.Tooltip_Stat)
             + ",\nthen exploding it after a short delay, with damage equal" 
             + "\n to a portion of the enemy's " + Hooks.Colors.GetColoredTooltipText("current health", Hooks.Colors.Tooltip_Stat)
-            + '.';
+            + '.'
+            + "\n\n"
+            + Hooks.Colors.GetColoredTooltipText("Sheer Heart Attack has no weaknesses.", Hooks.Colors.Tooltip_Quote);
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_ABILITY_KILLERQUEEN_ABILITY2);
 
@@ -48,18 +52,21 @@ namespace Ascension.Players
             }
         }
 
+        internal ReturnCountdown CanSeekCountdown { get; private set; }
+        internal bool CanSeekTarget;
+
         protected override ReturnCountdown Countdown { get; } = 1f;
 
         protected override bool ActivateCondition() => CountdownReady && !Active;
 
-        protected override bool DeactivateCondition() => !Stand.Active || (ASCResources.Input.GetStandAbilityKey(2).Current && pv_CanRecall) || pv_SheerHeartAttack == null;
+        protected override bool DeactivateCondition() => !Stand.Active || (ASCResources.Input.GetStandAbilityKey(Index).Current && pv_CanRecall) || pv_SheerHeartAttack == null;
 
         protected override void OnActivate()
         {
-            Countdown.Reset();
-            int projIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Stand.Owner, Stand), Stand.Owner.Player.Center, new(0, 1f), ModContent.ProjectileType<Projectile_SheerHeartAttack>(), Stand.GetDamage(), 0);
+            ResetCountdown();
+            int projIndex = Projectile.NewProjectile(new ProjectileSource_Stand(Stand.Owner, Stand), Stand.Owner.Player.Top, new(0, 1f), ModContent.ProjectileType<Projectile_SheerHeartAttack>(), Stand.GetDamage(), 0);
             pv_SheerHeartAttack = ((Projectile_SheerHeartAttack)Main.projectile[projIndex].ModProjectile);
-            pv_SheerHeartAttack.Init(Stand);
+            pv_SheerHeartAttack.Init(Stand, this);
         }
 
         protected override void OnDeactivate()
@@ -73,7 +80,6 @@ namespace Ascension.Players
         private void Event_OnStandRecall()
         {
             OnDeactivate();
-            Debug.Log(pv_SheerHeartAttack);
         }
 
         bool IAbilityHideCountdown.HideCountdown() => true;

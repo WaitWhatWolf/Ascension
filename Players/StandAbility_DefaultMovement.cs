@@ -1,6 +1,7 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Interfaces;
+using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -13,7 +14,7 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/24 13:34:03")]
     public abstract class StandAbility_DefaultMovement : StandAbility, IAbilityHideCountdown
     {
-        public StandAbility_DefaultMovement(Stand stand) : base(stand)
+        public StandAbility_DefaultMovement(Stand stand, int index) : base(stand, index)
         {
             pr_Owner = stand.Owner.Player;
 
@@ -55,7 +56,8 @@ namespace Ascension.Players
             float speed;
             float inertia;
             Vector2 finalPos;
-            bool goesToTarget = StandMoveTargetFound && StandMoveTargetDist(false) <= StandMoveNPCDetectionRange;
+            bool goesToTarget = StandMoveTargetFound && Hooks.InGame.NPCExists(StandMoveTarget) 
+                && StandMoveTargetDist(false) <= StandMoveNPCDetectionRange;
             
             if (goesToTarget)
             {

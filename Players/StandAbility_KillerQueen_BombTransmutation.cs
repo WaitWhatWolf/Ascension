@@ -20,7 +20,7 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/24 7:02:06")]
     public class StandAbility_KillerQueen_BombTransmutation : StandAbility_DefaultMovement
     {
-        public StandAbility_KillerQueen_BombTransmutation(Stand stand) : base(stand)
+        public StandAbility_KillerQueen_BombTransmutation(Stand stand, int index) : base(stand, index)
         {
         }
 
@@ -41,9 +41,11 @@ namespace Ascension.Players
 
         protected override void OnActivate()
         {
-            if(StandMoveTarget.TryGetGlobalNPC<StandHandlerNPC>(out StandHandlerNPC standHandler) && !standHandler.Debuffs.Any(d => d is SB_KillerQueen_Bomb))
+            if(StandMoveTarget.TryGetGlobalNPC(out StandHandlerNPC standHandler) && !standHandler.Debuffs.Any(d => d is SB_KillerQueen_Bomb))
             {
                 standHandler.AddDebuff(new SB_KillerQueen_Bomb(Stand, pv_DetonateCountdown, pv_StandDamage, pv_BombPen, pv_BombKnockback));
+                Stand.GetStandModProjectile().StandAnimator.Speed = Stand.GetAttackSpeed() / 10f;
+                Stand.GetStandModProjectile().StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_PLACEBOMB);
             }
 
             ResetCountdown();
@@ -51,7 +53,6 @@ namespace Ascension.Players
 
         protected override void OnDeactivate()
         {
-
         }
 
         protected override void Event_OnNewBossDefeated(string obj)

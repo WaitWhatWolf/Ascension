@@ -18,6 +18,12 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public class StandAbility_StarPlatinum_ORA : StandAbility
     {
+        //Required
+        public StandAbility_StarPlatinum_ORA(Stand stand, int index) : base(stand, index)
+        {
+
+        }
+
         public override string Name { get; } = "ORA!!!";
 
         public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) + " quicky rushes to it's stand user\nand punches any nearby enemy with massive damage & knockback.\n"
@@ -94,11 +100,7 @@ namespace Ascension.Players
             pv_WithinORARange = currentDist < 5f;
         }
 
-        //Required
-        public StandAbility_StarPlatinum_ORA(Stand stand) : base(stand)
-        {
-
-        }
+        
 
         private float pv_StandMoveSpeed;
         private bool pv_DeactivateReady;

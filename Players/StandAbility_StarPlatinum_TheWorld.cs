@@ -14,6 +14,8 @@ namespace Ascension.Players
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 09)]
     public sealed class StandAbility_StarPlatinum_TheWorld : StandAbility
     {
+        public StandAbility_StarPlatinum_TheWorld(Stand stand, int index) : base(stand, index) { }
+
         public override string Name { get; } = "Star Platinum: The World";
 
         public override string Description => Hooks.Colors.GetColoredTooltipText("Stops time.", Hooks.Colors.Tooltip_Effect)
@@ -57,7 +59,6 @@ namespace Ascension.Players
             }
         }
 
-        public StandAbility_StarPlatinum_TheWorld(Stand stand) : base(stand) { }
 
         private float pv_Duration = 10f;
         private float pv_CurrentDuration;

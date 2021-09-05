@@ -197,7 +197,7 @@ namespace Ascension.Players
                 UnlockAbility(1, debugUnlocks);
 
             UnlockAbility(2, debugUnlocks);
-            //UnlockAbility(3, debugUnlocks);
+            UnlockAbility(3, debugUnlocks);
         }
 
         /// <summary>
@@ -207,19 +207,21 @@ namespace Ascension.Players
         /// <param name="debugUnlock"></param>
         public void UnlockAbility(int index, bool debugUnlock = true)
         {
-            if (index >= Owner.UnlockedStandAbility.Length)
+            int abIndex = Array.FindIndex(Abilities, a => a.Index == index);
+
+            if (abIndex == -1)
             {
                 Debug.LogWarning($"There is no ability at index {index}.");
                 return;
             }
 
-            if (!Owner.UnlockedStandAbility[index])
+            if (!Owner.UnlockedStandAbility[abIndex])
             {
-                Owner.UnlockedStandAbility[index] = true;
+                Owner.UnlockedStandAbility[abIndex] = true;
                 if (debugUnlock)
-                    Debug.Log($"{Name} has unlocked {Abilities[index].Name}!");
+                    Debug.Log($"{Name} has unlocked {Abilities[abIndex].Name}!");
 
-                OnAbilityUnlock?.Invoke(index);
+                OnAbilityUnlock?.Invoke(abIndex);
             }
         }
 
@@ -264,7 +266,7 @@ namespace Ascension.Players
 
             for (int i = 0; i < Abilities.Length; i++)
             {
-                if (!Owner.UnlockedStandAbility[i])
+                if (!Owner.UnlockedStandAbility[Abilities[i].Index])
                     continue;
                 Abilities[i].Update();
                 //This makes it so even if the stand is recalled, it will still cool down all abilities.
@@ -272,7 +274,7 @@ namespace Ascension.Players
                 {
 
                     //Tries to activate this ability if it's either the basic attack or the correct key was pressed.
-                    if (i == 0 || ASCResources.Input.GetStandAbilityKey(i).JustPressed)
+                    if ((i == 0 || ASCResources.Input.GetStandAbilityKey(Abilities[i].Index).JustPressed) && !Abilities[i].Active)
                         Abilities[i].TryActivate();
                     else
                         Abilities[i].TryDeactivate();

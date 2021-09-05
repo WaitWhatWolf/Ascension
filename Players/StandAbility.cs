@@ -4,12 +4,25 @@ using Ascension.Interfaces;
 using Ascension.Utility;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections.Generic;
 
 namespace Ascension.Players
 {
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public abstract class StandAbility : IStandReferencable
     {
+        /// <summary>
+        /// Base constructor for all stand abilities.
+        /// </summary>
+        /// <param name="stand"></param>
+        public StandAbility(Stand stand, int index)
+        {
+            Stand = stand;
+            Index = index;
+            stand.Owner.OnNewBossDefeated += Event_OnNewBossDefeated;
+            Event_OnNewBossDefeated(string.Empty);
+        }
+
         /// <summary>
         /// Reference to the stand this ability belongs to.
         /// </summary>
@@ -26,10 +39,22 @@ namespace Ascension.Players
         public abstract string Description { get; }
 
         /// <summary>
+        /// Index of this ability.
+        /// </summary>
+        public int Index { get; }
+
+        /// <summary>
         /// The text used for tooltips.
         /// </summary>
-        public virtual string TooltipText => Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tangelo) + '\n' + Description;
-
+        public virtual string TooltipText
+        {
+            get
+            {
+                List<string> keys = ASCResources.Input.GetStandAbilityKey(Index)?.GetAssignedKeys();
+                string formatKeys = keys == null ? string.Empty : $" ({string.Join(", ", keys)})";
+                return Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tangelo) + formatKeys + '\n' + Description;
+            }
+        }
         /// <summary>
         /// The icon of this ability to be displayed in the UI.
         /// </summary>
@@ -86,14 +111,15 @@ namespace Ascension.Players
         }
 
         /// <summary>
-        /// Base constructor for all stand abilities.
+        /// Force-deactivates the ability (if active), regardless of any other condition.
         /// </summary>
-        /// <param name="stand"></param>
-        public StandAbility(Stand stand)
+        public void ForceDeactivate()
         {
-            Stand = stand;
-            stand.Owner.OnNewBossDefeated += Event_OnNewBossDefeated;
-            Event_OnNewBossDefeated(string.Empty);
+            if (!Active)
+                return;
+
+            Active = false;
+            OnDeactivate();
         }
 
         /// <summary>
@@ -107,6 +133,11 @@ namespace Ascension.Players
         /// </summary>
         /// <returns></returns>
         public float GetCurrentCountdown() => Countdown.GetCurrentCountdown();
+
+        /// <summary>
+        /// Returns true if the cooldown is off; Handled in base <see cref="Update"/>.
+        /// </summary>
+        public bool CountdownReady { get; protected set; }
 
         /// <summary>
         /// Invoked by <see cref="AscendedPlayer.OnNewBossDefeated"/> and when the ability is created.
@@ -147,10 +178,5 @@ namespace Ascension.Players
         /// The cooldown of this ability.
         /// </summary>
         protected abstract ReturnCountdown Countdown { get; }
-
-        /// <summary>
-        /// Returns true if the cooldown is off; Handled in base <see cref="Update"/>.
-        /// </summary>
-        protected bool CountdownReady { get; set; }
     }
 }

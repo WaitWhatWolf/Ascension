@@ -18,6 +18,11 @@ namespace Ascension.Players
         "Named it \"Receipt\" cause it the class name is already getting long at this point.")]
     public sealed class StandAbility_StarPlatinum_Receipt : StandAbility
     {
+        public StandAbility_StarPlatinum_Receipt(Stand stand, int index) : base(stand, index)
+        {
+
+        }
+
         public override string Name { get; } = "Prime-time Delivery";
 
         public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title) 
@@ -30,10 +35,7 @@ namespace Ascension.Players
 
         public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_STARPLATINUM_ABILITY2);
 
-        public StandAbility_StarPlatinum_Receipt(Stand stand) : base(stand)
-        {
-
-        }
+        
 
         protected override ReturnCountdown Countdown { get; } = 12f;
 

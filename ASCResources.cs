@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Terraria;
@@ -242,6 +243,8 @@ namespace Ascension
                 StandID.KILLER_QUEEN
             };
 
+            public static readonly Vector2 Stand_KillerQueen_BitesTheDust_MarkOffset = new(0, -36f);
+
             private static bool CreateStand(AscendedPlayer player, StandID id, bool debugStandName)
             {
                 if (player.in_IsStandUser)
@@ -309,8 +312,10 @@ namespace Ascension
                 Dust_SheerHeartAttack_EyeLight = new(new(6, 12), new(-Vector2.One * 3f, Vector2.One * 3f), 4, 4, Color.Yellow, new(-4f, 4f), new(-0.1f, 0.1f), new(25, 100), new(0.5f, 1f), Event_DisableDustGrav, DustID.MinecartSpark, DustID.AncientLight);
                 Dust_Stand_KillerQueen_Explosion = new(new(25, 45), new(-1f, -1f, 1f, 1f), 8, 8, Color.White, new(-5f, 5f), new(-5f, 5f), new(25, 100), new(1f, 2f), DustID.MinecartSpark, DustID.SparksMech);
                 Dust_Stand_KillerQueen_Bubble = new(new(5, 10), Vector2.Zero, 8, 8, Color.White, 0f, 0f, new(0, 50), new(0.8f, 1f), DustID.BubbleBurst_Blue, DustID.BubbleBurst_Purple);
+                Dust_Stand_KillerQueen_BitesTheDust_Remember = new(new(3, 6), Vector2.Zero, 2, 2, Color.YellowGreen, new(-1f, 1f), new(-1f, 1f), new(50, 150), new(0.5f, 1f), Event_DisableDustGrav, DustID.Ash);
+                Dust_Stand_KillerQueen_BitesTheDust_Mark = new(new(5, 10), Vector2.Zero, 2, 2, Color.Red, new(-1.5f, 1.5f), new(-1.5f, 1.5f), new(0, 50), new(0.75f, 1.25f), Event_DisableDustGrav, DustID.TreasureSparkle);
                 Dust_ParasiteSlime_Explode = new(new(30, 45), Vector2.Zero, 5, 5, Color.Cyan, new(-2f, 2f), new(-2f, 0.5f), new(0, 100), new(0.6f, 1.4f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime, DustID.Crimslime);
-            
+
                 pv_Dust_ParasiteSlime_ProjTravel = new(new(1, 3), Vector2.Zero, 5, 5, Color.Cyan, 0f, 0f, new(0, 100), new(0.2f, 0.5f), Event_ParasiteSlime, DustID.t_Slime, DustID.BunnySlime);
                 pv_Dust_SheerHeartAttack_Explode = new(new(100, 125), Vector2.Zero, 5, 5, Color.Yellow, new(-8f, 8f), new(-8f, 8f), new(0, 50), new(1f, 10f), Event_DisableDustGrav, DustID.MinecartSpark, DustID.SparksMech);
             }
@@ -319,6 +324,8 @@ namespace Ascension
             public static GoreMaker Gore_SheerHeartAttack_Explosion { get; private set; }
             public static DustMaker Dust_SheerHeartAttack_EyeLight { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Explosion { get; private set; }
+            public static DustMaker Dust_Stand_KillerQueen_BitesTheDust_Remember { get; private set; }
+            public static DustMaker Dust_Stand_KillerQueen_BitesTheDust_Mark { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Bubble { get; private set; }
             public static DustMaker Dust_ParasiteSlime_Explode { get; private set; }
             public static DustMaker Dust_ParasiteSlime_ProjTravel(Projectile @for) 
@@ -502,6 +509,7 @@ namespace Ascension
             public const string STAND_ABILITY_KILLERQUEEN_BASIC = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_BombTransmutation";
             public const string STAND_ABILITY_KILLERQUEEN_ABILITY1 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_StrayCatBombing";
             public const string STAND_ABILITY_KILLERQUEEN_ABILITY2 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_SheerHeartAttack";
+            public const string STAND_ABILITY_KILLERQUEEN_ULTIMATE = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_BitesTheDust";
             public const string STAND_PORTRAIT_KILLERQUEEN = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_KillerQueen";
             public const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
 
@@ -611,6 +619,28 @@ namespace Ascension
             public static DamageClass DamageClass_Umbral { get; } = new UmbralDamageClass();
         }
 
+        [CreatedBy(Dev.WaitWhatWolf, 2021, 09, 05)]
+        public static class Animations
+        {
+            public const string NAME_IDLE = "Idle";
+            public const string NAME_STAND_KILLERQUEEN_PLACEBOMB = "menacing touch lol";
+            public const string NAME_STAND_KILLERQUEEN_TRIGGERBOMB = "menacing boom eksdee";
+
+            public static readonly Animator Stand_KillerQueen = new
+                (
+                    0,
+                    new Animator.Animation(NAME_IDLE, true, new (0, 0, 0f), new (1, 1, 0.5f), new(2, 1, 1f)),
+                    new Animator.Animation(NAME_STAND_KILLERQUEEN_PLACEBOMB, false, new (0, 0, 0f), new (1, 1, 0.25f), new(2, 2, 0.5f), new(3, 2, 1f)),
+                    new Animator.Animation(NAME_STAND_KILLERQUEEN_TRIGGERBOMB, false, new (0, 3, 0f), new (1, 4, 0.5f), new(2, 4, 1f))
+                );
+
+            public static readonly Animator Stand_StarPlatinum = new
+                (
+                    0,
+                    new Animator.Animation(NAME_IDLE, true, new(0, 0, 0f), new(1, 0, 0.5f))
+                );
+        }
+
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
         public static class Sound
         {
@@ -642,6 +672,17 @@ namespace Ascension
             {
                 
             }
+            
+            [Obsolete(willremovelol)]
+            internal static System.Media.SoundPlayer kiraYoshikageTheme => new(Path.Combine(Path.GetDirectoryName(Terraria.ModLoader.ModLoader.ModPath), @"Mod Sources\Ascension\Assets\Sound\Custom\Stand_KillerQueen_Ultimate_Trigger.wav"));
+            [Obsolete(willremovelol)]
+            internal static System.Media.SoundPlayer biteZaDasuto => new(Path.Combine(Path.GetDirectoryName(Terraria.ModLoader.ModLoader.ModPath), @"Mod Sources\Ascension\Assets\Sound\Custom\Stand_KillerQueen_Ultimate_Activate.wav"));
+            [Obsolete(willremovelol)]
+            internal static System.Media.SoundPlayer kocchiWoMiro => new(Path.Combine(Path.GetDirectoryName(Terraria.ModLoader.ModLoader.ModPath), @"Mod Sources\Ascension\Assets\Sound\Custom\Stand_KillerQueen_SheerHeartAttack_TargetSet.wav"));
+            [Obsolete(willremovelol)]
+            internal static System.Media.SoundPlayer shaOYYY => new(Path.Combine(Path.GetDirectoryName(Terraria.ModLoader.ModLoader.ModPath), @"Mod Sources\Ascension\Assets\Sound\Custom\Stand_KillerQueen_SheerHeartAttack_Invoke.wav"));
+
+            private const string willremovelol = "will remove once custom sound is added";
         }
     }
 }

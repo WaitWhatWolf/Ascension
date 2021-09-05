@@ -1,6 +1,7 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Players;
+using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -43,6 +44,11 @@ namespace Ascension.Projectiles
 		public override bool MinionContactDamage() => true;
 
 		/// <summary>
+		/// The animator of this stand projectile.
+		/// </summary>
+		public abstract Animator StandAnimator { get; }
+
+		/// <summary>
 		/// Returns the position in front of the stand.
 		/// </summary>
 		public virtual Vector2 Front
@@ -74,6 +80,9 @@ namespace Ascension.Projectiles
 				return;
 
 			pv_Stand.GetCurrentMovementAI()();
+			Projectile.timeLeft = 18000;
+			StandAnimator.Update();
+			Projectile.frame = StandAnimator;
 
 			BonusAI();
 		}

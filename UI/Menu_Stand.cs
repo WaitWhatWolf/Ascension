@@ -52,7 +52,7 @@ namespace Ascension.UI
                 float abilityCurrentCooldown = ability.GetCurrentCountdown();
                 pv_AbilityCooldowns[i].SetText(ability is IAbilityHideCountdown hide && hide.HideCountdown() 
                     ? string.Empty 
-                    : abilityCurrentCooldown <= 0 
+                    : abilityCurrentCooldown <= 0 || ability.CountdownReady
                     ? string.Empty 
                     : abilityCurrentCooldown.Truncate(1).ToString());
             }
@@ -108,7 +108,7 @@ namespace Ascension.UI
             for (int i = 0; i < pv_Stand.Abilities.Length; i++)
             {
                 UIImage image = new(pv_Stand.Abilities[i].Icon);
-                image.Left.Set(66 + (34 * i), 0f);
+                image.Left.Set(67 + (34 * i), 0f);
                 image.Width.Set(32, 0f);
                 image.Top.Set(34, 0f);
                 image.Height.Set(32, 0f);
@@ -119,17 +119,17 @@ namespace Ascension.UI
 
                 //this.Append(image);
 
-                if (i != 0)
+                /*if (i != 0)
                 {
                     UIText textKey = new(ASCResources.Input.GetStandAbilityKey(i).GetAssignedKeys().First(), 0.75f, true);
                     textKey.Left.Set(0, 0.2f);
                     textKey.Top.Set(0, 0.2f);
-                    textKey.TextColor = Hooks.Colors.Tangelo;
+                    textKey.TextColor = new(Hooks.Colors.Tangelo.R, Hooks.Colors.Tangelo.G, Hooks.Colors.Tangelo.B, 100);
                     textKey.IgnoresMouseInteraction = true;
                     image.Append(textKey);
 
                     pv_AbilityKeys[i - 1] = textKey;
-                }
+                }*/
 
                 UIText textCooldown = new(string.Empty, 0.4f, true);
                 textCooldown.Left.Set(0, 0.5f);
