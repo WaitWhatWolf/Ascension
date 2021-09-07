@@ -55,6 +55,7 @@ namespace Ascension.World
             pv_AscendedPlayer.OnManifestStand -= Event_OnManifestStand;
             pv_Stand.Recall();
             pv_Stand = null;
+            pv_HasStand = false;
             pv_AscendedPlayer = null;
         }
 
@@ -76,7 +77,7 @@ namespace Ascension.World
         }
         private bool Delegate_HandleStandMenuGIL()
         {
-            if (pv_HasStand && pv_Stand.StandMenu.Active)
+            if (pv_HasStand && pv_Stand.StandMenu != null && pv_Stand.StandMenu.Active)
             {
                 pv_Stand.StandMenu.Draw(Main.spriteBatch);
                 pv_Stand.StandMenuUI.Update(Main._drawInterfaceGameTime);

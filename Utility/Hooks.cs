@@ -1,6 +1,7 @@
 ﻿    using Ascension.Attributes;
 using Ascension.Enums;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -401,6 +402,57 @@ namespace Ascension.Utility
         public static class Text
         {
             /// <summary>
+            /// Returns a colored tooltip text based on a specific format.
+            /// </summary>
+            /// <param name="text"></param>
+            /// <example>
+            /// This text is standard
+            /// {{c:Debuff=This text is colored with Tooltip_Debuff}}
+            /// {{c:Quote=This text is a quote-colored text}}
+            /// </example>
+            /// <returns></returns>
+            [Note(Dev.WaitWhatWolf, "Holy fucking shit. I actually did it.")]
+            public static string GetFormatTooltipText(string text)
+            {
+                string toReturn = text;
+                Match match = pv_Regex_IsFormatArg.Match(text);
+
+                while (match.Success)
+                {
+                    string nobVal = match.Value[2..^2];
+                    Dictionary<char, string> commands = new();
+
+                    string commandsRaw = nobVal[0..nobVal.IndexOf('=')];
+                    string argVal = nobVal[(nobVal.IndexOf('=') + 1)..];
+
+                    if (!commandsRaw.Contains(' '))
+                    {
+                        string[] split = commandsRaw.Split(':');
+                        commands.Add(split[0].First(), split[1]);
+                    }
+                    else
+                    {
+                        string[] splits = nobVal.Split(' ');
+                        foreach (string s in splits)
+                        {
+                            string[] split = s.Split(':');
+                            commands.Add(split[0].First(), split[1]);
+                        }
+                    }
+
+                    if (commands.TryGetValue('c', out string command) && Colors.TryGetColorByFieldName(command.ToUpper(), out Color color))
+                    {
+                        toReturn = toReturn.Remove(match.Index, match.Length);
+                        toReturn = toReturn.Insert(match.Index, Hooks.Colors.GetColoredTooltipText(argVal, color));
+                    }
+
+                    match = match.NextMatch();
+                }
+
+                return toReturn;
+            }
+
+            /// <summary>
             /// Returns a formatted string which separates capital letters with a space.
             /// </summary>
             /// <param name="for"></param>
@@ -442,6 +494,7 @@ namespace Ascension.Utility
 
             [Note(Dev.WaitWhatWolf, "The right to left option is required as GetFormatClassName depends on the regex going from right to left.")]
             private static Regex pv_Regex_ClassFormat = new(@"[a-z][A-Z]", RegexOptions.RightToLeft);
+            private static Regex pv_Regex_IsFormatArg = new(@"\{{2}([a-z]:.+?)+?=.+?\}{2}", RegexOptions.RightToLeft);
         }
 
         public static class MathF
@@ -592,12 +645,12 @@ namespace Ascension.Utility
             /// <summary>
             /// Color used to refer to a player's name.
             /// </summary>
-            public static readonly Color Tooltip_Player_Title = Color.Purple;
+            public static readonly Color Tooltip_Player_Title = Color.MediumPurple;
 
             /// <summary>
             /// Color used to refer to a stand title.
             /// </summary>
-            public static readonly Color Tooltip_Stand_Title = Color.MediumPurple;
+            public static readonly Color Tooltip_Stand_Title = Color.Purple;
 
             /// <summary>
             /// Color used to refer to a stand ability.
@@ -638,6 +691,45 @@ namespace Ascension.Utility
             /// </summary>
             public static readonly Color Tooltip_Stat = Color.DodgerBlue;
             #endregion
+
+            /// <summary>
+            /// Returns an array of pixel colors that represent the given texture2D.
+            /// </summary>
+            /// <param name="texture"></param>
+            /// <param name="frameX"></param>
+            /// <param name="frameY"></param>
+            /// <param name="width"></param>
+            /// <param name="height"></param>
+            /// <param name="maxFramesX"></param>
+            /// <param name="maxFramesY"></param>
+            /// <param name="flipped"></param>
+            /// <returns></returns>
+            public static Color[,] GetColorGridFromSprite(Texture2D texture, int frameX, int frameY, out int width, out int height,
+                int maxFramesX = 1, int maxFramesY = 1, SpriteEffects flipped = SpriteEffects.None)
+            {
+                Rectangle sourceRectangle = texture.Frame(maxFramesX, maxFramesY, frameX, frameY, 0, 0);
+
+                Color[] retrievePixels = new Color[sourceRectangle.Width * sourceRectangle.Height];
+
+                texture.GetData(0, sourceRectangle, retrievePixels, 0, retrievePixels.Length);
+                
+                Color[,] pixels = new Color[sourceRectangle.Width, sourceRectangle.Height];
+
+                width = sourceRectangle.Width;
+                height = sourceRectangle.Height;
+
+                for (int i = 0; i < retrievePixels.Length; i++)
+                {
+                    int x = flipped.HasFlag(SpriteEffects.FlipHorizontally)
+                        ? (width - 1) - (i % width) : i % width;
+                    int y = flipped.HasFlag(SpriteEffects.FlipVertically) 
+                        ? (height - 1) - (i / width) : i / width;
+
+                    pixels[x, y] = retrievePixels[i];
+                }
+
+                return pixels;
+            }
 
             /// <summary>
             /// Returns a colored text for item tooltips.
@@ -728,10 +820,32 @@ namespace Ascension.Utility
             }
 
             /// <summary>
+            /// Attempts to retrieve a color field in <see cref="Colors"/> by name.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="color"></param>
+            /// <returns></returns>
+            public static bool TryGetColorByFieldName(string name, out Color color) => pv_FieldColors.TryGetValue(name, out color);
+
+            /// <summary>
             /// Matches any string which look similar to this: [c/(hexcode):(text)]
             /// </summary>
             private static Regex pv_Regex_CustomTooltipColor = new(@"\[c\/[a-zA-Z0-9]{6}:.+\]", RegexOptions.RightToLeft);
             private static Regex pv_Regex_IsNewLine = new(@"(\n|^).*");
+            
+            private static readonly Dictionary<string, Color> pv_FieldColors = new();
+
+            static Colors()
+            {
+                var fields = typeof(Hooks.Colors).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
+                foreach(var field in fields)
+                {
+                    if (field.FieldType != typeof(Color))
+                        continue;
+                    string name = field.Name.StartsWith("Tooltip_") ? field.Name[8..] : field.Name;
+                    pv_FieldColors.Add(name.ToUpper(), (Color)field.GetValue(null));
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Projectiles;
 using Ascension.UI;
+using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Ascension.Players
@@ -96,6 +98,40 @@ namespace Ascension.Players
         public abstract StandID ID { get; }
 
         /// <summary>
+        /// Theme color of this stand.
+        /// </summary>
+        public abstract Color ThemeColor { get; }
+
+        /// <summary>
+        /// What to display on tooltips when displaying info about this stand.
+        /// </summary>
+        public virtual string Tooltip
+        {
+            get
+            {
+                string toReturn = Hooks.Colors.GetColoredTooltipMultilineText(Name, Hooks.Colors.Tooltip_Stand_Title);
+                toReturn += '\n';
+                toReturn += Description;
+                toReturn += "\n\n";
+                toReturn += Hooks.Colors.GetColoredTooltipMultilineText(Quote, Hooks.Colors.Tooltip_Quote);
+                toReturn += "\n\n";
+                toReturn += $"Most suited class: {Hooks.Colors.GetColoredTooltipText(Class.DisplayName, Hooks.Colors.Tooltip_Class)}";
+                return toReturn;
+            }
+        }
+
+        /// <summary>
+        /// Best suited damage class for this stand.
+        /// </summary>
+        /// <remarks>This is not used directly, but for info display such as <see cref="Tooltip"/>.</remarks>
+        public abstract DamageClass Class { get; }
+
+        /// <summary>
+        /// Stand/User's most iconic quote.
+        /// </summary>
+        public abstract string Quote { get; }
+
+        /// <summary>
         /// The current level of the stand.
         /// </summary>
         public int Level { get; private set; }
@@ -119,6 +155,11 @@ namespace Ascension.Players
         /// All abilities of this stand.
         /// </summary>
         public StandAbility[] Abilities { get; private set; }
+
+        /// <summary>
+        /// Shorthand writing for GetStandModProjectile().StandAnimator.
+        /// </summary>
+        public Animator StandAnimator => GetStandModProjectile().StandAnimator;
 
         /// <summary>
         /// Returns the mod stand projectile of this stand.

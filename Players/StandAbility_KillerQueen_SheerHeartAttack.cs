@@ -29,16 +29,17 @@ namespace Ascension.Players
         public override string Name { get; } = "Sheer Heart Attack";
 
         [Note(Dev.WaitWhatWolf, "Yes, the dot at the end is necessary, again, excuse my OCD.")]
-        public override string Description => Hooks.Colors.GetColoredTooltipText(Stand.Owner.Player.name, Hooks.Colors.Tooltip_Player_Title)
-            + " detaches " + (Stand.Owner.Player.Male ? "his" : "her") + " right hand, which " + Hooks.Colors.GetColoredTooltipText("drastically reduces attack speed", Hooks.Colors.Tooltip_Debuff)
-            + ".\nThe detached hand turns into " + Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tooltip_Stand_Ability)
-            + "\nwhich "+ Hooks.Colors.GetColoredTooltipText("autonomously seeks", Hooks.Colors.Tooltip_Effect) 
-            + " the target with the " + Hooks.Colors.GetColoredTooltipText("highest health", Hooks.Colors.Tooltip_Stat)
-            + ",\nthen exploding it after a short delay, with damage equal" 
-            + "\n to a portion of the enemy's " + Hooks.Colors.GetColoredTooltipText("current health", Hooks.Colors.Tooltip_Stat)
-            + '.'
-            + "\n\n"
-            + Hooks.Colors.GetColoredTooltipText("Sheer Heart Attack has no weaknesses.", Hooks.Colors.Tooltip_Quote);
+
+        public override string Description =>
+            $"{{{{c:Player_Title={Stand.Owner.Player.name}}}}} detaches {(Stand.Owner.Player.Male ? "his" : "her")}"
+            + " right hand, which {{c:Debuff=drastically reduces attack speed}}."
+            + $"\nThe detached hand turns into {{{{c:Stand_Ability={Name}}}}}"
+            + "\nwhich {{c:Effect=autonomously seeks}} the target with the {{c:Stat=highest health}},"
+            + "\napplying a bomb on the target when near."
+            + "\nAfter a {{c:Delay=short delay}}, the bomb {{c:Effect=explodes}} with damage equal"
+            + "\nto {{c:Stat=50% of it's current health}}.";
+
+        public override string Quote { get; } = "Sheer Heart Attack has no weaknesses.";
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_ABILITY_KILLERQUEEN_ABILITY2);
 

@@ -29,20 +29,20 @@ namespace Ascension.Players
             + Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tooltip_Stand_Ability)
             + " " + Hooks.Colors.GetColoredTooltipText("marks", Hooks.Colors.Tooltip_Effect) + " the "
             + Hooks.Colors.GetColoredTooltipText("strongest remembered enemy", Hooks.Colors.Tooltip_Stat) + ";"
-            + "\nIf you are killed in the presence of the " 
+            + "\nIf you are killed in the presence of the "
             + Hooks.Colors.GetColoredTooltipText("marked", Hooks.Colors.Tooltip_Effect) + " enemy,"
-            + "\nthe enemy will " + Hooks.Colors.GetColoredTooltipText("explode", Hooks.Colors.Tooltip_Effect) + "; If it was a " 
+            + "\nthe enemy will " + Hooks.Colors.GetColoredTooltipText("explode", Hooks.Colors.Tooltip_Effect) + "; If it was a "
             + "boss, the explosion deals"
             + "\n"
             + Hooks.Colors.GetColoredTooltipText("10% of it's max health as damage", Hooks.Colors.Tooltip_Stat)
             + ", otherwise, the enemy"
-            + "\nis "+ Hooks.Colors.GetColoredTooltipText("instantly killed", Hooks.Colors.Tooltip_Effect)
+            + "\nis " + Hooks.Colors.GetColoredTooltipText("instantly killed", Hooks.Colors.Tooltip_Effect)
             + ".\n\nWhen the explosion successfully triggers, you will\n"
-            + Hooks.Colors.GetColoredTooltipText("teleport back to spawn", Hooks.Colors.Tooltip_Effect) 
-            + " instead of " + Hooks.Colors.GetColoredTooltipText("dying", Hooks.Colors.Tooltip_Debuff) + '.'
-            + "\n\n"
-            + Hooks.Colors.GetColoredTooltipMultilineText("Bites the Dust emerged from my single-minded desire not to encounter you..." 
-                + "\nBring it on! Let's see you stop time! How long can you keep it up?", Hooks.Colors.Tooltip_Quote);
+            + Hooks.Colors.GetColoredTooltipText("teleport back to spawn", Hooks.Colors.Tooltip_Effect)
+            + " instead of " + Hooks.Colors.GetColoredTooltipText("dying", Hooks.Colors.Tooltip_Debuff) + '.';
+
+        public override string Quote { get; } = "Bites the Dust emerged from my single-minded desire not to encounter you..."
+                + "\nBring it on! Let's see you stop time! How long can you keep it up?";
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_ABILITY_KILLERQUEEN_ULTIMATE);
 

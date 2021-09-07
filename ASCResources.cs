@@ -398,9 +398,9 @@ namespace Ascension
             };
             private static string[] PDRV_SHEERHEARTATTACKDRAWBACK => new[]
             {
-                Hooks.Colors.GetColoredTooltipText("{0}", Hooks.Colors.Tooltip_Stand_Ability) + "turned {1}'s \'insides\' into \'outsides\'.",
-                "{1} couldn't handle " + Hooks.Colors.GetColoredTooltipText("{0}", Hooks.Colors.Tooltip_Stand_Ability) + "'s drawbacks.",
-                Hooks.Colors.GetColoredTooltipText("{0}", Hooks.Colors.Tooltip_Stand_Ability) + " made {0} lose more than just his hand...",
+                "{0} accidentally turned {1}'s \'insides\' into \'outsides\'.",
+                "{1} couldn't handle {0}'s drawbacks.",
+                "{0} made {1} lose more than just his hand...",
             };
 #pragma warning restore IDE0051
 
@@ -489,7 +489,6 @@ namespace Ascension
                         continue;
 
                     string val = (string)property.GetValue(null);
-                    System.Diagnostics.Debug.WriteLine(val);
                     Asset<Texture2D> texture = ascension.Assets.Request<Texture2D>(val);
                     pv_Textures.Add(val, texture);
                 }
@@ -512,6 +511,7 @@ namespace Ascension
             public const string STAND_ABILITY_KILLERQUEEN_ULTIMATE = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_KillerQueen_BitesTheDust";
             public const string STAND_PORTRAIT_KILLERQUEEN = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_KillerQueen";
             public const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
+            public const string STAND_MENU_TOGGLE = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Toggle";
 
             private static readonly Dictionary<string, Asset<Texture2D>> pv_Textures = new();
         }
@@ -625,13 +625,15 @@ namespace Ascension
             public const string NAME_IDLE = "Idle";
             public const string NAME_STAND_KILLERQUEEN_PLACEBOMB = "menacing touch lol";
             public const string NAME_STAND_KILLERQUEEN_TRIGGERBOMB = "menacing boom eksdee";
+            public const string NAME_STAND_KILLERQUEEN_STRAYCATBOMBING = "GATOOOOOOOOOOOOO";
 
             public static readonly Animator Stand_KillerQueen = new
                 (
                     0,
                     new Animator.Animation(NAME_IDLE, true, new (0, 0, 0f), new (1, 1, 0.5f), new(2, 1, 1f)),
                     new Animator.Animation(NAME_STAND_KILLERQUEEN_PLACEBOMB, false, new (0, 0, 0f), new (1, 1, 0.25f), new(2, 2, 0.5f), new(3, 2, 1f)),
-                    new Animator.Animation(NAME_STAND_KILLERQUEEN_TRIGGERBOMB, false, new (0, 3, 0f), new (1, 4, 0.5f), new(2, 4, 1f))
+                    new Animator.Animation(NAME_STAND_KILLERQUEEN_TRIGGERBOMB, false, new (0, 3, 0f), new (1, 4, 0.5f), new(2, 4, 1f)),
+                    new Animator.Animation(NAME_STAND_KILLERQUEEN_STRAYCATBOMBING, true, new (0, 5, 0f), new (1, 5, 0.5f))
                 );
 
             public static readonly Animator Stand_StarPlatinum = new

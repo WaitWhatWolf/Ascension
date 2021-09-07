@@ -3,8 +3,10 @@ using Ascension.Enums;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 using static Ascension.ASCResources.Stats;
 
 namespace Ascension.Projectiles
@@ -26,6 +28,8 @@ namespace Ascension.Projectiles
 
 			Main.projPet[Projectile.type] = true;
 			ProjectileID.Sets.CountsAsHoming[Projectile.type] = false; //Some damage retuction shit, nothing to do with AI
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
+			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
 		/// <summary>
@@ -38,6 +42,7 @@ namespace Ascension.Projectiles
 			Projectile.friendly = true;
 			Projectile.minion = false; // Only determines the damage type								  
 			Projectile.penetrate = -1; // Needed so stand doesn't despawn
+			Projectile.alpha = 30;
 		}
 
 		public override bool? CanCutTiles() => true;
@@ -66,20 +71,60 @@ namespace Ascension.Projectiles
 		/// </summary>
 		public virtual Vector2 Direction =>  new(Projectile.spriteDirection == -1 ? 1f : -1f, 0f);
 
+		/// <summary>
+		/// Whether this stand emits an after-image effect.
+		/// </summary>
+		public virtual bool EmitsAfterImages { get; } = true;
+
 		internal void SetupStand(Player owner, Stand stand)
         {
-			pv_Owner = owner;
-			pv_Stand = stand;
-			pv_Stand.Owner.OnNewBossDefeated += OnBossDefeated;
+			pr_Owner = owner;
+			pr_Stand = stand;
+			pr_Stand.Owner.OnNewBossDefeated += OnBossDefeated;
 			OnBossDefeated(string.Empty);
 		}
 
-		public sealed override void AI()
+		/// <summary>
+		/// Emits light as well as after-images if <see cref="EmitsAfterImages"/> is true.
+		/// </summary>
+		/// <param name="lightColor"></param>
+		/// <returns></returns>
+		public override bool PreDraw(ref Color lightColor)
+        {
+			Lighting.AddLight(Projectile.Center, pr_Stand.ThemeColor.R / 100f, pr_Stand.ThemeColor.G / 100f, pr_Stand.ThemeColor.B / 100f);
+
+			if (EmitsAfterImages)
+			{
+				SpriteEffects spriteEffects = SpriteEffects.None;
+				if (Projectile.spriteDirection == -1)
+					spriteEffects = SpriteEffects.FlipHorizontally;
+
+				Texture2D texture = (Texture2D)ModContent.Request<Texture2D>(Texture);
+
+				int frameHeight = texture.Height / Main.projFrames[Projectile.type];
+				int startY = frameHeight * Projectile.frame;
+
+				Rectangle sourceRectangle = new Rectangle(0, startY, texture.Width, frameHeight);
+				Vector2 origin = sourceRectangle.Size() / 2f;
+
+				for (int i = 0; i < Projectile.oldPos.Length; i++)
+				{
+					Color drawColor = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
+					Main.EntitySpriteDraw(texture,
+						(Projectile.oldPos[i] + (Projectile.Size / 2f)) - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
+						sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, spriteEffects, 0);
+				}
+			}
+
+			return true;
+		}
+
+        public sealed override void AI()
 		{
-			if (!CheckActive(pv_Owner))
+			if (!CheckActive(pr_Owner))
 				return;
 
-			pv_Stand.GetCurrentMovementAI()();
+			pr_Stand.GetCurrentMovementAI()();
 			Projectile.timeLeft = 18000;
 			StandAnimator.Update();
 			Projectile.frame = StandAnimator;
@@ -99,12 +144,12 @@ namespace Ascension.Projectiles
         /// </summary>
         protected virtual void OnBossDefeated(string name)
         {
-			Projectile.damage = pv_Stand.GetDamage();
-			Projectile.knockBack = pv_Stand.GetKnockback();
+			Projectile.damage = pr_Stand.GetDamage();
+			Projectile.knockBack = pr_Stand.GetKnockback();
 		}
 
-		protected Player pv_Owner;
-		protected Stand pv_Stand;
+		protected Player pr_Owner;
+		protected Stand pr_Stand;
 
 		private bool CheckActive(Player owner)
 		{

@@ -1,6 +1,7 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Interfaces;
+using Ascension.Internal;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
@@ -9,6 +10,8 @@ using System;
 using System.Linq;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.UI;
 using static Ascension.ASCResources.Textures;
 
@@ -20,32 +23,48 @@ namespace Ascension.UI
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class Menu_Stand : Menu
     {
-        protected override float DimensionHeight => 68;
-        protected override float DimensionWidth
+        public override float Scale
         {
-            get
+            get => pv_Cfg.StandMenuScale;
+            set
             {
-                int abilitiesLength = pv_Stand?.Abilities.Length ?? 3;
-                return 66 + (34 * abilitiesLength);
+                pv_Cfg.StandMenuScale = value;
+                ScaleMenu();
             }
         }
-        protected override float DimensionLeft => pv_X;
-        protected override float DimensionTop => pv_Y;
 
         public void SetDefaultPosition(int x, int y)
         {
-            pv_X = x;
-            pv_Y = y;
+            pv_Cfg.StandMenuPosX = x;
+            pv_Cfg.StandMenuPosY = y;
 
             ResetDimensions();
         }
 
+        protected override float DimensionHeight => 130 * Scale;
+        protected override float DimensionWidth
+        {
+            get
+            {
+                return 390 * Scale;
+                //int abilitiesLength = pv_Stand?.Abilities.Length ?? 3;
+                //return (130 + (65 * abilitiesLength)) * Scale;
+            }
+        }
+        protected override float DimensionLeft => pv_Cfg.StandMenuPosX;
+        protected override float DimensionTop => pv_Cfg.StandMenuPosY;
+
         protected override void OnActiveDrawSelf(SpriteBatch spriteBatch)
         {
+            pv_BackgroundImage.Color = pv_Stand.ThemeColor;
+
             for (int i = 0; i < pv_Stand.Abilities.Length; i++)
             {
                 if (!pv_Stand.Owner.UnlockedStandAbility[i])
+                {
+                    pv_AbilityImages[i].Color = Color.Black;
                     continue;
+                }
 
                 StandAbility ability = pv_Stand.Abilities[i];
 
@@ -55,6 +74,11 @@ namespace Ascension.UI
                     : abilityCurrentCooldown <= 0 || ability.CountdownReady
                     ? string.Empty 
                     : abilityCurrentCooldown.Truncate(1).ToString());
+
+                pv_AbilityImages[i].Color = ability.CountdownReady ? Color.White : Color.Brown;
+
+                pv_AbilityToggles[i].Rotation += ASCResources.FLOAT_PER_FRAME;
+                pv_AbilityToggles[i].Color = ability.Active ? pv_Stand.ThemeColor : Color.Transparent;
             }
         }
 
@@ -78,43 +102,37 @@ namespace Ascension.UI
             pv_TooltipText = null;
         }
 
-        public Menu_Stand(Stand stand) : base()
+        public Menu_Stand(Stand stand) : base(false)
         {
+            pv_Cfg = ModContent.GetInstance<AscensionConfig>();
+
             pv_Stand = stand;
             pv_Stand.OnAbilityUnlock += Event_OnAbilityUnlock;
 
             pv_AbilityImages = new UIImage[pv_Stand.Abilities.Length];
             pv_AbilityKeys = new UIText[pv_Stand.Abilities.Length];
             pv_AbilityCooldowns = new UIText[pv_Stand.Abilities.Length];
+            pv_AbilityToggles = new UIImage[pv_Stand.Abilities.Length];
 
             pv_BackgroundImage = new UIImage(GetTexture(STAND_MENU_BACKGROUND));
-            pv_BackgroundImage.Left.Set(0, 0f);
-            pv_BackgroundImage.Width.Set(DimensionWidth, 0f);
-            pv_BackgroundImage.Top.Set(0, 0f);
-            pv_BackgroundImage.Height.Set(DimensionHeight, 0f);
-            pv_BackgroundImage.Color = Hooks.Colors.Tangelo;
+            pv_BackgroundImage.Color = pv_Stand.ThemeColor;
             pv_BackgroundImage.IgnoresMouseInteraction = true;
+            pv_BackgroundImage.ScaleToFit = true;
             Append(pv_BackgroundImage);
 
             pv_PortraitImage = new UIImage(pv_Stand.Portrait);
-            pv_PortraitImage.Left.Set(2, 0f);
-            pv_PortraitImage.Width.Set(64, 0f);
-            pv_PortraitImage.Top.Set(2, 0f);
-            pv_PortraitImage.Height.Set(64, 0f);
             pv_PortraitImage.OnMouseOver += Event_PortraitOnMouseOver;
             pv_PortraitImage.OnMouseOut += Event_AbilityOnMouseOut;
+            pv_PortraitImage.ScaleToFit = true;
             Append(pv_PortraitImage);
 
             for (int i = 0; i < pv_Stand.Abilities.Length; i++)
             {
                 UIImage image = new(pv_Stand.Abilities[i].Icon);
-                image.Left.Set(67 + (34 * i), 0f);
-                image.Width.Set(32, 0f);
-                image.Top.Set(34, 0f);
-                image.Height.Set(32, 0f);
                 image.Color = Color.White;
                 image.OnMouseOver += Event_AbilityOnMouseOver;
                 image.OnMouseOut += Event_AbilityOnMouseOut;
+                image.ScaleToFit = true;
                 image.Deactivate();
 
                 //this.Append(image);
@@ -132,19 +150,61 @@ namespace Ascension.UI
                 }*/
 
                 UIText textCooldown = new(string.Empty, 0.4f, true);
-                textCooldown.Left.Set(0, 0.5f);
-                textCooldown.Top.Set(0, 0.25f);
-                textCooldown.TextColor = Color.WhiteSmoke;
+                textCooldown.Left.Set(0, 0f);
+                textCooldown.Top.Set(0, 0f);
+                textCooldown.Width.Set(0, 1f);
+                textCooldown.Height.Set(0, 1f);
+                textCooldown.TextColor = Hooks.Colors.Tooltip_Stand_Ability_Cooldown;
                 textCooldown.IgnoresMouseInteraction = true;
+                textCooldown.DynamicallyScaleDownToWidth = true;
                 image.Append(textCooldown);
                 pv_AbilityCooldowns[i] = textCooldown;
 
                 pv_AbilityImages[i] = image;
+
+                UIImage toggleImg = new(GetTexture(STAND_MENU_TOGGLE));
+                toggleImg.Left.Set(0, 0.0f);
+                toggleImg.Top.Set(0, 0.0f);
+                toggleImg.Color = new Color(255, 215, 0, 125);
+                toggleImg.IgnoresMouseInteraction = true;
+                toggleImg.NormalizedOrigin = Vector2.One * 0.5f;
+                image.Append(toggleImg);
+                pv_AbilityToggles[i] = toggleImg;
             }
 
-            pv_TooltipText = new(string.Empty, 1f, false);
+            pv_TooltipText = new(string.Empty, Scale, false);
             pv_TooltipText.IgnoresMouseInteraction = true;
             pv_TooltipText.Deactivate();
+
+            ScaleMenu();
+        }
+
+        private void ScaleMenu()
+        {
+            pv_BackgroundImage.ImageScale = Scale;
+            pv_BackgroundImage.Left.Set(0, 0f);
+            pv_BackgroundImage.Width.Set(DimensionWidth, 0f);
+            pv_BackgroundImage.Top.Set(0, 0f);
+            pv_BackgroundImage.Height.Set(DimensionHeight, 0f);
+
+            pv_PortraitImage.Left.Set(1 * Scale, 0f);
+            pv_PortraitImage.Width.Set(128f * Scale, 0f);
+            pv_PortraitImage.Top.Set(1 * Scale, 0f);
+            pv_PortraitImage.Height.Set(128 * Scale, 0f);
+            pv_PortraitImage.ImageScale = Scale;
+
+            for (int i = 0; i < pv_AbilityImages.Length; i++)
+            {
+                pv_AbilityImages[i].Left.Set((130 + (65 * i)) * Scale, 0f);
+                pv_AbilityImages[i].Width.Set(64 * Scale, 0f);
+                pv_AbilityImages[i].Top.Set(-65 * Scale, 1f);
+                pv_AbilityImages[i].Height.Set(64 * Scale, 0f);
+                pv_AbilityImages[i].ImageScale = Scale;
+
+                pv_AbilityToggles[i].ImageScale = Scale;
+            }
+
+            pv_TooltipText.TextScale = Scale;
         }
 
         private void Event_AbilityOnMouseOver(UIMouseEvent mEvent, UIElement element)
@@ -194,48 +254,44 @@ namespace Ascension.UI
             pv_TooltipText.Activate();
             
 
-            int left = pv_MouseOverIndex switch
+            float left = pv_MouseOverIndex switch
             {
-                0 => 99,
-                1 => 122,
-                2 => 155,
-                3 => 188,
-                -2 => 66,
-                _ => 0,
+                -2 => 0,
+                _ => (130f + (66f * pv_MouseOverIndex)) * Scale,
             };
 
-            int top = pv_MouseOverIndex switch //This is here for later use...probably.
+            float top = pv_MouseOverIndex switch //This is here for later use...probably.
             {
-                _ => 64,
+                _ => 130f * Scale,
             };
 
             string text = pv_MouseOverIndex switch
             {
-                0 => pv_Stand.Abilities[0].TooltipText,
-                1 => pv_Stand.Abilities[1].TooltipText,
-                2 => pv_Stand.Abilities[2].TooltipText,
-                3 => pv_Stand.Abilities[3].TooltipText,
-                -2 => pv_Stand.Description,
-                _ => string.Empty
+                -2 => pv_Stand.Tooltip,
+                _ => pv_Stand.Abilities[pv_MouseOverIndex].TooltipText
             };
 
             Vector2 size = FontAssets.MouseText.Value.MeasureString(Hooks.Colors.GetUncoloredTooltipText(text));
+            size.Y *= Scale;
 
             pv_TooltipText.SetText(text);
             pv_TooltipText.Left.Set(left, 0f);
             pv_TooltipText.Top.Set(top, 0f);
-            pv_TooltipText.MaxWidth.Set(size.X, 0f);
             pv_TooltipText.Width.Set(size.X, 0f);
-            pv_TooltipText.MaxHeight.Set(size.Y + 8f, 0f);
             pv_TooltipText.Height.Set(size.Y + 8f, 0f);
+            pv_TooltipText.MaxWidth.Set(size.X, 0f);
+            pv_TooltipText.MaxHeight.Set(size.Y + 8f, 0f);
 
             pv_TooltipText.Recalculate();
         }
 
         private Stand pv_Stand;
+        private readonly AscensionConfig pv_Cfg;
+
         private UIImage pv_BackgroundImage;
         private UIImage pv_PortraitImage;
         private UIImage[] pv_AbilityImages;
+        private UIImage[] pv_AbilityToggles;
         private UIText[] pv_AbilityCooldowns;
         private UIText[] pv_AbilityKeys;
         private UITextPanel<string> pv_TooltipText;

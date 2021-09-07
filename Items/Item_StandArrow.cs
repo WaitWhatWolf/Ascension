@@ -10,6 +10,7 @@ using Ascension.Players;
 using static Ascension.ASCResources;
 using Ascension.Enums;
 using Ascension.Attributes;
+using Ascension.Utility;
 
 namespace Ascension.Items
 {
@@ -52,7 +53,7 @@ namespace Ascension.Items
 
         public override bool? UseItem(Player player)
         {
-            player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), player.statLifeMax - 1, -1);
+            player.Hurt(ASCResources.DeathReasons.GetReason("STANDARROW", player.name), (player.statLifeMax + (player.statDefense / 2)) + Hooks.Random.Range(-20, 20), -player.direction);
             if(!player.dead)
             {
                 AscendedPlayer modPlayer = player.GetModPlayer<AscendedPlayer>();

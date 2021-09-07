@@ -1,7 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 

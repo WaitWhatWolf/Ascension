@@ -52,9 +52,29 @@ namespace Ascension.Players
             {
                 List<string> keys = ASCResources.Input.GetStandAbilityKey(Index)?.GetAssignedKeys();
                 string formatKeys = keys == null ? string.Empty : $" ({string.Join(", ", keys)})";
-                return Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tangelo) + formatKeys + '\n' + Description;
+
+                string toReturn = Hooks.Colors.GetColoredTooltipText(Name, Hooks.Colors.Tangelo) + formatKeys + '\n' + Hooks.Text.GetFormatTooltipText(Description);
+
+                if(!string.IsNullOrEmpty(Quote))
+                {
+                    toReturn += "\n\n";
+                    toReturn += Hooks.Colors.GetColoredTooltipMultilineText(Quote, Hooks.Colors.Tooltip_Quote);
+                }
+
+                if (DisplaysCountdownOnTooltip)
+                {
+                    toReturn += "\n";
+                    toReturn += Hooks.Colors.GetColoredTooltipText($"Cooldown: {GetCooldown()}", Hooks.Colors.Tooltip_Stand_Ability_Cooldown);
+                }
+                return toReturn;
             }
         }
+
+        /// <summary>
+        /// A quote/reference of this ability; Displayed at the end of <see cref="TooltipText"/> by default.
+        /// </summary>
+        public virtual string Quote { get; } = string.Empty;
+
         /// <summary>
         /// The icon of this ability to be displayed in the UI.
         /// </summary>
@@ -178,5 +198,10 @@ namespace Ascension.Players
         /// The cooldown of this ability.
         /// </summary>
         protected abstract ReturnCountdown Countdown { get; }
+
+        /// <summary>
+        /// Whether the countdown of this ability is displayed on the tooltip. Used in <see cref="TooltipText"/> by default.
+        /// </summary>
+        protected virtual bool DisplaysCountdownOnTooltip { get; } = true;
     }
 }

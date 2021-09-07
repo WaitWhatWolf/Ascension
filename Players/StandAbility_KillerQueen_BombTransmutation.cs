@@ -26,11 +26,13 @@ namespace Ascension.Players
 
         public override string Name { get; } = "Bomb Transmutation";
 
-        public override string Description => Hooks.Colors.GetColoredTooltipText("Killer Queen", Hooks.Colors.Tooltip_Stand_Title) + 
-            " applies a bomb to the nearest target\nwhich detonates after " + 
-            Hooks.Colors.GetColoredTooltipText(pv_DetonateCountdown.Countdown.Truncate(2).ToString() + 's', Hooks.Colors.Tooltip_Delay)
-            + "\n\n"
-            + Hooks.Colors.GetColoredTooltipText("I have no choice but to fight the ones who find out my identity.", Hooks.Colors.Tooltip_Quote);
+        public override string Description => Hooks.Colors.GetColoredTooltipText("Killer Queen", Hooks.Colors.Tooltip_Stand_Title) +
+            " applies a bomb to the most recently attacked target." +
+            "\nHe then detonates the bomb after a " + Hooks.Colors.GetColoredTooltipText(pv_DetonateCountdown.Countdown.Truncate(2).ToString() + 's', Hooks.Colors.Tooltip_Delay) 
+            + " delay.";
+
+        protected override bool DisplaysCountdownOnTooltip { get; } = false;
+        public override string Quote { get; } = "I have no choice but to fight the ones who find out my identity.";
 
         public override Asset<Texture2D> Icon => GetTexture(STAND_ABILITY_KILLERQUEEN_BASIC);
 
@@ -44,8 +46,8 @@ namespace Ascension.Players
             if(StandMoveTarget.TryGetGlobalNPC(out StandHandlerNPC standHandler) && !standHandler.Debuffs.Any(d => d is SB_KillerQueen_Bomb))
             {
                 standHandler.AddDebuff(new SB_KillerQueen_Bomb(Stand, pv_DetonateCountdown, pv_StandDamage, pv_BombPen, pv_BombKnockback));
-                Stand.GetStandModProjectile().StandAnimator.Speed = Stand.GetAttackSpeed() / 10f;
-                Stand.GetStandModProjectile().StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_PLACEBOMB);
+                Stand.StandAnimator.Speed = Stand.GetAttackSpeed() / 10f;
+                Stand.StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_PLACEBOMB);
             }
 
             ResetCountdown();

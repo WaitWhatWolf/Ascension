@@ -3,6 +3,7 @@ using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Projectiles;
 using Ascension.Utility;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
@@ -21,11 +22,11 @@ namespace Ascension.Players
         
         public override string Name { get; } = "Killer Queen";
 
-        public override string Description => Hooks.Colors.GetColoredTooltipText("Killer Queen", Hooks.Colors.Tooltip_Stand_Title)
-                    + " is a stand which focuses primarily on the offensive,\nusing utility for defense rather than tough skin."
-                    + "\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.Tooltip_Class)
-                    + "\n\n"
-                    + Hooks.Colors.GetColoredTooltipMultilineText("My name is Yoshikage Kira. I'm 33 years old."
+        public override string Description => "A stand which focuses primarily on the offensive,\nusing utility for defense rather than tough skin.";
+
+        public override DamageClass Class => DamageClass.Melee;
+
+        public override string Quote { get; } = "My name is Yoshikage Kira. I'm 33 years old."
                     + "\nMy house is in the northeast section of Morioh,"
                     + "\nwhere all the villas are, and I am not married."
                     + "\nI work as an employee for the Kame Yu department stores,"
@@ -41,9 +42,11 @@ namespace Ascension.Players
                     + "\nI take care not to trouble myself with any enemies,"
                     + "\nlike winning and losing, that would cause me to lose sleep at night."
                     + "\nThat is how I deal with society, and I know that is what brings me happiness."
-                    + "\nAlthough, if I were to fight I wouldn't lose to anyone.", Hooks.Colors.Tooltip_Quote);
+                    + "\nAlthough, if I were to fight I wouldn't lose to anyone.";
 
         public override StandID ID { get; } = StandID.KILLER_QUEEN;
+
+        public override Color ThemeColor { get; } = Color.DarkMagenta;
 
         protected override int StandProjectileType => ModContent.ProjectileType<Projectile_KillerQueen>();
 

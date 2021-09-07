@@ -1,15 +1,16 @@
 ﻿using Ascension.Attributes;
-using Ascension.Enums;
-using System;
-using System.Collections.Generic;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ID;
 using Ascension.Buffs;
+using Ascension.Dusts;
+using Ascension.Enums;
 using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
-using Ascension.Dusts;
+using System;
+using System.Collections.Generic;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Ascension.Projectiles
 {
@@ -162,7 +163,7 @@ namespace Ascension.Projectiles
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             damage = Hooks.InGame.GetDamageWithPen(pv_Stand.GetDamage(), pv_Stand.GetArmorPen(), target);
-            pv_Stand.Owner.Player.Hurt(ASCResources.DeathReasons.GetReason("SHEERHEARTATTACKDRAWBACK", this.DisplayName, pv_Stand.Owner.Player), target.damage / 4, 0);
+            pv_Stand.Owner.Player.Hurt(ASCResources.DeathReasons.GetReason("SHEERHEARTATTACKDRAWBACK", pv_Ability.Name, pv_Stand.Owner.Player.name), target.damage / 2, -pv_Stand.Owner.Player.direction);
 
             pv_TargetsHit.Add(new(1f, target));
             pv_Target = null;
@@ -173,12 +174,15 @@ namespace Ascension.Projectiles
         private void ExplodeTarget(NPC target)
         {
             float dist = target.width + target.height * 3f;
-            int damage = target.boss ? target.life / 10 : target.life / 2;
+            int damage = target.boss ? target.life / 20 : target.life / 4;
             var NPCs = Hooks.InGame.GetAllWithin(Projectile, target.Center, dist);
             NPCs.Remove(target);
-            target.StrikeNPC(target.boss ? target.life / 20 : (target.life + target.defense), 0f, 0);
+            target.StrikeNPC(target.boss ? target.life / 10 : ((target.life + target.defense) / 2), 0f, 0);
             ASCResources.Dusts.Gore_SheerHeartAttack_Explosion.Create(target.Center);
             ASCResources.Dusts.Dust_SheerHeartAttack_Explode(target).Create(target.Center);
+            SoundEngine.PlaySound(SoundID.DD2_GoblinBomb, target.Center);
+            SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode, target.Center);
+            SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion, target.Center);
             foreach (NPC npc in NPCs)
             {
                 npc.StrikeNPC(damage, 0f, 0);
@@ -233,6 +237,7 @@ namespace Ascension.Projectiles
 
         private void SetLineDrawerData()
         {
+
             if (pv_LineDrawer != null)
             {
                 Vector2 eyePos = Projectile.TopLeft + pv_EyeLocalPos;

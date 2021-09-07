@@ -27,9 +27,13 @@ namespace Ascension.Players
 
         public override string Name { get; } = "Stray Cat Bombing";
 
-        public override string Description => Hooks.Colors.GetColoredTooltipText(Stand.Name, Hooks.Colors.Tooltip_Stand_Title)
-            + " fires a barrage of bubbles\nwhich explode on impact.\n\n"
-            + Hooks.Colors.GetColoredTooltipText("Once narrow like a cat's; Now broad.", Hooks.Colors.Tooltip_Quote);
+        public override string Description => $"{{{{c:Stand_Title={Stand.Name}}}}}"
+            + " fires a barrage of bubbles\nwhich {{c:Effect=seek the most recently attacked enemy}} when close." +
+            "\nWhen the bubbles hit terrain or a {{c:Effect=seeked enemy}}," +
+            "\nthey {{c:Effect=explode}} dealing damage to anything within"
+            + $"\na {{{{c:Stat={((int)(Stand.GetRange() * 2f)) / 16}-block distance}}}}.";
+
+        public override string Quote { get; } = "Once narrow like a cat's; Now broad.";
 
         public override Asset<Texture2D> Icon => ASCResources.Textures.GetTexture(ASCResources.Textures.STAND_ABILITY_KILLERQUEEN_ABILITY1);
 
@@ -42,6 +46,8 @@ namespace Ascension.Players
         protected override void OnActivate()
         {
             ResetCountdown();
+
+            Stand.GetStandModProjectile().StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_STRAYCATBOMBING);
         }
 
         public override void Update()
@@ -78,6 +84,8 @@ namespace Ascension.Players
         protected override void OnDeactivate()
         {
             pv_AttackCounter = 0;
+
+            Stand.StandAnimator.Play();
         }
 
         private ReturnCountdown pv_Countdown = new(11f, true);

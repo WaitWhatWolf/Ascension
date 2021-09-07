@@ -4,6 +4,8 @@ using Ascension.Players;
 using Ascension.Utility;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 
 namespace Ascension.Buffs.StandUnique
 {
@@ -28,8 +30,10 @@ namespace Ascension.Buffs.StandUnique
                 CreateParticlesAt(Parent.NPC.Right);
                 CreateParticlesAt(Parent.NPC.Top);
                 CreateParticlesAt(Parent.NPC.Bottom);
+                SoundEngine.PlaySound(SoundID.DD2_GoblinBomb, Parent.NPC.Center);
+                SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode, Parent.NPC.Center);
 
-                foreach(NPC npc in NPCs)
+                foreach (NPC npc in NPCs)
                 {
                     npc.StrikeNPC(Hooks.InGame.GetDamageWithPen(Damage / 2, Pen, Parent.NPC), 0f, 0);
                     Vector2 dir = (npc.Center - Parent.NPC.Center);
@@ -43,8 +47,8 @@ namespace Ascension.Buffs.StandUnique
             if (!pv_PlayedAnim && Countdown.GetCurrentCountdown() <= Stand.GetStandModProjectile().StandAnimator.GetAnimation(ASCResources.Animations.NAME_STAND_KILLERQUEEN_TRIGGERBOMB).TotalPlayback / 2f)
             {
                 pv_PlayedAnim = true;
-                Stand.GetStandModProjectile().StandAnimator.Speed = 1f;
-                Stand.GetStandModProjectile().StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_TRIGGERBOMB);
+                Stand.StandAnimator.Speed = 1f;
+                Stand.StandAnimator.Play(ASCResources.Animations.NAME_STAND_KILLERQUEEN_TRIGGERBOMB);
             }
         }
 

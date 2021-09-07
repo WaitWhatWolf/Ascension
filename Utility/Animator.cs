@@ -210,6 +210,18 @@ namespace Ascension.Utility
         }
 
         /// <summary>
+        /// Attempts to play the default animation.
+        /// </summary>
+        /// <returns></returns>
+        public bool Play()
+        {
+            if (DefaultAnimationIndex == -1)
+                return false;
+
+            return Play(DefaultAnimationIndex);
+        }
+
+        /// <summary>
         /// Restarts the current animation (if one is playing).
         /// </summary>
         /// <returns></returns>

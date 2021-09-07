@@ -3,6 +3,7 @@ using Ascension.Enums;
 using Ascension.Internal;
 using Ascension.Projectiles;
 using Ascension.Utility;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -24,11 +25,15 @@ namespace Ascension.Players
         public override string Name { get; } = "Star Platinum";
 
         public override string Description => Hooks.Colors.GetColoredTooltipText("Star Platinum", Hooks.Colors.Tooltip_Stand_Title)
-                    + ", a stand which excels at\neverything outside of range.\nMost suited class: " + Hooks.Colors.GetColoredTooltipText("Melee", Hooks.Colors.Tooltip_Class)
-                    + "\n\n"
-                    + Hooks.Colors.GetColoredTooltipText("Good grief.", Hooks.Colors.Tooltip_Quote);
+                    + ", a stand which excels at\neverything outside of range.";
+
+        public override DamageClass Class => DamageClass.Melee;
+
+        public override string Quote { get; } = "Good grief.";
 
         public override StandID ID { get; } = StandID.STAR_PLATINUM;
+
+        public override Color ThemeColor { get; } = Color.RoyalBlue;
 
         protected override int StandProjectileType => ModContent.ProjectileType<Projectile_StarPlatinum>();
 
