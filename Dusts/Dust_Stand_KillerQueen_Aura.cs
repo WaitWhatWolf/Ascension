@@ -21,7 +21,7 @@ namespace Ascension.Dusts
             dust.alpha = 255;
             dust.noGravity = true;
             dust.velocity.X *= .25f;
-            dust.velocity.Y = -1f;
+            dust.velocity.Y = Math.Max(dust.velocity.Y.ToNegative(), -1f);
         }
 
         public override bool Update(Dust dust)
@@ -30,12 +30,12 @@ namespace Ascension.Dusts
 
             if (data.Item1 > 6 && dust.alpha <= data.Item2)
             {
-                dust.alpha += 12;
+                dust.alpha += Hooks.Random.Range(4, 7);
 
-                if (data.Item1 == 7 && Hooks.Random.Range(0, 2) == 0)
-                    dust.color = Color.DodgerBlue;
+                if (data.Item1 == 26)
+                    dust.color = Hooks.Random.ChanceIn(2) ? Color.DeepPink : Color.DodgerBlue;
 
-                if (data.Item2 == 42 || dust.alpha >= 255)
+                if (data.Item2 == 56 || dust.alpha >= 255)
                 {
                     dust.active = false;
                     return true;
@@ -43,7 +43,7 @@ namespace Ascension.Dusts
             }
             else
             {
-                dust.alpha -= 5;
+                dust.alpha -= Hooks.Random.Range(1, 5);
             }
 
             dust.customData = (data.Item1 + 1, data.Item2);

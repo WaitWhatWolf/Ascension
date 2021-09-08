@@ -39,7 +39,7 @@ namespace Ascension.Projectiles
 
         public override void PostDraw(Color lightColor)
         {
-            ASCResources.Dusts.Dust_ParasiteSlime_ProjTravel(Projectile).Create(Projectile.position);
+            ASCResources.Dusts.Dust_ParasiteSlime_ProjTravel(Projectile.Size).Create(Projectile.position);
 
             if(Projectile.wet)
             {

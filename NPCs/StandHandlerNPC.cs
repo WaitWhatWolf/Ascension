@@ -20,23 +20,23 @@ namespace Ascension.NPCs
     [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 08)]
     public sealed class StandHandlerNPC : GlobalNPC
     {
-        public List<StandBuff> Debuffs { get; } = new List<StandBuff>();
+        public List<StandBuff> Buffs { get; } = new List<StandBuff>();
 
         public override bool InstancePerEntity => true;
 
         public NPC NPC { get; private set; }
 
-        public void AddDebuff(StandBuff debuff) 
+        public void AddDebuff(StandBuff buff) 
         {
-            if (Debuffs.Contains(debuff))
+            if (Buffs.Contains(buff))
                 return;
 
-            debuff.Parent = this;
-            debuff.Init();
-            Debuffs.Add(debuff);
+            buff.Parent = this;
+            buff.Init();
+            Buffs.Add(buff);
 
-            if(debuff is IDebuggable)
-                Debug.Log($"{this.Name} is now debuffed with {debuff.GetType().Name}");
+            if(buff is IDebuggable)
+                Debug.Log($"{this.Name} is now debuffed with {buff.GetType().Name}");
         }
 
         public override bool PreAI(NPC npc)
@@ -45,19 +45,19 @@ namespace Ascension.NPCs
 
             NPC = npc;
 
-            for (int i = 0; i < Debuffs.Count; i++)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                if (Debuffs[i].AllowRemove())
+                if (Buffs[i].AllowRemove())
                 {
-                    if(Debuffs[i] is IDebuggable)
-                        Debug.Log($"{npc.FullName} is no longer debuffed with {Debuffs[i].GetType().Name}");
+                    if(Buffs[i] is IDebuggable)
+                        Debug.Log($"{npc.FullName} is no longer debuffed with {Buffs[i].GetType().Name}");
                     
-                    Debuffs.RemoveAt(i);
+                    Buffs.RemoveAt(i);
                     continue;
                 }
 
                 //Debug.Log($"ToReturn: {toReturn} ::: StopsAI: {Debuffs[i].StopsAI()}");
-                if (toReturn && Debuffs[i].StopsAI())
+                if (toReturn && Buffs[i].StopsAI())
                 {
                     toReturn = false;
                 }
@@ -73,14 +73,23 @@ namespace Ascension.NPCs
 
         public override void AI(NPC npc)
         {
-            for (int i = 0; i < Debuffs.Count; i++)
+            for (int i = 0; i < Buffs.Count; i++)
             {
-                Debuffs[i].Update();
-                if (Debuffs[i].StopsAI())
+                Buffs[i].Update();
+                if (Buffs[i].StopsAI())
                 {
                     //Debug.Log(Debuffs[i]);
-                    Debuffs[i].CustomAI(npc);
+                    Buffs[i].CustomAI(npc);
                 }
+            }
+        }
+
+        public override void OnKill(NPC npc)
+        {
+            for (int i = 0; i < Buffs.Count; i++)
+            {
+                Buffs[i].OnDeath();
+                Buffs.RemoveAt(i);
             }
         }
 

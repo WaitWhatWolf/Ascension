@@ -22,11 +22,13 @@ namespace Ascension.Players
             stand.Owner.OnSetTarget += Event_OnSetTarget;
             stand.Owner.OnSameTarget += Event_OnSetTarget;
             stand.Owner.OnRemoveTarget += Event_OnRemoveTarget;
+            StandIdlePosVariant = new(-5, -5, 5, 5);
         }
 
         protected Player pr_Owner;
         protected NPC StandMoveTarget;
         protected bool StandMoveTargetFound;
+        protected Vector2Range StandIdlePosVariant;
         protected abstract float StandMoveAttackRange { get; }
         protected abstract float StandMoveNPCDetectionRange { get; }
         protected abstract float StandMoveSpeed { get; }
@@ -67,14 +69,22 @@ namespace Ascension.Players
             }
             else
             {
-                finalPos = pr_Owner.Center + new Vector2(-pr_Owner.direction * 32f, -32f);
-                float distFromOwner = pr_Owner.position.Distance(projectile.position);
+                finalPos = pr_Owner.Center + new Vector2(pr_Owner.direction * 8f, -32f) + StandIdlePosVariant.GetRandom();
+                float distFromOwner = pr_Owner.Center.Distance(projectile.Center);
                 speed = StandMoveSpeed / 2f;
                 inertia = StandMoveSpeed * 2f;
 
-                if (distFromOwner > 600f)
+                if(distFromOwner > 1200f)
+                {
+                    projectile.position = pr_Owner.Top + Hooks.Random.Range(new Vector2(-20f, -20f), new Vector2(20f, -5f));
+                }
+                else if (distFromOwner > 600f)
                 {
                     speed = inertia = StandMoveSpeed * 2f;
+                }
+                else if (distFromOwner < 140f)
+                {
+                    speed = StandMoveSpeed * 0.20f;
                 }
             }
 
@@ -89,7 +99,6 @@ namespace Ascension.Players
             destDir.Normalize();
             destDir *= speed;
             projectile.velocity = (projectile.velocity * (inertia - 1) + destDir) / inertia;
-
 
             projectile.spriteDirection = goesToTarget ? directionToTargetFromOwner.X > 0f ? -1 : 1 : -pr_Owner.direction;
 

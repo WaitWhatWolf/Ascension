@@ -136,7 +136,7 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 24)]
         public static class Items
         {
-            public const string TOOLTIP_PARASITESLIMEWEAPON = "\nParasites do not attack slimes.";
+            public const string TOOLTIP_PARASITESLIMEEXPLOSION = "\nExplosions create parasites that drain the health of\nall enemies hit by the Explosion.\nParasites do not attack slimes.";
         }
 
         /// <summary>
@@ -147,6 +147,21 @@ namespace Ascension
         {
             public const float PARASITESLIME_EXP_RANGE = 120f;
             public const int PARASITESLIME_BUFF_DURATION = 80;
+            public static int ParasiteSlime_Buff_MaxStacks
+            {
+                get
+                {
+                    int toReturn = 4;
+                    if (Main.expertMode)
+                        toReturn += 1;
+                    if (Main.masterMode)
+                        toReturn += 2;
+                    if (Main.hardMode)
+                        toReturn *= 2;
+
+                    return toReturn;
+                }
+            }
         }
 
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 10)]
@@ -328,8 +343,8 @@ namespace Ascension
             public static DustMaker Dust_Stand_KillerQueen_BitesTheDust_Mark { get; private set; }
             public static DustMaker Dust_Stand_KillerQueen_Bubble { get; private set; }
             public static DustMaker Dust_ParasiteSlime_Explode { get; private set; }
-            public static DustMaker Dust_ParasiteSlime_ProjTravel(Projectile @for) 
-                => pv_Dust_ParasiteSlime_ProjTravel with { PosVariation = new(Vector2.Zero, @for.Size) };
+            public static DustMaker Dust_ParasiteSlime_ProjTravel(Vector2 hitboxSize) 
+                => pv_Dust_ParasiteSlime_ProjTravel with { PosVariation = new(Vector2.Zero, hitboxSize) };
             public static DustMaker Dust_SheerHeartAttack_Explode(NPC target)
                 => pv_Dust_SheerHeartAttack_Explode with { PosVariation = new(-target.Size, target.Size) };
 

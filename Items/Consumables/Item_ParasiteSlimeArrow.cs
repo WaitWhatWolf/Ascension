@@ -13,7 +13,7 @@ namespace Ascension.Items.Consumables
     [CreatedBy(Dev.WaitWhatWolf, "2021/08/31 6:12:56")]
     public class Item_ParasiteSlimeArrow : AscensionItem
     {
-        protected override string TooltipDefault { get; } = "Arrows explode on impact;\nExplosions create parasites that drain the enemy's health." + TOOLTIP_PARASITESLIMEWEAPON;
+        protected override string TooltipDefault { get; } = "Arrows explode on impact;" + TOOLTIP_PARASITESLIMEEXPLOSION;
 
         protected override int JourneyCheatCount { get; } = 999;
 

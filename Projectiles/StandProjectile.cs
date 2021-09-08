@@ -23,12 +23,10 @@ namespace Ascension.Projectiles
         public override void SetStaticDefaults()
         {
 			base.SetStaticDefaults();
-			//The line below is just so I don't forget, ignore
-			//Main.projFrames[Projectile.type] = 4;
 
 			Main.projPet[Projectile.type] = true;
-			ProjectileID.Sets.CountsAsHoming[Projectile.type] = false; //Some damage retuction shit, nothing to do with AI
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 4;
+			ProjectileID.Sets.CountsAsHoming[Projectile.type] = false; //Some damage reduction shit, nothing to do with AI
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
@@ -109,7 +107,7 @@ namespace Ascension.Projectiles
 
 				for (int i = 0; i < Projectile.oldPos.Length; i++)
 				{
-					Color drawColor = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length);
+					Color drawColor = Projectile.GetAlpha(lightColor) * ((float)(Projectile.oldPos.Length - i) / (float)Projectile.oldPos.Length) * (i < 3 ? 1f : .5f);
 					Main.EntitySpriteDraw(texture,
 						(Projectile.oldPos[i] + (Projectile.Size / 2f)) - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),
 						sourceRectangle, drawColor, Projectile.rotation, origin, Projectile.scale, spriteEffects, 0);

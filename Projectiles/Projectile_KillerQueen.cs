@@ -43,8 +43,8 @@ namespace Ascension.Projectiles
                     Dust.NewDust(Projectile.TopLeft + pos.Item2, 7, 9, 
                         ModContent.DustType<Dust_Stand_KillerQueen_Aura>(), 
                         SpeedX: pos.Item1 * 2, 
-                        newColor: Hooks.Random.Range(0, 3) == 0 ? Color.DodgerBlue : default,
-                        Alpha: Hooks.Random.Range(pos.Item1 != 0 ? 200 : 125, 230));
+                        newColor: Color.White,
+                        Alpha: Hooks.Random.Range(pos.Item1 != 0 ? 220 : 150, 230));
             }
         }
 
@@ -57,6 +57,11 @@ namespace Ascension.Projectiles
 
             pv_PrevFrame = Projectile.frame;
             pv_PrevSpriteDir = Projectile.spriteDirection;
+
+            for(int i = 0; i < 50; i++)
+                Dust.NewDust(pr_Owner.TopLeft + (Vector2.One * -16f), 
+                    pr_Owner.width + 32, 
+                    pr_Owner.height + 32, ModContent.DustType<Dust_Stand_KillerQueen_Aura>());
         }
 
         public override Animator StandAnimator { get; } = new(ASCResources.Animations.Stand_KillerQueen);
@@ -80,7 +85,7 @@ namespace Ascension.Projectiles
                 maxFramesY: Main.projFrames[Projectile.type] = 6,
                 flipped: Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
             List<(int, Vector2)> positions = new();
-
+            
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
@@ -105,7 +110,7 @@ namespace Ascension.Projectiles
 
                     if (index != -2)
                     {
-                        positions.Add((index, new(x + Projectile.gfxOffY - 3, y - 4)));
+                        positions.Add((index, new(x + Projectile.gfxOffY - 4, y - 4)));
                     }
                 }
             }

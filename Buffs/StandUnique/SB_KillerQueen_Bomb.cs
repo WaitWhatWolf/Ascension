@@ -62,6 +62,12 @@ namespace Ascension.Buffs.StandUnique
             Knockback = knockback;
         }
 
+        public override void OnDeath()
+        {
+            //prevents killer queen from having a sped-up idle animation
+            Stand.StandAnimator.Speed = 1f;
+        }
+
         public ReturnCountdown Countdown { get; }
 
         private void CreateParticlesAt(Vector2 position)

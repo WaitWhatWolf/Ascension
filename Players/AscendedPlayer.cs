@@ -1,5 +1,6 @@
 ﻿using Ascension;
 using Ascension.Attributes;
+using Ascension.Dusts;
 using Ascension.Enums;
 using Ascension.Interfaces;
 using Ascension.Internal;
@@ -170,8 +171,16 @@ namespace Ascension.Players
                 else in_Stand.Recall();
             }
 
-            if(in_IsStandUser)
+            if (in_IsStandUser)
+            {
                 in_Stand.Update();
+
+                if (in_Stand.Active && Player.oldPosition == Player.position && pv_MenacingCountdown)
+                {
+                    Dust.NewDust(Player.Bottom + new Vector2(12f, -12), 6, 3, ModContent.DustType<Dust_Stand_Menacing>(), SpeedY: -0.5f);
+                    Dust.NewDust(Player.Bottom + new Vector2(-32f, -12), 6, 3, ModContent.DustType<Dust_Stand_Menacing>(), SpeedY: -0.5f);
+                }
+            }
 
             if (!Hooks.InGame.NPCExists(Target))
                 ForceRemoveTarget();
@@ -285,6 +294,7 @@ namespace Ascension.Players
         internal Stand in_Stand = null;
         internal bool in_IsStandUser = false;
         private StandID pv_LoadedStandID = StandID.NEWBIE;
+        private ReturnCountdown pv_MenacingCountdown = 0.5f;
         private readonly List<Action<AscendedPlayer, Player>> pv_CustomDeath = new();
     }
 }

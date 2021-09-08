@@ -21,8 +21,8 @@ namespace Ascension.Projectiles
         {
             Projectile.CloneDefaults(ProjectileID.JavelinFriendly);
 
-            Projectile.width = 60;
-            Projectile.height = 20;
+            Projectile.width = 10;
+            Projectile.height = 25;
             Projectile.penetrate = 1;
 
             Projectile.DamageType = ModContent.GetInstance<UmbralDamageClass>();
@@ -30,14 +30,14 @@ namespace Ascension.Projectiles
 
         public override void PostDraw(Color lightColor)
         {
-            ASCResources.Dusts.Dust_ParasiteSlime_ProjTravel(Projectile).Create(Projectile.position);
+            ASCResources.Dusts.Dust_ParasiteSlime_ProjTravel(Projectile.Size / 2f).Create(Projectile.position);
         }
 
         public override void Kill(int timeLeft)
         {
-            ASCResources.Sound.Play_ParasiteSlime_Explosion(Projectile.position);
+            ASCResources.Sound.Play_ParasiteSlime_Explosion(Projectile.Center);
             Hooks.InGame.ApplyModBuffToAllWithin<Buff_Parasites>(Projectile, Projectile.Center, PARASITESLIME_EXP_RANGE, PARASITESLIME_BUFF_DURATION, ASCResources.Delegates.IsNotSlime);
-            ASCResources.Dusts.Dust_ParasiteSlime_Explode.Create(Projectile.position);
+            ASCResources.Dusts.Dust_ParasiteSlime_Explode.Create(Projectile.Center);
         }
     }
 }

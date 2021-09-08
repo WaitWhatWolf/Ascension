@@ -43,7 +43,7 @@ namespace Ascension.Players
 
         protected override void OnActivate()
         {
-            if(StandMoveTarget.TryGetGlobalNPC(out StandHandlerNPC standHandler) && !standHandler.Debuffs.Any(d => d is SB_KillerQueen_Bomb))
+            if(StandMoveTarget.TryGetGlobalNPC(out StandHandlerNPC standHandler) && !standHandler.Buffs.Any(d => d is SB_KillerQueen_Bomb))
             {
                 standHandler.AddDebuff(new SB_KillerQueen_Bomb(Stand, pv_DetonateCountdown, pv_StandDamage, pv_BombPen, pv_BombKnockback));
                 Stand.StandAnimator.Speed = Stand.GetAttackSpeed() / 10f;

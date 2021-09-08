@@ -44,6 +44,11 @@ namespace Ascension.Buffs.StandUnique
         /// </summary>
         public virtual void Init() { }
 
+        /// <summary>
+        /// Called when the NPC is killed.
+        /// </summary>
+        public virtual void OnDeath() { }
+
         public StandBuff(Stand stand)
         {
             Stand = stand;

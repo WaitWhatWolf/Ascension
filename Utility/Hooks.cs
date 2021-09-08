@@ -375,6 +375,14 @@ namespace Ascension.Utility
         public static class Random
         {
             /// <summary>
+            /// Randomly returns true based on x.
+            /// </summary>
+            /// <param name="x">How much chance there is for something to happen, A.K.A chance in x.</param>
+            /// <remarks>As an example, when setting x to 10, this method will return true on average every 10 times.</remarks>
+            /// <returns></returns>
+            public static bool ChanceIn(int x) => x <= 1 ? true : Range(0, x) == 0;
+
+            /// <summary>
             /// Returns a <see cref="Vector2"/> with each of it's values being a random number between min and max.
             /// </summary>
             /// <param name="min"></param>
@@ -548,6 +556,38 @@ namespace Ascension.Utility
                 double num2 = Math.Truncate(num * value) / num;
                 return num2;
             }
+
+            /// <summary>
+            /// Returns the given value in negative (if not already)
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public static float ToNegative(float value)
+                => value > 0f ? -value : value;
+
+            /// <summary>
+            /// Returns the given value in negative (if not already)
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public static int ToNegative(int value)
+                => value > 0 ? -value : value;
+
+            /// <summary>
+            /// Returns the given value in positive (if not already)
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public static float ToPositive(float value)
+                => value < 0 ? -value : value; 
+            
+            /// <summary>
+            /// Returns the given value in positive (if not already)
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public static int ToPositive(int value)
+                => value < 0 ? -value : value;
 
             /// <summary>
             ///   <para>Moves a point current towards target.</para>
