@@ -4,16 +4,15 @@ using System;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Ascension.Items.Placeable
+namespace Ascension.Items.Placeables
 {
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidAltarP : AscensionItem
     {
         protected override string TooltipDefault { get; } = "Used for sacrifices to the void";
         protected override int JourneyCheatCount { get; } = 1;
-
-        protected override string DisplayNameDefault { get; } = "Void Altar";
-
+		protected override string DisplayNameDefault { get; } = "Void Altar";
+		
         public override void SetDefaults()
         {
             Item.width = 42;
@@ -28,6 +27,7 @@ namespace Ascension.Items.Placeable
             Item.value = 150;
             Item.createTile = ModContent.TileType<Tiles.VoidAltar>();
             //Item.pick = 150;
+            
         }
 
         public override void AddRecipes()

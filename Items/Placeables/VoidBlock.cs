@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Ascension.Items.Placeable
+namespace Ascension.Items.Placeables
 {
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class VoidBlock : AscensionItem

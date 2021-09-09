@@ -1,6 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
-using Ascension.Items.Placeable;
+using Ascension.Items.Placeables;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
