@@ -11,7 +11,8 @@ namespace Ascension.Items.Placeables
     {
         protected override string TooltipDefault { get; } = "Used for sacrifices to the void";
         protected override int JourneyCheatCount { get; } = 1;
-
+		protected override string DisplayNameDefault { get; } = "Void Altar";
+		
         public override void SetDefaults()
         {
             Item.width = 42;
