@@ -16,9 +16,18 @@ namespace Ascension.NPCs
     [CreatedBy(Dev.Adragon, 2021, 08, 08)]
     class ProphetSwordOccultist : AscensionNPC
     {
+        int timesHit;
+        int timesHit2; //counter for teleport
         int i = 1;
         int j = 1;
         int counterForChainCirclet;
+        int counterForSingleChain;
+        int counterAfterHit;
+        int counterForMeleeAttack;
+        bool gotHit;
+        float randomDirection;
+        bool meleeAttack;
+        bool teleport;
         public override void SetStaticDefaults()
         {
             //The name the enemy displays
@@ -59,29 +68,93 @@ namespace Ascension.NPCs
         public override void AI()
         {
             counterForChainCirclet++;
-
+            counterForSingleChain++;
+            counterForMeleeAttack++;
+            if(gotHit == true)
+            {
+                counterAfterHit++;
+                if (counterAfterHit >= 60)
+                {
+                    counterAfterHit = 0;
+                    gotHit = false;
+                }
+            }
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
             #region Movement
-            Vector2 moveTo = player.Center + new Vector2(-3f, -300f);
-            float speed = 9f;
-            Vector2 move = moveTo - NPC.Center;
-            float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
-            if (magnitude > speed)
+            if(gotHit == false && meleeAttack == false)
             {
-                move *= speed / magnitude;
+                Vector2 moveTo = player.Center + new Vector2(-3f, -300f);
+                float speed = 9f;
+                Vector2 move = moveTo - NPC.Center;
+                float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                if (magnitude > speed)
+                {
+                    move *= speed / magnitude;
+                }
+                float turnResistance = 10f; //the larger this is, the slower the boss will turn
+                move = (NPC.velocity * turnResistance + move) / (turnResistance + 1f);
+                magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                if (magnitude > speed)
+                {
+                    move *= speed / magnitude;
+                }
+                NPC.velocity = move;
             }
-            float turnResistance = 10f; //the larger this is, the slower the boss will turn
-            move = (NPC.velocity * turnResistance + move) / (turnResistance + 1f);
-            magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
-            if (magnitude > speed)
+            if(gotHit == true && meleeAttack == false)
             {
-                move *= speed / magnitude;
+                int i = Main.rand.Next(2);
+                if(i == 0)
+                {
+                    randomDirection = 300f;
+                }
+                if(i == 1)
+                {
+                    randomDirection = -300f;
+                }
+                Vector2 moveTo = player.Center + new Vector2(randomDirection, -300f);
+                float speed = 9f;
+                Vector2 move = moveTo - NPC.Center;
+                float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                if (magnitude > speed)
+                {
+                    move *= speed / magnitude;
+                }
+                float turnResistance = 10f; //the larger this is, the slower the boss will turn
+                move = (NPC.velocity * turnResistance + move) / (turnResistance + 1f);
+                magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                if (magnitude > speed)
+                {
+                    move *= speed / magnitude;
+                }
+                NPC.velocity = move;
             }
-            NPC.velocity = move;
+            if(teleport == true)
+            {
+                teleport = false;
+                SoundEngine.PlaySound(SoundID.NPCHit49, NPC.position);
+                NPC.position.X = player.position.X + Main.rand.Next(-300, 300);
+                NPC.position.Y = player.position.Y - Main.rand.Next(-300, 300); ;
+                NPC.netUpdate = true;
+            }
             #endregion
-
-            if (counterForChainCirclet > 60)
+            #region Single Chain
+            if (counterForSingleChain > 60)
+            {
+                counterForSingleChain = 0;
+                int damage = 5;
+                float knockBack = 0.1f;
+                float projectileSpeed = 4;
+                Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
+                new Vector2(NPC.position.X + NPC.width, NPC.position.Y + NPC.height)) * projectileSpeed;
+                
+                Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X, 
+                velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                
+            }
+            #endregion
+            #region Circlet Chain
+            if (counterForChainCirclet > 600)
             {
                 counterForChainCirclet = 0;
                 int damage = 5;
@@ -129,6 +202,77 @@ namespace Ascension.NPCs
                     }
                 }
             }
+            #endregion
+            #region Melee Attack
+            if (counterForMeleeAttack >= 600)
+            {
+                meleeAttack = true;
+                Vector2 moveTo = player.Center;
+                float speed = 10f;
+                Vector2 move = moveTo - NPC.Center;
+                float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                if (magnitude > speed)
+                {
+                    move *= speed / magnitude;
+                }
+                float turnResistance = 10f; //the larger this is, the slower the boss will turn
+                move = (NPC.velocity * turnResistance + move) / (turnResistance + 1f);
+                magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
+                if (magnitude > speed)
+                {
+                    move *= speed / magnitude;
+                }
+                NPC.velocity = move;
+                //NPC.aiStyle = 19;
+                if (counterForMeleeAttack >= 780)
+                {
+                    meleeAttack = false;
+                    counterForMeleeAttack = 0;
+                    //NPC.aiStyle = 0;
+                }
+            }
+            #endregion
+        }
+
+        public void MakeDust()
+        {
+            for (int k = 0; k < 20; k++)
+            {
+                int dust = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Wraith, 0f, 0f, 50, default(Color), 1.5f); //56 blue or 54 black 27 purple
+                Main.dust[dust].velocity *= 2f;
+                Main.dust[dust].noGravity = true;
+            }
+            int gore = Gore.NewGore(new Vector2(NPC.position.X, NPC.position.Y - 10f), NPC.Center, 99, NPC.scale); //99 is the ID for the smoke gore
+            Main.gore[gore].velocity *= 0.3f;
+            gore = Gore.NewGore(new Vector2(NPC.position.X, NPC.position.Y + (float)(NPC.height / 2) - 15f), NPC.Center, 99, NPC.scale);
+            Main.gore[gore].velocity *= 0.3f;
+            gore = Gore.NewGore(new Vector2(NPC.position.X, NPC.position.Y + (float)NPC.height - 20f), NPC.Center, 99, NPC.scale);
+            Main.gore[gore].velocity *= 0.3f;
+        }
+
+        public override void OnHitPlayer(Player target, int damage, bool crit)
+        {
+            meleeAttack = false;
+            counterForMeleeAttack = 0;
+        }
+        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        {
+            timesHit++;
+            timesHit2++;
+            if(timesHit > 3)
+            {
+                timesHit = 0;
+                gotHit = true;
+            }
+            if(timesHit2 > 8)
+            {
+                timesHit2 = 0;
+                teleport = true;
+            }
+        }
+        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        {
+            counterForMeleeAttack += 120;
         }
     }
 }
