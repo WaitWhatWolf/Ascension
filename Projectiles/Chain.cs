@@ -21,25 +21,28 @@ namespace Ascension.Projectiles
         public override void SetDefaults()
         {
             Projectile.width = 48;
-            Projectile.height = 3;
+            Projectile.height = 36;
             Projectile.hostile = true;
             Projectile.DamageType = DamageClass.Throwing;
             Projectile.penetrate = -1;
             Projectile.timeLeft = 600;
             Projectile.tileCollide = false;
-            Projectile.aiStyle = 0;
+            Projectile.aiStyle = 3;
             Projectile.knockBack = 0.01f;
             Projectile.scale = 1;
+            Projectile.alpha = 400;
         }
 
         public override void AI()
         {
-
+            Projectile.alpha -= 15;
+            Projectile.direction = Projectile.spriteDirection = Projectile.velocity.X > 0f ? 1 : -1;
+            Projectile.rotation = Projectile.velocity.ToRotation();
             //Projectile.TargetClosest(faceTarget: true);
             //Projectile.FindTargetWithinRange
             //Player player = Main.player[owner.target];
             //Projectile target = Main.player[i];
-            if(counter == 0)
+            if (counter == 0)
             {
                 shouldICount = true;
             }
