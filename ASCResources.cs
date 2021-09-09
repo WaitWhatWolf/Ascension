@@ -78,6 +78,7 @@ namespace Ascension
         public const string ASSETS_SUBPATH_MINIONS = "Minions/";
         public const string ASSETS_SUBPATH_WEAPONS = "Weapons/";
         public const string ASSETS_SUBPATH_CONSUMABLES = "Consumables/";
+        public const string ASSETS_SUBPATH_PLACEABLES = "Placeables/";
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
