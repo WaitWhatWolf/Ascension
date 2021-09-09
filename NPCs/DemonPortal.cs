@@ -167,14 +167,14 @@ namespace Ascension.NPCs
                         if (i >= 6)
                             Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width + (20 * i) , NPC.position.Y + NPC.height, velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
                         else
-                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width + (20 * i), NPC.position.Y + NPC.height, velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width - (20 * i), NPC.position.Y + NPC.height, velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
                     }
                     if(!withinYrange)
                     {
                         if (i >= 6)
-                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height + (20 * i) -90, velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height + (20 * i) , velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
                         else
-                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height - (20 * i) -70, velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height - (20 * i) , velocity.X, velocity.Y, ModContent.ProjectileType<DemonPortalWave>(), damage, knockBack, Main.myPlayer);
 
                     }
                     i++;
