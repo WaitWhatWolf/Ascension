@@ -53,13 +53,13 @@ namespace Ascension.NPCs
             NPC.width = 38;
             NPC.height = 46;
             //The Enemies max health
-            NPC.lifeMax = 10000;
+            NPC.lifeMax = 9500;
             //Enemy Damage and Defence
-            NPC.damage = 50;
-            NPC.defense = 16;
+            NPC.damage = 38;
+            NPC.defense = 18;
             //The sound the enemy makes upon hit or death
             NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.DeathSound = SoundID.NPCDeath49;
             //The amount of money that is dropped (as a float?)
             NPC.value = 1000f;
             NPC.aiStyle = -1;
@@ -189,7 +189,7 @@ namespace Ascension.NPCs
             if (counterForSingleChain > 60)
             {
                 counterForSingleChain = 0;
-                int damage = 5;
+                int damage = 35;
                 if(phase == 2)
                 {
                     damage = damage * 3 / 2;
@@ -205,11 +205,13 @@ namespace Ascension.NPCs
 
                 if (phase == 1)
                 {
+                    SoundEngine.PlaySound(SoundID.Item7, NPC.position);
                     Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X,
                     velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
                 }
                 if (phase == 2)
                 {
+                    SoundEngine.PlaySound(SoundID.Item7, NPC.position);
                     Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X,
                     velocity.Y, ModContent.ProjectileType<ChainUpgraded>(), damage, knockBack, Main.myPlayer);
                 }
@@ -222,7 +224,7 @@ namespace Ascension.NPCs
                 counterForChainCirclet = 0;
                 attacking = true;
                 animationCounter = 0;
-                int damage = 5;
+                int damage = 25;
                 if (phase == 2)
                 {
                     damage = damage * 3 / 2;
@@ -233,7 +235,7 @@ namespace Ascension.NPCs
                 {
                     projectileSpeed = projectileSpeed * 1.5f;
                 }
-
+                SoundEngine.PlaySound(SoundID.Item28, NPC.position);
                 Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
                 new Vector2(NPC.position.X + NPC.width, NPC.position.Y + NPC.height)) * projectileSpeed;
                 /*
@@ -369,8 +371,9 @@ namespace Ascension.NPCs
             }
             if(initLinkChain == true)
             {
+                SoundEngine.PlaySound(SoundID.Item121, NPC.position);
                 linkChainCounter2++;
-                int damage = 5;
+                int damage = 20;
                 float knockBack = -1f;
                 float projectileSpeed = 2;
 
@@ -468,6 +471,7 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
                     }
                     if (animationCounter >= 420)
                     {
+                        SoundEngine.PlaySound(SoundID.Item31, NPC.position);
                         attacking = false;
                         animationCounter = 0;
                     }
@@ -511,6 +515,7 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
                     }
                     if (animationCounter >= 420)
                     {
+                        SoundEngine.PlaySound(SoundID.Item31, NPC.position);
                         attacking = false;
                         animationCounter = 0;
                     }
@@ -536,6 +541,7 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
+            SoundEngine.PlaySound(SoundID.Item75, NPC.position);
             meleeAttack = false;
             counterForMeleeAttack = 0;
         }

@@ -35,6 +35,7 @@ namespace Ascension.Projectiles
             Projectile.aiStyle = 0;
             Projectile.knockBack = 0.05f;
             Projectile.scale = 0.8f;
+            Projectile.damage = 20;
         }
         public override void SetStaticDefaults()
         {

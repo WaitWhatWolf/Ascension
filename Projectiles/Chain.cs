@@ -31,6 +31,7 @@ namespace Ascension.Projectiles
             Projectile.knockBack = 0.01f;
             Projectile.scale = 1;
             Projectile.alpha = 400;
+            Projectile.damage = 35;
         }
 
         public override void AI()
