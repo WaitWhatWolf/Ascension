@@ -36,6 +36,7 @@ namespace Ascension.NPCs
         int linkChain;
         bool initLinkChain;
         int linkChainCounter2;
+        bool secondSpawn;
         public override void SetStaticDefaults()
         {
             //The name the enemy displays
@@ -55,7 +56,7 @@ namespace Ascension.NPCs
             //The Enemies max health
             NPC.lifeMax = 9500;
             //Enemy Damage and Defence
-            NPC.damage = 38;
+            NPC.damage = 30;
             NPC.defense = 18;
             //The sound the enemy makes upon hit or death
             NPC.HitSound = SoundID.NPCHit1;
@@ -70,9 +71,10 @@ namespace Ascension.NPCs
             NPC.netAlways = true;
             NPC.noGravity = true;
             NPC.behindTiles = false;
+            NPC.lavaImmune = true;
+            NPC.buffImmune[24] = true;
             //Music = ModContent.GetSoundSlot(SoundType.Music, "Sounds/Music/POEHEISTWAV");
         }
-
         public override void AI()
         {
             counterForChainCirclet++;
@@ -94,6 +96,20 @@ namespace Ascension.NPCs
             }
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
+            if (!player.active || player.dead)
+            {
+                NPC.TargetClosest(false);
+                player = Main.player[NPC.target];
+                if (!player.active || player.dead)
+                {
+                    NPC.velocity = new Vector2(0f, -10f);
+                    if (NPC.timeLeft > 10)
+                    {
+                        NPC.timeLeft = 10;
+                    }
+                    return;
+                }
+            }
             #region Life Check
             if (NPC.life < (NPC.lifeMax / 1.5) && !firstSpawn)
             {
@@ -102,12 +118,15 @@ namespace Ascension.NPCs
                 Random rnd = new Random();
                 NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<DesertSwordOccultist>());
                 NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<DesertSwordOccultist>());
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<DesertSwordOccultist>());
             }
-            if (NPC.life < (NPC.lifeMax / 2) && phase == 1)
+            if (NPC.life < (NPC.lifeMax / 2) && phase == 1 && !secondSpawn)
             {
+                secondSpawn = true;
                 phase = 2;
                 SoundEngine.PlaySound(SoundID.NPCHit56, NPC.position);
                 Random rnd = new Random();
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<SwordOccultist>());
                 NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<SwordOccultist>());
                 NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<SwordOccultist>());
             }
@@ -189,10 +208,11 @@ namespace Ascension.NPCs
             if (counterForSingleChain > 60)
             {
                 counterForSingleChain = 0;
-                int damage = 35;
-                if(phase == 2)
+                int damage = 15;
+
+                if (phase == 2)
                 {
-                    damage = damage * 3 / 2;
+                    damage = (int)(damage * 1.5f);
                 }
                 float knockBack = 0.1f;
                 float projectileSpeed = 4;
@@ -221,13 +241,13 @@ namespace Ascension.NPCs
             #region Circlet Chain
             if (counterForChainCirclet > 600)
             {
+                int damage = 12;
                 counterForChainCirclet = 0;
                 attacking = true;
                 animationCounter = 0;
-                int damage = 25;
                 if (phase == 2)
                 {
-                    damage = damage * 3 / 2;
+                    damage = (int)(damage * 1.5f);
                 }
                 float knockBack = 0.1f;
                 float projectileSpeed = 4;
@@ -323,7 +343,7 @@ namespace Ascension.NPCs
             {
                 meleeAttack = true;
                 Vector2 moveTo = player.Center;
-                float speed = 10f;
+                float speed = 8f;
                 if (phase == 2)
                 {
                     speed = speed * 1.5f;
@@ -345,7 +365,7 @@ namespace Ascension.NPCs
                 //NPC.aiStyle = 19;
                 if (phase == 1)
                 {
-                    if (counterForMeleeAttack >= 780)
+                    if (counterForMeleeAttack >= 600)
                     {
                         meleeAttack = false;
                         counterForMeleeAttack = 0;
@@ -354,7 +374,7 @@ namespace Ascension.NPCs
                 }
                 if (phase == 2)
                 {
-                    if (counterForMeleeAttack >= 660)
+                    if (counterForMeleeAttack >= 600)
                     {
                         meleeAttack = false;
                         counterForMeleeAttack = 0;
@@ -371,9 +391,9 @@ namespace Ascension.NPCs
             }
             if(initLinkChain == true)
             {
+                int damage = 12;
                 SoundEngine.PlaySound(SoundID.Item121, NPC.position);
                 linkChainCounter2++;
-                int damage = 20;
                 float knockBack = -1f;
                 float projectileSpeed = 2;
 
@@ -569,6 +589,11 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
         {
             counterForMeleeAttack += 120;
 
+        }
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+        {
+            scale = 1.5f;
+            return null;
         }
     }
 }

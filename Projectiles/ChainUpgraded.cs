@@ -38,49 +38,34 @@ namespace Ascension.Projectiles
             Projectile.alpha -= 15;
             Projectile.direction = Projectile.spriteDirection = Projectile.velocity.X > 0f ? 1 : -1;
             Projectile.rotation = Projectile.velocity.ToRotation();
-            /*
-            if (++Projectile.frameCounter >= 5)
+            if (counter == 0)
             {
-                Projectile.frameCounter = 0;
-                if (++Projectile.frame >= 4)
-                {
-                    Projectile.frame = 0;
-                }
+                shouldICount = true;
             }
-            */
-                if (counter == 0)
-                {
-                    shouldICount = true;
-                }
-                if (shouldICount == true)
-                {
-                    counter++;
-                }
-                if (counter > 45)
-                {
-                    Player player = Main.player[Projectile.owner];
-                    float ProjectileSpeed = 0;
-                    Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
-                    new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * ProjectileSpeed;
-                    Projectile.velocity = velocity;
-                }
-                if (counter > 240)
-                {
-                    Player player = Main.player[Projectile.owner];
-                    float ProjectileSpeed = 15;
+            if (shouldICount == true)
+            {
+                counter++;
+            }
+            if (counter == 45)
+            {
+                Player player = Main.player[Projectile.owner];
+                float ProjectileSpeed = 0;
+                Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
+                new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * ProjectileSpeed;
+                Projectile.velocity = velocity;
+            }
+            if (counter == 240)
+            {
+                Player player = Main.player[Projectile.owner];
+                float ProjectileSpeed = 15;
 
-                    Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
-                    new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * ProjectileSpeed;
+                Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
+                new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * ProjectileSpeed;
 
-                    Projectile.velocity = velocity;
-                    /*
-                    Projectile.NewProjectile(new ProjectileSource_ProjectileParent(Projectile.), Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height, velocity.X,
-                    velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
-                    Kill(0);
-                    */
-                    shouldICount = false;
-                    counter = 1;
-                }
+                Projectile.velocity = velocity;
+                shouldICount = false;
+                counter = 1;
+            }
         }
 
         public override void Kill(int timeLeft)

@@ -27,11 +27,10 @@ namespace Ascension.Projectiles
             Projectile.penetrate = -1;
             Projectile.timeLeft = 600;
             Projectile.tileCollide = false;
-            Projectile.aiStyle = 3;
+            Projectile.aiStyle = 0;
             Projectile.knockBack = 0.01f;
             Projectile.scale = 1;
             Projectile.alpha = 400;
-            Projectile.damage = 35;
         }
 
         public override void AI()
@@ -39,10 +38,6 @@ namespace Ascension.Projectiles
             Projectile.alpha -= 15;
             Projectile.direction = Projectile.spriteDirection = Projectile.velocity.X > 0f ? 1 : -1;
             Projectile.rotation = Projectile.velocity.ToRotation();
-            //Projectile.TargetClosest(faceTarget: true);
-            //Projectile.FindTargetWithinRange
-            //Player player = Main.player[owner.target];
-            //Projectile target = Main.player[i];
             if (counter == 0)
             {
                 shouldICount = true;
@@ -51,7 +46,7 @@ namespace Ascension.Projectiles
             {
                 counter++;
             }
-            if(counter > 60)
+            if(counter == 45)
             {
                 Player player = Main.player[Projectile.owner];
                 float projectileSpeed = 0;
@@ -59,7 +54,7 @@ namespace Ascension.Projectiles
                 new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * projectileSpeed;
                 Projectile.velocity = velocity;
             }
-            if(counter > 300)
+            if(counter == 240)
             {
                 Player player = Main.player[Projectile.owner];
                 float projectileSpeed = 15;
@@ -68,11 +63,6 @@ namespace Ascension.Projectiles
                 new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * projectileSpeed;
 
                 Projectile.velocity = velocity;
-                /*
-                Projectile.NewProjectile(new ProjectileSource_ProjectileParent(Projectile.), Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height, velocity.X,
-                velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
-                Kill(0);
-                */
                 shouldICount = false;
                 counter = 1;
             }
