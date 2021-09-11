@@ -285,6 +285,7 @@ namespace Ascension.NPCs
             {
                 Item.NewItem(NPC.position, ModContent.ItemType<PortalDemonWings>(), 1);
             }
+            Item.NewItem(NPC.position, ModContent.ItemType<YggdrasilPact>(), 1);
         }
         /*
         public override void DrawEffects( ref Color drawColor)

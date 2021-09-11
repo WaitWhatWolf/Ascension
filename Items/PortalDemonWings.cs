@@ -15,7 +15,7 @@ namespace Ascension.Items
             get
             {
                 Debug.LogWarning("@adi pls read note in PortalDemonWings");
-                return "<tooltip to add>";
+                return "Ascension is further than those wings can reach";
             }
         }
 

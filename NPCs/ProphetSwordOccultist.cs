@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 
@@ -37,11 +38,12 @@ namespace Ascension.NPCs
         bool initLinkChain;
         int linkChainCounter2;
         bool secondSpawn;
+        bool entryLine;
         public override void SetStaticDefaults()
         {
             //The name the enemy displays
-            DisplayName.SetDefault("Prophet of Sword Occult");
-
+            DisplayName.SetDefault("Prophet of the Sword Occult");
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
             //The frame count for the enemy
             Main.npcFrameCount[NPC.type] = 10; //Zombie has 3 frames but u can instead type in number 3 instead (depending how many frames you want)
         }
@@ -75,12 +77,36 @@ namespace Ascension.NPCs
             NPC.buffImmune[24] = true;
             //Music = ModContent.GetSoundSlot(SoundType.Music, "Sounds/Music/POEHEISTWAV");
         }
+
+        /*
+public override int SpawnNPC(int tileX, int tileY)
+{
+/*
+if (Main.netMode == 0)
+{
+    Main.NewText(NPC.name + " " + Lang.misc[16], 175, 75, 255, false);
+}
+else if (Main.netMode == 2)
+{
+    NetMessage.SendData(25, -1, -1, NPC.displayName + " " + Lang.misc[16], 255, (float)175, (float)75, (float)255, 0f); 
+    //R, G, and B make up the color of the text. If you don't know what this means, look up RGB values.
+            NPC.name
+    //Most bosses have a text color of r = 175, g = 75, b = 255
+}
+return 1;
+        }
+    */
         public override void AI()
         {
             counterForChainCirclet++;
             counterForSingleChain++;
             counterForMeleeAttack++;
             animationCounter++;
+            if(entryLine == false)
+            {
+                entryLine = true;
+                Talk("Shouldn't have used that!");
+            }
             if (phase == 2)
             {
                 linkChainCounter++;
@@ -96,6 +122,7 @@ namespace Ascension.NPCs
             }
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
+            #region Escape from battle
             if (!player.active || player.dead)
             {
                 NPC.TargetClosest(false);
@@ -110,9 +137,11 @@ namespace Ascension.NPCs
                     return;
                 }
             }
+            #endregion
             #region Life Check
             if (NPC.life < (NPC.lifeMax / 1.5) && !firstSpawn)
             {
+                Talk("Minions come forth!");
                 firstSpawn = true;
                 SoundEngine.PlaySound(SoundID.NPCHit56, NPC.position);
                 Random rnd = new Random();
@@ -122,6 +151,7 @@ namespace Ascension.NPCs
             }
             if (NPC.life < (NPC.lifeMax / 2) && phase == 1 && !secondSpawn)
             {
+                Talk("Azazel grant me power!");
                 secondSpawn = true;
                 phase = 2;
                 SoundEngine.PlaySound(SoundID.NPCHit56, NPC.position);
@@ -449,6 +479,20 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
 
             #endregion
         }
+        private void Talk(string message)
+        {
+            if (Main.netMode != NetmodeID.Server)
+            {
+                
+                string text = Language.GetTextValue(message,Lang.GetNPCNameValue(NPC.type));
+                Main.NewText(text, 133, 56, 93);
+            }
+            else
+            {
+                NetworkText text = NetworkText.FromKey(message,Lang.GetNPCNameValue(NPC.type));
+                Terraria.Chat.ChatHelper.BroadcastChatMessage(text, new Color(133, 56, 93));
+            }
+        }
 
         public override void FindFrame(int frameSize)
         {
@@ -594,6 +638,14 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
         {
             scale = 1.5f;
             return null;
+        }
+        public override bool PreKill()
+        {            
+            return true;
+        }
+        public override void OnKill()
+        {
+            Talk("Im sorry..failed you..blegh");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Items;
 using Ascension.Items.Projectiles;
 using Ascension.Items.Weapons;
 using Microsoft.Xna.Framework;
@@ -169,6 +170,7 @@ namespace Ascension.NPCs
             {
                 Item.NewItem(NPC.position, ModContent.ItemType<RuneBlade>(), 1);
             }
+            Item.NewItem(NPC.position, ModContent.ItemType<JudgementChainPact>(), 1);
         }
     }
 }

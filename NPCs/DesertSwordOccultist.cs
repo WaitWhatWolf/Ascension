@@ -1,5 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Items;
 using Ascension.Projectiles.Minions;
 using Microsoft.Xna.Framework;
 using System;
@@ -144,6 +145,7 @@ namespace Ascension.NPCs
             {
                 Item.NewItem(NPC.position, ModContent.ItemType<SilentMinionItem>(), 1);
             }
+            Item.NewItem(NPC.position, ModContent.ItemType<ExcaliburPact>(), 1);
         }
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
         {

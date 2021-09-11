@@ -1,4 +1,5 @@
 ﻿using Ascension.Buffs;
+using Ascension.Items;
 using Ascension.Items.Projectiles;
 using Ascension.Items.Weapons;
 using Microsoft.Xna.Framework;
@@ -203,6 +204,7 @@ namespace Ascension.NPCs
             {
                 Item.NewItem(NPC.position, ModContent.ItemType<Zanbato>(), 1);
             }
+            Item.NewItem(NPC.position, ModContent.ItemType<KusanagiPact>(), 1);
         }
     }
 }

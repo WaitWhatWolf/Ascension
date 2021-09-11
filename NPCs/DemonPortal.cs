@@ -267,10 +267,11 @@ namespace Ascension.NPCs
             Item.NewItem(NPC.position, ItemType("PortalCatalyst"), 1);
         }
         */
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             Item.NewItem(NPC.position, ModContent.ItemType<PortalCatalyst>(), 1);
         }
+
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
         {
             //music = MusicID.Temple;
