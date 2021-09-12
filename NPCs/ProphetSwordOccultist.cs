@@ -647,5 +647,16 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
         {
             Talk("Im sorry..failed you..blegh");
         }
+        public override bool CheckDead()
+        {
+            Talk("Im sorry..failed you..blegh");
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+           // npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonSword>(), 6, 1, 1));
+        }
+
     }
 }

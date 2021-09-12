@@ -4,6 +4,7 @@ using Ascension.Items;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -266,18 +267,15 @@ namespace Ascension.NPCs
             }
         }
 
-        public override void OnKill()
+        public override bool CheckDead()
         {
-            //This will make the NPC always drop this item
-            Item.NewItem(NPC.position, ItemID.DemoniteOre, Main.rand.Next(3));
-            Item.NewItem(NPC.position, ModContent.ItemType<LeatherPlate>(), Main.rand.Next(3));
-            //This will make the NPC only drop this item 25% of the time
-            /*
-            if (Main.rand.Next(4) == 0)
-            {
-                Item.NewItem(NPC.position, ItemID.DemoniteBar, 1);
-            }
-            */
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ItemID.DemoniteOre, 1, 1, 3));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<LeatherPlate>(), 1, 1, 3));
         }
 
     }

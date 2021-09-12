@@ -7,6 +7,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -267,9 +268,15 @@ namespace Ascension.NPCs
             Item.NewItem(NPC.position, ItemType("PortalCatalyst"), 1);
         }
         */
+
+        public override bool CheckDead()
+        {
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem(NPC.position, ModContent.ItemType<PortalCatalyst>(), 1);
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<PortalCatalyst>(), 1,1,1));
         }
 
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)

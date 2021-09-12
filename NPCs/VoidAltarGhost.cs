@@ -6,6 +6,8 @@ using Ascension.Buffs;
 using Ascension.Items;
 using Ascension.Enums;
 using Ascension.Attributes;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.GameContent.Bestiary;
 
 namespace Ascension.NPCs
 {
@@ -22,6 +24,12 @@ namespace Ascension.NPCs
             //The frame count for the enemy
             Main.npcFrameCount[NPC.type] = 3; //Zombie has 3 frames but u can instead type in number 3 instead (depending how many frames you want)
 
+
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new NPCID.Sets.NPCBestiaryDrawModifiers(0)
+            { //Influences how the NPC looks in the Bestiary
+                Velocity = 1f //Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
 
         public override void SetDefaults()
@@ -109,12 +117,21 @@ namespace Ascension.NPCs
                 player2 = Main.player[NPC.target];
             }
             player2.AddBuff(ModContent.BuffType<ManaRegenVoid>(), 240, false);
+            NPC.NPCLoot();
             return base.CheckDead();
         }
-
-        public override void OnKill()
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
-            Item.NewItem(NPC.position, ModContent.ItemType<VoidFragment>(), Main.rand.Next(1, 5));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<VoidFragment>(), 1, 1, 5));
+        }
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            // We can use AddRange instead of calling Add multiple times in order to add multiple items at once
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+
+				// Sets the description of this NPC that is listed in the bestiary.
+				new FlavorTextBestiaryInfoElement("This type of ghost appears near void blocks. Gives me mana to absorb after I slay one of them and is very weak overall.")
+            });
         }
     }
 }

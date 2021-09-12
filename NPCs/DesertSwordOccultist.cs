@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -139,13 +140,15 @@ namespace Ascension.NPCs
             return SpawnCondition.DesertCave.Chance * 0.0f;
         }
 
-        public override void OnKill()
+        public override bool CheckDead()
         {
-            if (Main.rand.Next(6) == 0)
-            {
-                Item.NewItem(NPC.position, ModContent.ItemType<SilentMinionItem>(), 1);
-            }
-            Item.NewItem(NPC.position, ModContent.ItemType<ExcaliburPact>(), 1);
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<SilentMinionItem>(), 6, 1, 1));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<ExcaliburPact>(), 1, 1, 1));
         }
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
         {
