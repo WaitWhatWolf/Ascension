@@ -164,11 +164,15 @@ namespace Ascension.NPCs
         {
             return SpawnCondition.Dungeon.Chance * 0.03f;
         }
-
         public override bool CheckDead()
         {
-            NPC.NPCLoot();
-            return base.CheckDead();
+            if (base.CheckDead())
+            {
+                NPC.NPCLoot();
+                return true;
+            }
+
+            return false;
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {

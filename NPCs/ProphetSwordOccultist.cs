@@ -1,12 +1,15 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Items;
+using Ascension.Items.Weapons;
 using Ascension.Projectiles;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -34,11 +37,11 @@ namespace Ascension.NPCs
         int phase = 1;
         bool firstSpawn;
         int linkChainCounter;
-        int linkChain;
         bool initLinkChain;
         int linkChainCounter2;
         bool secondSpawn;
         bool entryLine;
+
         public override void SetStaticDefaults()
         {
             //The name the enemy displays
@@ -49,7 +52,6 @@ namespace Ascension.NPCs
         }
 
         public override string Texture => ASCResources.GetAssetsPath(ItemAssetType.NPCs, "ProphetSwordOccultist/", this);
-
         public override void SetDefaults()
         {
             //Enemy Hitbox Width and Height
@@ -66,7 +68,6 @@ namespace Ascension.NPCs
             //The amount of money that is dropped (as a float?)
             NPC.value = 1000f;
             NPC.aiStyle = -1;
-            //mod.ProjectileType("SmallPurpleFlame");
             NPC.boss = true;
             NPC.knockBackResist = 0.01f;
             NPC.noTileCollide = true;
@@ -75,27 +76,12 @@ namespace Ascension.NPCs
             NPC.behindTiles = false;
             NPC.lavaImmune = true;
             NPC.buffImmune[24] = true;
-            //Music = ModContent.GetSoundSlot(SoundType.Music, "Sounds/Music/POEHEISTWAV");
+            //LEAVING THOSE BELOW AFTER THE TMODLOADER FIXES SO I CAN TEST AROUND
+            //Music = Mod.GetSoundSlot(Terraria.ModLoader.SoundType.Custom, "Assets/Sound/Custom/ProphetBossBattle");
+            //SoundEngine.PlaySound(Mod.GetSoundSlot(Terraria.ModLoader.SoundType.Custom, "Assets/Sound/Custom/ProphetBossBattle"), NPC.position);
+            //Music = MusicLoader.GetMusicSlot(ASCResources.ASSETS_PATH_SOUND_CUSTOM + "ProphetBossBattle");
+            Music = MusicLoader.GetMusicSlot(ASCResources.ASSETS_PATH_SOUND + ASCResources.ASSETS_SUBPATH_MUSIC + "ProphetBossBattle");
         }
-
-        /*
-public override int SpawnNPC(int tileX, int tileY)
-{
-/*
-if (Main.netMode == 0)
-{
-    Main.NewText(NPC.name + " " + Lang.misc[16], 175, 75, 255, false);
-}
-else if (Main.netMode == 2)
-{
-    NetMessage.SendData(25, -1, -1, NPC.displayName + " " + Lang.misc[16], 255, (float)175, (float)75, (float)255, 0f); 
-    //R, G, and B make up the color of the text. If you don't know what this means, look up RGB values.
-            NPC.name
-    //Most bosses have a text color of r = 175, g = 75, b = 255
-}
-return 1;
-        }
-    */
         public override void AI()
         {
             counterForChainCirclet++;
@@ -482,8 +468,7 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
         private void Talk(string message)
         {
             if (Main.netMode != NetmodeID.Server)
-            {
-                
+            {               
                 string text = Language.GetTextValue(message,Lang.GetNPCNameValue(NPC.type));
                 Main.NewText(text, 133, 56, 93);
             }
@@ -605,7 +590,6 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
-            SoundEngine.PlaySound(SoundID.Item75, NPC.position);
             meleeAttack = false;
             counterForMeleeAttack = 0;
         }
@@ -645,18 +629,25 @@ velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPl
         }
         public override void OnKill()
         {
-            Talk("Im sorry..failed you..blegh");
-        }
-        public override bool CheckDead()
-        {
-            Talk("Im sorry..failed you..blegh");
-            NPC.NPCLoot();
-            return base.CheckDead();
-        }
-        public override void ModifyNPCLoot(NPCLoot npcLoot)
-        {
-           // npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonSword>(), 6, 1, 1));
+            //Talk("Im sorry..failed you..blegh"); Dont need it anymore unless stuff breaks again
         }
 
+        public override bool CheckDead()
+        {
+            if (base.CheckDead())
+            {
+                Talk("Im sorry..failed you..blegh");
+                NPC.NPCLoot();
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            int[] ItemType = { ModContent.ItemType<ChainsOfHate>(), ModContent.ItemType<ChainsOfJustice>() };
+            npcLoot.Add(ItemDropRule.OneFromOptions(1,ItemType));
+        }
     }
 }
