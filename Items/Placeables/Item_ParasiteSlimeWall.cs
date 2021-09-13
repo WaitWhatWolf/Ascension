@@ -1,6 +1,6 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
-using Ascension.Tiles;
+using Ascension.Walls;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -11,10 +11,11 @@ namespace Ascension.Items.Placeables
     /// <summary>
     ///
     /// </summary>
-    [CreatedBy(Dev.WaitWhatWolf, "2021/09/09 20:24:20")]
-    public sealed class Item_ParasiteSlimeBlock : AscensionItem
+    [CreatedBy(Dev.WaitWhatWolf, "2021/09/10 11:08:19")]
+    public sealed class Item_ParasiteSlimeWall : AscensionItem
     {
         protected override string TooltipDefault { get; } = ASCResources.Trademark.PARASITESLIME_PLACEABLE_TOOLTIP;
+        protected override string TextureSubFolder { get; } = ASCResources.ASSETS_SUBPATH_PLACEABLES;
         protected override int JourneyCheatCount { get; } = 500;
 
         public override void SetDefaults()
@@ -28,9 +29,7 @@ namespace Ascension.Items.Placeables
             Item.useTime = 10;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.consumable = true;
-            Item.createTile = ModContent.TileType<Tile_ParasiteSlime>();
+            Item.createWall = ModContent.WallType<Wall_ParasiteSlime>();
         }
-
-        protected override string TextureSubFolder => ASCResources.ASSETS_SUBPATH_PLACEABLES;
     }
 }

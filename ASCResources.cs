@@ -69,9 +69,11 @@ namespace Ascension
         public const string ASSETS_PATH_PROJECTILES = ASSETS_PATH + "Projectiles/";
         public const string ASSETS_PATH_DUSTS = ASSETS_PATH + "Dusts/";
         public const string ASSETS_PATH_TILES = ASSETS_PATH + "Tiles/";
+        public const string ASSETS_PATH_WALLS = ASSETS_PATH + "Walls/";
         public const string ASSETS_PATH_PLACEABLES = ASSETS_PATH + "Placeables/";
         public const string ASSETS_PATH_BUFFS = ASSETS_PATH + "Buffs/";
         public const string ASSETS_PATH_UI = ASSETS_PATH + "UI/";
+        public const string ASSETS_PATH_BIOMES = ASSETS_PATH + "Biomes/";
         public const string ASSETS_PATH_UI_ASSETSONLY = ASSETS_PATH_ASSETSONLY + "UI/";
         public const string ASSETS_PATH_SOUND_CUSTOM = ASSETS_PATH + "Sound/Custom/";
 
@@ -112,6 +114,8 @@ namespace Ascension
                 ItemAssetType.Dusts => ASSETS_PATH_DUSTS,
                 ItemAssetType.Placeables => ASSETS_PATH_PLACEABLES,
                 ItemAssetType.Tiles => ASSETS_PATH_TILES,
+                ItemAssetType.Walls => ASSETS_PATH_WALLS,
+                ItemAssetType.Biomes => ASSETS_PATH_BIOMES,
                 _ => throw new System.Exception("ItemAssetType was set to ItemAssetType.Undefined; This is not allowed.")
             };
         
@@ -146,8 +150,11 @@ namespace Ascension
         [CreatedBy(Dev.WaitWhatWolf, 2021, 08, 31), Note(Dev.WaitWhatWolf, "I had no idea how to name this class ok")]
         public static class Trademark
         {
+            public static readonly Color Biome_SlimeChasm_Theme_Color = Color.DodgerBlue;
+
             public const float PARASITESLIME_EXP_RANGE = 120f;
             public const int PARASITESLIME_BUFF_DURATION = 80;
+            public const string PARASITESLIME_PLACEABLE_TOOLTIP = "Hmm...Maybe I shouldn't hold it with my bare hands?";
             public static int ParasiteSlime_Buff_MaxStacks
             {
                 get
@@ -507,6 +514,12 @@ namespace Ascension
                     string val = (string)property.GetValue(null);
                     Asset<Texture2D> texture = ascension.Assets.Request<Texture2D>(val);
                     pv_Textures.Add(val, texture);
+                }
+
+                foreach(var asset in ascension.Assets.GetLoadedAssets())
+                {
+                    if(asset.Name.StartsWith(ASSETS_PATH_BIOMES + "Surface"))
+                        BackgroundTextureLoader.AddBackgroundTexture(ascension, asset.Name); //adds background textures to the background loader.
                 }
             }
 

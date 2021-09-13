@@ -19,6 +19,8 @@ namespace Ascension.Enums
         Projectiles,
         Dusts,
         Tiles,
+        Walls,
         Placeables,
+        Biomes,
     }
 }

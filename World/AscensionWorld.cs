@@ -75,6 +75,7 @@ namespace Ascension.World
             pv_Stand.StandMenu.SetDefaultPosition(ModContent.GetInstance<AscensionConfig>().StandMenuPosX,
             ModContent.GetInstance<AscensionConfig>().StandMenuPosY);
         }
+
         private bool Delegate_HandleStandMenuGIL()
         {
             if (pv_HasStand && pv_Stand.StandMenu != null && pv_Stand.StandMenu.Active)

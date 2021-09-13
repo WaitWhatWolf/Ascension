@@ -1,5 +1,6 @@
 using Ascension.Attributes;
 using Ascension.Enums;
+using ReLogic.Content.Sources;
 using Terraria.ModLoader;
 
 namespace Ascension

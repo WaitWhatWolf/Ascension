@@ -9,10 +9,15 @@ namespace Ascension.Enums
     public enum StandID
     {
         NEWBIE = -1,
-        STAR_PLATINUM = 0,
-        THE_WORLD,
-        MAGICIANS_RED,
-        KILLER_QUEEN,
-        HIEROPHANT_GREEN,
+        STAR_PLATINUM = 0, //Melee
+        THE_WORLD, //Umbral
+        MAGICIANS_RED, //Mage
+        WHEATHER_REPORT, //Mage
+        KILLER_QUEEN, //Melee
+        HIEROPHANT_GREEN, //Ranged
+        FOO_FIGHTERS, //Umbral
+        SEX_PISTOLS, //Ranged
+        SILVER_CHARIOT, //Summoner
+        AEROSMITH, //Summoner
     }
 }

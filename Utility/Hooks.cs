@@ -465,21 +465,16 @@ namespace Ascension.Utility
             /// </summary>
             /// <param name="for"></param>
             /// <returns></returns>
-            public static string GetFormatName<T>() => GetFormatName(typeof(T).Name);
+            public static string GetFormatName<T>(string replacer = " ") => GetFormatName(typeof(T).Name, replacer);
 
             /// <summary>
             /// Returns a formatted string which separates capital letters with a space.
             /// </summary>
             /// <param name="for"></param>
             /// <returns></returns>
-            public static string GetFormatName(object obj) => GetFormatName(obj.GetType().Name);
+            public static string GetFormatName(object obj, string replacer = " ") => GetFormatName(obj.GetType().Name, replacer);
 
-            /// <summary>
-            /// Returns a formatted string which separates capital letters with a space.
-            /// </summary>
-            /// <param name="for"></param>
-            /// <returns></returns>
-            public static string GetFormatName(string name)
+            public static string GetFormatName(string name, string replacer = " ")
             {
                 int classTypeIndex = name.IndexOf('_'); //This looks if a class starts with "Item_", "Projectile_", "Tile_", etc...
                 if (classTypeIndex != -1)
@@ -494,7 +489,7 @@ namespace Ascension.Utility
 
                 foreach (Match match in matches)
                 {
-                    toReturn = toReturn.Insert(match.Index + 1, " ");
+                    toReturn = toReturn.Insert(match.Index + 1, replacer);
                 }
 
                 return toReturn;
