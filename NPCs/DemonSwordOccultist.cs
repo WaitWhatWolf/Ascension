@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -112,7 +113,22 @@ namespace Ascension.NPCs
                 Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width / 2, NPC.position.Y + NPC.height / 2, velocity.X, velocity.Y, ModContent.ProjectileType<DemonSwordOccultistSlash>(), damage, knockBack, Main.myPlayer);
                 counter = 0;
             }
-
+            #region Escape from battle
+            if (!player.active || player.dead)
+            {
+                NPC.TargetClosest(false);
+                player = Main.player[NPC.target];
+                if (!player.active || player.dead)
+                {
+                    NPC.velocity = new Vector2(0f, 0f);
+                    if (NPC.timeLeft > 10)
+                    {
+                        NPC.timeLeft = 10;
+                    }
+                    return;
+                }
+            }
+            #endregion
             if (NPC.Distance(player.position) < 180 && counter3 >= 60 && !justBursted && withinMaxRange)
             {
                 NPC.velocity *= 0;
@@ -275,16 +291,16 @@ namespace Ascension.NPCs
             return true;       //this make that the NPC does not have a health bar
         }
 
-        public override void OnKill()
+        public override bool CheckDead()
         {
-            if (Main.rand.Next(6) == 0)
-            {
-                Item.NewItem(NPC.position, ModContent.ItemType<DemonSword>(), 1);
-            }
-            else if (Main.rand.Next(3) == 0)
-            {
-                Item.NewItem(NPC.position, ModContent.ItemType<PortalDemonWings>(), 1);
-            }
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonSword>(), 6, 1, 1));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<PortalDemonWings>(), 3, 1, 1));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<YggdrasilPact>(), 1, 1, 1));
         }
         /*
         public override void DrawEffects( ref Color drawColor)

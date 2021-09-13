@@ -13,8 +13,8 @@ namespace Ascension.Projectiles
     /// <summary>
     ///
     /// </summary>
-    [CreatedBy(Dev.Adragon, "9/8/2021 4:11:53 PM")]
-    public class Chain : AscensionProjectile
+    [CreatedBy(Dev.Adragon, "9/9/2021 3:14:12 PM")]
+    public class ChainUpgraded : AscensionProjectile
     {
         int counter;
         bool shouldICount;
@@ -42,25 +42,25 @@ namespace Ascension.Projectiles
             {
                 shouldICount = true;
             }
-            if(shouldICount == true)
+            if (shouldICount == true)
             {
                 counter++;
             }
-            if(counter == 45)
+            if (counter == 45)
             {
                 Player player = Main.player[Projectile.owner];
-                float projectileSpeed = 0;
+                float ProjectileSpeed = 0;
                 Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
-                new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * projectileSpeed;
+                new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * ProjectileSpeed;
                 Projectile.velocity = velocity;
             }
-            if(counter == 240)
+            if (counter == 240)
             {
                 Player player = Main.player[Projectile.owner];
-                float projectileSpeed = 15;
+                float ProjectileSpeed = 15;
 
                 Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
-                new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * projectileSpeed;
+                new Vector2(Projectile.position.X + Projectile.width, Projectile.position.Y + Projectile.height)) * ProjectileSpeed;
 
                 Projectile.velocity = velocity;
                 shouldICount = false;

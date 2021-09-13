@@ -37,9 +37,11 @@ namespace Ascension.Projectiles.Minions
             Projectile.height = 44;
             // Makes the minion go through tiles freely
             Projectile.tileCollide = false;
-
+            Projectile.damage = 14;
+            Projectile.knockBack = 3;
+            Projectile.DamageType = DamageClass.Summon;
             // These below are needed for a minion weapon
-            // Only controls if it deals damage to enemies on contact (more on that later)
+            // Only controls if it deals damage to enemies on contact
             Projectile.friendly = true;
             // Only determines the damage type
             Projectile.minion = true;
@@ -65,6 +67,7 @@ namespace Ascension.Projectiles.Minions
         {
             counter++;
             counter2++;
+            Projectile.originalDamage = 14;
             Player player = Main.player[Projectile.owner];
 
             #region Active check

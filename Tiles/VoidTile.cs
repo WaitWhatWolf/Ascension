@@ -54,6 +54,11 @@ namespace Ascension.Tiles
             Convert(i, j, 1);
         }
 
+        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+            Item.NewItem(i * 16, j * 16, 16, 16, ModContent.ItemType<Items.Placeables.VoidBlock>());
+        }
+
 
         public void Convert(int i, int j, int size = 4)
         {

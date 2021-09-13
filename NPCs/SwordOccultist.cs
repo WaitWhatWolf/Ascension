@@ -1,11 +1,13 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
+using Ascension.Items;
 using Ascension.Items.Projectiles;
 using Ascension.Items.Weapons;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
@@ -163,12 +165,15 @@ namespace Ascension.NPCs
             return SpawnCondition.Dungeon.Chance * 0.03f;
         }
 
-        public override void OnKill()
+        public override bool CheckDead()
         {
-            if (Main.rand.Next(6) == 0)
-            {
-                Item.NewItem(NPC.position, ModContent.ItemType<RuneBlade>(), 1);
-            }
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<RuneBlade>(), 6, 1, 1));
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<JudgementChainPact>(), 1, 1, 1));
         }
     }
 }

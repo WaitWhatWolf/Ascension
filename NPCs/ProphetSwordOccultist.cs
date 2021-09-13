@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Utilities;
 
@@ -28,11 +29,21 @@ namespace Ascension.NPCs
         float randomDirection;
         bool meleeAttack;
         bool teleport;
+        bool attacking;
+        int animationCounter;
+        int phase = 1;
+        bool firstSpawn;
+        int linkChainCounter;
+        int linkChain;
+        bool initLinkChain;
+        int linkChainCounter2;
+        bool secondSpawn;
+        bool entryLine;
         public override void SetStaticDefaults()
         {
             //The name the enemy displays
-            DisplayName.SetDefault("Prophet of Sword Occult");
-
+            DisplayName.SetDefault("Prophet of the Sword Occult");
+            NPCID.Sets.MustAlwaysDraw[NPC.type] = true;
             //The frame count for the enemy
             Main.npcFrameCount[NPC.type] = 10; //Zombie has 3 frames but u can instead type in number 3 instead (depending how many frames you want)
         }
@@ -45,13 +56,13 @@ namespace Ascension.NPCs
             NPC.width = 38;
             NPC.height = 46;
             //The Enemies max health
-            NPC.lifeMax = 10000;
+            NPC.lifeMax = 9500;
             //Enemy Damage and Defence
-            NPC.damage = 50;
-            NPC.defense = 16;
+            NPC.damage = 30;
+            NPC.defense = 18;
             //The sound the enemy makes upon hit or death
             NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.DeathSound = SoundID.NPCDeath49;
             //The amount of money that is dropped (as a float?)
             NPC.value = 1000f;
             NPC.aiStyle = -1;
@@ -62,14 +73,44 @@ namespace Ascension.NPCs
             NPC.netAlways = true;
             NPC.noGravity = true;
             NPC.behindTiles = false;
+            NPC.lavaImmune = true;
+            NPC.buffImmune[24] = true;
             //Music = ModContent.GetSoundSlot(SoundType.Music, "Sounds/Music/POEHEISTWAV");
         }
 
+        /*
+public override int SpawnNPC(int tileX, int tileY)
+{
+/*
+if (Main.netMode == 0)
+{
+    Main.NewText(NPC.name + " " + Lang.misc[16], 175, 75, 255, false);
+}
+else if (Main.netMode == 2)
+{
+    NetMessage.SendData(25, -1, -1, NPC.displayName + " " + Lang.misc[16], 255, (float)175, (float)75, (float)255, 0f); 
+    //R, G, and B make up the color of the text. If you don't know what this means, look up RGB values.
+            NPC.name
+    //Most bosses have a text color of r = 175, g = 75, b = 255
+}
+return 1;
+        }
+    */
         public override void AI()
         {
             counterForChainCirclet++;
             counterForSingleChain++;
             counterForMeleeAttack++;
+            animationCounter++;
+            if(entryLine == false)
+            {
+                entryLine = true;
+                Talk("Shouldn't have used that!");
+            }
+            if (phase == 2)
+            {
+                linkChainCounter++;
+            }
             if(gotHit == true)
             {
                 counterAfterHit++;
@@ -81,11 +122,54 @@ namespace Ascension.NPCs
             }
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
+            #region Escape from battle
+            if (!player.active || player.dead)
+            {
+                NPC.TargetClosest(false);
+                player = Main.player[NPC.target];
+                if (!player.active || player.dead)
+                {
+                    NPC.velocity = new Vector2(0f, -10f);
+                    if (NPC.timeLeft > 10)
+                    {
+                        NPC.timeLeft = 10;
+                    }
+                    return;
+                }
+            }
+            #endregion
+            #region Life Check
+            if (NPC.life < (NPC.lifeMax / 1.5) && !firstSpawn)
+            {
+                Talk("Minions come forth!");
+                firstSpawn = true;
+                SoundEngine.PlaySound(SoundID.NPCHit56, NPC.position);
+                Random rnd = new Random();
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<DesertSwordOccultist>());
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<DesertSwordOccultist>());
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<DesertSwordOccultist>());
+            }
+            if (NPC.life < (NPC.lifeMax / 2) && phase == 1 && !secondSpawn)
+            {
+                Talk("Azazel grant me power!");
+                secondSpawn = true;
+                phase = 2;
+                SoundEngine.PlaySound(SoundID.NPCHit56, NPC.position);
+                Random rnd = new Random();
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<SwordOccultist>());
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<SwordOccultist>());
+                NPC.NewNPC((int)NPC.Center.X + (rnd.Next(50, 100)), (int)NPC.Center.Y + (rnd.Next(50, 100)), (int)ModContent.NPCType<SwordOccultist>());
+            }
+            #endregion
             #region Movement
-            if(gotHit == false && meleeAttack == false)
+            if (gotHit == false && meleeAttack == false)
             {
                 Vector2 moveTo = player.Center + new Vector2(-3f, -300f);
-                float speed = 9f;
+                float speed = 6f;
+                if (phase == 2)
+                {
+                    speed += 3;
+                }
                 Vector2 move = moveTo - NPC.Center;
                 float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
                 if (magnitude > speed)
@@ -114,6 +198,10 @@ namespace Ascension.NPCs
                 }
                 Vector2 moveTo = player.Center + new Vector2(randomDirection, -300f);
                 float speed = 9f;
+                if (phase == 2)
+                {
+                    speed += 3;
+                }
                 Vector2 move = moveTo - NPC.Center;
                 float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
                 if (magnitude > speed)
@@ -133,8 +221,16 @@ namespace Ascension.NPCs
             {
                 teleport = false;
                 SoundEngine.PlaySound(SoundID.NPCHit49, NPC.position);
-                NPC.position.X = player.position.X + Main.rand.Next(-300, 300);
-                NPC.position.Y = player.position.Y - Main.rand.Next(-300, 300); ;
+                if (phase == 1)
+                {
+                    NPC.position.X = player.position.X + Main.rand.Next(-300, 300);
+                    NPC.position.Y = player.position.Y - Main.rand.Next(-300, 300); ;
+                }
+                if (phase == 2)
+                {
+                    NPC.position.X = player.position.X + Main.rand.Next(-400, 400);
+                    NPC.position.Y = player.position.Y - Main.rand.Next(-400, 400); ;
+                }
                 NPC.netUpdate = true;
             }
             #endregion
@@ -142,73 +238,146 @@ namespace Ascension.NPCs
             if (counterForSingleChain > 60)
             {
                 counterForSingleChain = 0;
-                int damage = 5;
+                int damage = 15;
+
+                if (phase == 2)
+                {
+                    damage = (int)(damage * 1.5f);
+                }
                 float knockBack = 0.1f;
                 float projectileSpeed = 4;
+                if (phase == 2)
+                {
+                    projectileSpeed = projectileSpeed * 1.5f;
+                }
                 Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
                 new Vector2(NPC.position.X + NPC.width, NPC.position.Y + NPC.height)) * projectileSpeed;
-                
-                Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X, 
-                velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+
+                if (phase == 1)
+                {
+                    SoundEngine.PlaySound(SoundID.Item7, NPC.position);
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X,
+                    velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (phase == 2)
+                {
+                    SoundEngine.PlaySound(SoundID.Item7, NPC.position);
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X,
+                    velocity.Y, ModContent.ProjectileType<ChainUpgraded>(), damage, knockBack, Main.myPlayer);
+                }
                 
             }
             #endregion
             #region Circlet Chain
             if (counterForChainCirclet > 600)
             {
+                int damage = 12;
                 counterForChainCirclet = 0;
-                int damage = 5;
+                attacking = true;
+                animationCounter = 0;
+                if (phase == 2)
+                {
+                    damage = (int)(damage * 1.5f);
+                }
                 float knockBack = 0.1f;
-                float projectileSpeed = 7;
-
+                float projectileSpeed = 4;
+                if (phase == 2)
+                {
+                    projectileSpeed = projectileSpeed * 1.5f;
+                }
+                SoundEngine.PlaySound(SoundID.Item28, NPC.position);
                 Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
                 new Vector2(NPC.position.X + NPC.width, NPC.position.Y + NPC.height)) * projectileSpeed;
                 /*
                 Projectile.NewProjectile(new ProjectileSource_NPC(NPC), NPC.position.X + NPC.width, NPC.position.Y + NPC.height, velocity.X, 
                 velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
                 */
-                int SpaceBy = 60;
-                for (int k = 0; k < 32; k++)
+                if (phase == 1)
                 {
-                    if (i <= 8)
+                    int SpaceBy = 60;
+                    for (int k = 0; k < 32; k++)
                     {
-                        Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width - (SpaceBy * j)) +50, (NPC.position.Y + NPC.height + (SpaceBy * j) - 200),
-                           -velocity.X, -velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                        if (i <= 8)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width - (SpaceBy * j)) + 50, (NPC.position.Y + NPC.height + (SpaceBy * j) - 200),
+                               -velocity.X, -velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                        }
+                        if (i <= 16 && i > 8)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width + (SpaceBy * j)) - 100, (NPC.position.Y + NPC.height + (SpaceBy * j) - 200),
+                               velocity.X, -velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                        }
+                        if (i <= 24 && i > 16)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width + (SpaceBy * j)) - 400, (NPC.position.Y + NPC.height + (SpaceBy * j) - 600),
+                               velocity.X, velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                        }
+                        if (i <= 32 && i > 24)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width - (SpaceBy * j)) + 400, (NPC.position.Y + NPC.height + (SpaceBy * j) - 600),
+                               velocity.X, velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
+                        }
+                        j++;
+                        i++;
+                        if (i > 32)
+                        {
+                            i = 1;
+                        }
+                        if (j > 8)
+                        {
+                            j = 1;
+                        }
                     }
-                    if(i <= 16 && i > 8)
+                }
+                if (phase == 2)
+                {
+                    int SpaceBy = 80;
+                    for (int k = 0; k < 32; k++)
                     {
-                        Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width + (SpaceBy * j)) -100, (NPC.position.Y + NPC.height + (SpaceBy * j) - 200),
-                           velocity.X, -velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
-                    }
-                    if (i <= 24 && i > 16)
-                    {
-                        Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width + (SpaceBy * j)) - 400, (NPC.position.Y + NPC.height + (SpaceBy * j) - 600),
-                           velocity.X, velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
-                    }
-                    if (i <= 32 && i > 24)
-                    {
-                        Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width - (SpaceBy * j)) + 400, (NPC.position.Y + NPC.height + (SpaceBy * j) - 600),
-                           velocity.X, velocity.Y, ModContent.ProjectileType<Chain>(), damage, knockBack, Main.myPlayer);
-                    }
-                    j++;
-                    i++;
-                    if (i > 32)
-                    {
-                        i = 1;
-                    }
-                    if(j > 8)
-                    {
-                        j = 1;
+                        if (i <= 8)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width - (SpaceBy * j)) + 50, (NPC.position.Y + NPC.height + (SpaceBy * j) - 200),
+                               -velocity.X, -velocity.Y, ModContent.ProjectileType<ChainUpgraded>(), damage, knockBack, Main.myPlayer);
+                        }
+                        if (i <= 16 && i > 8)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width + (SpaceBy * j)) - 100, (NPC.position.Y + NPC.height + (SpaceBy * j) - 200),
+                               velocity.X, -velocity.Y, ModContent.ProjectileType<ChainUpgraded>(), damage, knockBack, Main.myPlayer);
+                        }
+                        if (i <= 24 && i > 16)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width + (SpaceBy * j)) - 400, (NPC.position.Y + NPC.height + (SpaceBy * j) - 600),
+                               velocity.X, velocity.Y, ModContent.ProjectileType<ChainUpgraded>(), damage, knockBack, Main.myPlayer);
+                        }
+                        if (i <= 32 && i > 24)
+                        {
+                            Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width - (SpaceBy * j)) + 400, (NPC.position.Y + NPC.height + (SpaceBy * j) - 600),
+                               velocity.X, velocity.Y, ModContent.ProjectileType<ChainUpgraded>(), damage, knockBack, Main.myPlayer);
+                        }
+                        j++;
+                        i++;
+                        if (i > 32)
+                        {
+                            i = 1;
+                        }
+                        if (j > 8)
+                        {
+                            j = 1;
+                        }
                     }
                 }
             }
             #endregion
             #region Melee Attack
-            if (counterForMeleeAttack >= 600)
+            if (counterForMeleeAttack >= 420)
             {
                 meleeAttack = true;
                 Vector2 moveTo = player.Center;
-                float speed = 10f;
+                float speed = 8f;
+                if (phase == 2)
+                {
+                    speed = speed * 1.5f;
+                }
                 Vector2 move = moveTo - NPC.Center;
                 float magnitude = (float)Math.Sqrt(move.X * move.X + move.Y * move.Y);
                 if (magnitude > speed)
@@ -224,14 +393,198 @@ namespace Ascension.NPCs
                 }
                 NPC.velocity = move;
                 //NPC.aiStyle = 19;
-                if (counterForMeleeAttack >= 780)
+                if (phase == 1)
                 {
-                    meleeAttack = false;
-                    counterForMeleeAttack = 0;
-                    //NPC.aiStyle = 0;
+                    if (counterForMeleeAttack >= 600)
+                    {
+                        meleeAttack = false;
+                        counterForMeleeAttack = 0;
+                        //NPC.aiStyle = 0;
+                    }
+                }
+                if (phase == 2)
+                {
+                    if (counterForMeleeAttack >= 600)
+                    {
+                        meleeAttack = false;
+                        counterForMeleeAttack = 0;
+                        //NPC.aiStyle = 0;
+                    }
                 }
             }
             #endregion
+            #region Line Chain
+            if (phase == 2 && linkChainCounter >= 600)
+            {
+                linkChainCounter = 0 + Main.rand.Next(0, 120);
+                initLinkChain = true;
+            }
+            if(initLinkChain == true)
+            {
+                int damage = 12;
+                SoundEngine.PlaySound(SoundID.Item121, NPC.position);
+                linkChainCounter2++;
+                float knockBack = -1f;
+                float projectileSpeed = 2;
+
+                Vector2 velocity = Vector2.Normalize(new Vector2(player.position.X + player.width / 2, player.position.Y + player.height / 2) -
+                new Vector2(NPC.position.X + NPC.width / 2, NPC.position.Y + NPC.height / 2)) * projectileSpeed;
+                if (linkChainCounter2 == 1)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 + 100), (NPC.position.Y + NPC.height / 2 + 600), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 2)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 + 100), (NPC.position.Y + NPC.height / 2 - 600), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 3)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 - 500), (NPC.position.Y + NPC.height / 2 + 600), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 4)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 - 500), (NPC.position.Y + NPC.height / 2 - 600), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 5)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 + 200), (NPC.position.Y + NPC.height / 2 - 200), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 6)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 + 200), (NPC.position.Y + NPC.height / 2 + 200), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 7)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 - 600), (NPC.position.Y + NPC.height / 2 + 200), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+                if (linkChainCounter2 == 8)
+                {
+                    Projectile.NewProjectile(new ProjectileSource_NPC(NPC), (NPC.position.X + NPC.width / 2 - 600), (NPC.position.Y + NPC.height / 2 - 200), velocity.X,
+velocity.Y, ModContent.ProjectileType<LineChain>(), damage, knockBack, Main.myPlayer);
+                }
+
+                if (linkChainCounter2 >= 8)
+                {
+                    linkChainCounter2 = 0;
+                    initLinkChain = false;
+                }
+            }
+
+            #endregion
+        }
+        private void Talk(string message)
+        {
+            if (Main.netMode != NetmodeID.Server)
+            {
+                
+                string text = Language.GetTextValue(message,Lang.GetNPCNameValue(NPC.type));
+                Main.NewText(text, 133, 56, 93);
+            }
+            else
+            {
+                NetworkText text = NetworkText.FromKey(message,Lang.GetNPCNameValue(NPC.type));
+                Terraria.Chat.ChatHelper.BroadcastChatMessage(text, new Color(133, 56, 93));
+            }
+        }
+
+        public override void FindFrame(int frameSize)
+        {
+            NPC.frameCounter++;
+            if(phase == 1)
+            {
+                if (!attacking)
+                {
+                    if (animationCounter < 19)
+                    {
+                        NPC.frame.Y = 0 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter < 39 && animationCounter >= 19)
+                    {
+                        NPC.frame.Y = 1 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter >= 59)
+                    {
+                        animationCounter = 0;
+                    }
+                }
+                if (attacking == true)
+                {
+                    if (animationCounter < 19)
+                    {
+                        NPC.frame.Y = 2 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter < 39 && animationCounter >= 19)
+                    {
+                        NPC.frame.Y = 3 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter < 300 && animationCounter >= 299)
+                    {
+                        NPC.frame.Y = 4 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter >= 420)
+                    {
+                        SoundEngine.PlaySound(SoundID.Item31, NPC.position);
+                        attacking = false;
+                        animationCounter = 0;
+                    }
+                }
+            }
+            if(phase == 2)
+            {
+                if (!attacking)
+                {
+                    if (animationCounter < 19)
+                    {
+                        NPC.frame.Y = 5 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter < 39 && animationCounter >= 19)
+                    {
+                        NPC.frame.Y = 6 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter >= 59)
+                    {
+                        animationCounter = 0;
+                    }
+                }
+                if (attacking == true)
+                {
+                    if (animationCounter < 19)
+                    {
+                        NPC.frame.Y = 7 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter < 39 && animationCounter >= 19)
+                    {
+                        NPC.frame.Y = 8 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter < 240 && animationCounter >= 239)
+                    {
+                        NPC.frame.Y = 9 * frameSize;
+                        NPC.frameCounter = 0.0;
+                    }
+                    if (animationCounter >= 420)
+                    {
+                        SoundEngine.PlaySound(SoundID.Item31, NPC.position);
+                        attacking = false;
+                        animationCounter = 0;
+                    }
+                }
+            }
         }
 
         public void MakeDust()
@@ -252,6 +605,7 @@ namespace Ascension.NPCs
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
+            SoundEngine.PlaySound(SoundID.Item75, NPC.position);
             meleeAttack = false;
             counterForMeleeAttack = 0;
         }
@@ -269,10 +623,40 @@ namespace Ascension.NPCs
                 timesHit2 = 0;
                 teleport = true;
             }
+            if (phase == 2)
+            {
+                timesHit++;
+                timesHit2++;
+            }
         }
         public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
         {
             counterForMeleeAttack += 120;
+
         }
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
+        {
+            scale = 1.5f;
+            return null;
+        }
+        public override bool PreKill()
+        {            
+            return true;
+        }
+        public override void OnKill()
+        {
+            Talk("Im sorry..failed you..blegh");
+        }
+        public override bool CheckDead()
+        {
+            Talk("Im sorry..failed you..blegh");
+            NPC.NPCLoot();
+            return base.CheckDead();
+        }
+        public override void ModifyNPCLoot(NPCLoot npcLoot)
+        {
+           // npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<DemonSword>(), 6, 1, 1));
+        }
+
     }
 }

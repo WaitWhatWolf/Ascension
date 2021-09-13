@@ -55,6 +55,7 @@ namespace Ascension.Projectiles.Minions
 
         public override bool Shoot(Player player, ProjectileSource_Item_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            damage = 14;
             player.AddBuff(Item.buffType, 2);
 
             // Here you can change where the minion is spawned. Most vanilla minions spawn at the cursor position.
