@@ -16,17 +16,20 @@ namespace Ascension.Biomes
     {
         public override int ChooseCloseTexture(ref float scale, ref double parallax, ref float a, ref float b)
         {
-			return BackgroundTextureLoader.GetBackgroundSlot(ASCResources.ASSETS_PATH_BIOMES + "SurfaceClose_" + Hooks.Text.GetFormatName(this, string.Empty));
+			return BackgroundTextureLoader.GetBackgroundSlot(ASCResources.ASSETS_PATH_BIOMES 
+				+ ASCResources.ASSETS_SUBPATH_BACKGROUNDS + "SurfaceClose_" + Hooks.Text.GetFormatName(this, string.Empty));
         }
 
         public override int ChooseMiddleTexture()
         {
-			return BackgroundTextureLoader.GetBackgroundSlot(ASCResources.ASSETS_PATH_BIOMES + "SurfaceMid_" + Hooks.Text.GetFormatName(this, string.Empty));
+			return BackgroundTextureLoader.GetBackgroundSlot(ASCResources.ASSETS_PATH_BIOMES 
+				+ ASCResources.ASSETS_SUBPATH_BACKGROUNDS + "SurfaceMid_" + Hooks.Text.GetFormatName(this, string.Empty));
         }
 
         public override int ChooseFarTexture()
         {
-			return BackgroundTextureLoader.GetBackgroundSlot(ASCResources.ASSETS_PATH_BIOMES + "SurfaceFar_" + Hooks.Text.GetFormatName(this, string.Empty));
+			return BackgroundTextureLoader.GetBackgroundSlot(ASCResources.ASSETS_PATH_BIOMES 
+				+ ASCResources.ASSETS_SUBPATH_BACKGROUNDS + "SurfaceFar_" + Hooks.Text.GetFormatName(this, string.Empty));
         }
 
         public override void ModifyFarFades(float[] fades, float transitionSpeed)

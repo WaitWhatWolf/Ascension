@@ -15,7 +15,7 @@ namespace Ascension.Biomes
     public class WaterStyle_SlimeChasmLayer1 : AscensionWaterStyle
     {
         public override Color BiomeHairColor() => ASCResources.Trademark.Biome_SlimeChasm_Theme_Color;
-        public override int ChooseWaterfallStyle() => WaterStyleID.Purity;
+        public override int ChooseWaterfallStyle() => WaterStyleID.Desert;
 
         public override int GetDropletGore() => GoreID.WaterDrip;
 

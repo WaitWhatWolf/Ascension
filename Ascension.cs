@@ -1,7 +1,11 @@
 using Ascension.Attributes;
 using Ascension.Enums;
+using ReLogic.Content.Sources;
 using System;
+using System.Reflection;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Assets;
+using Terraria.ModLoader.Core;
 
 namespace Ascension
 {
@@ -44,7 +48,9 @@ namespace Ascension
 
         public Ascension()
         {
-            SoundAutoloadingEnabled = false;
+            //SoundAutoloadingEnabled = false;
+            //BackgroundAutoloadingEnabled = false;
+            //ContentAutoloadingEnabled = true;
         }
     }
 }

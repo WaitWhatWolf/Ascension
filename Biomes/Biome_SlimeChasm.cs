@@ -21,12 +21,12 @@ namespace Ascension.Biomes
         public override ModWaterStyle WaterStyle => ModContent.GetInstance<WaterStyle_SlimeChasmLayer1>();
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<SBGStyle_SlimeChasm>();
         public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Mushroom;
-
+        public override int Music => MusicLoader.GetMusicSlot(ASCResources.ASSETS_PATH_SOUND + ASCResources.ASSETS_SUBPATH_MUSIC + "Doom Eternal - The Only Thing They Fear is You (Slowed Down)");//Doom Eternal - The Only Thing They Fear is You (Slowed Down)
         public override bool IsBiomeActive(Player player)
         {
-            return ModContent.GetInstance<AscensionModSystem>().BiomeTiles[EAscensionBiome.SlimeChasm] >= 80;
-
-            return false;
+            bool con1 = ModContent.GetInstance<AscensionModSystem>().BiomeTiles[EAscensionBiome.SlimeChasm] >= 80;
+            //bool con2 = ASCResources.Delegates.PlayerAboveSurface(player);
+            return con1;
         }
     }
 }

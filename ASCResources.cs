@@ -38,12 +38,12 @@ namespace Ascension
         // Takes the current framerate, divides 60 by itself to get a float value which increases the lower the framerate
         // (this is here to get the same speed of adding regardless of framerate)
         // then divides it by 60 assuming it will be called once every frame, therefore 60 times a second.
-        public static TimeSpan TimespanCounter => TimeSpan.FromSeconds(Math.Max(1, 60 / Terraria.Main.frameRate) / 60);
+        public static TimeSpan TimespanCounter => TimeSpan.FromSeconds(Math.Max(1f, 60f / Main.frameRate) / 60f);
 
         /// <summary>
         /// Timer used to get a consistent timespan for a counter; Divided by 60 for an update-friendly timespan.
         /// </summary>
-        public static TimeSpan TimespanCounterUF => TimeSpan.FromSeconds(Math.Max(1, 60 / Terraria.Main.frameRate) / 60);
+        public static TimeSpan TimespanCounterUF => TimeSpan.FromSeconds(Math.Max(1f, 60f / Main.frameRate) / 60f);
 
         /// <summary>
         /// Float value which would amount to 1f if called every frame. (Assuming the game runs at a smooth 60fps)
@@ -75,12 +75,15 @@ namespace Ascension
         public const string ASSETS_PATH_UI = ASSETS_PATH + "UI/";
         public const string ASSETS_PATH_BIOMES = ASSETS_PATH + "Biomes/";
         public const string ASSETS_PATH_UI_ASSETSONLY = ASSETS_PATH_ASSETSONLY + "UI/";
-        public const string ASSETS_PATH_SOUND_CUSTOM = ASSETS_PATH + "Sound/Custom/";
+        public const string ASSETS_PATH_SOUND = ASSETS_PATH + "Sound/";
 
         public const string ASSETS_SUBPATH_MINIONS = "Minions/";
         public const string ASSETS_SUBPATH_WEAPONS = "Weapons/";
         public const string ASSETS_SUBPATH_CONSUMABLES = "Consumables/";
         public const string ASSETS_SUBPATH_PLACEABLES = "Placeables/";
+        public const string ASSETS_SUBPATH_BACKGROUNDS = "Backgrounds/";
+        public const string ASSETS_SUBPATH_CUSTOM = "Custom/";
+        public const string ASSETS_SUBPATH_MUSIC = "Music/";
 
         /// <summary>
         /// Returns the full path towards a moded component's texture.
@@ -124,11 +127,13 @@ namespace Ascension
         {
             public static Predicate<NPC> IsSlime { get; private set; }
             public static Predicate<NPC> IsNotSlime { get; private set; }
+            public static Predicate<Player> PlayerAboveSurface { get; private set; }
 
             internal static void Load()
             {
                 IsSlime = (npc) => npc.drippingSlime || npc.FullName.ToUpper().Contains("SLIME");
                 IsNotSlime = (npc) => !npc.drippingSlime && !npc.FullName.ToUpper().Contains("SLIME");
+                PlayerAboveSurface = (player) => player.ZoneSkyHeight || player.ZoneOverworldHeight;
             }
 
             internal static void Unload()
@@ -681,8 +686,8 @@ namespace Ascension
                 SoundEngine.PlaySound(SoundID.Item85, position);
             }
 
-            public const string STAND_INVOKE_STARPLATINUM = ASSETS_PATH_SOUND_CUSTOM + "Stand_Invoke_StarPlatinum";
-            public const string STAND_INVOKE_KILLERQUEEN = ASSETS_PATH_SOUND_CUSTOM + "Stand_Invoke_KillerQueen";
+            public const string STAND_INVOKE_STARPLATINUM = ASSETS_PATH_SOUND + ASSETS_SUBPATH_CUSTOM + "Stand_Invoke_StarPlatinum";
+            public const string STAND_INVOKE_KILLERQUEEN = ASSETS_PATH_SOUND + ASSETS_SUBPATH_CUSTOM + "Stand_Invoke_KillerQueen";
 
             public static int Stand_Invoke_Index_StarPlatinum { get; private set; }
             public static int Stand_Invoke_Index_KillerQueen { get; private set; }
