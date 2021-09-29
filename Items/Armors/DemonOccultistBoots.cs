@@ -30,10 +30,12 @@ namespace Ascension.Items.Armors
             player.moveSpeed = player.moveSpeed - 0.2f;
         }
 
-        public override bool DrawLegs()
+
+        /*public override bool DrawLegs()
         {
             return false;
-        }
+        }*/
+
 
         public override void AddRecipes()
         {

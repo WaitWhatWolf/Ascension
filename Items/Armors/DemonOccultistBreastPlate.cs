@@ -32,10 +32,10 @@ namespace Ascension.Items.Armors
             Item.rare = ItemRarityID.Orange;
             Item.defense = 9;
         }
-        public override bool DrawBody()
+        /*public override bool DrawBody()
         {
             return false;
-        }
+        }*/
 
         public override void UpdateEquip(Player player)
         {

@@ -46,10 +46,10 @@ namespace Ascension.Items.Armors
             player.meleeSpeed -= 0.05f;
         }
 
-        public override bool DrawHead()
+        /*public override bool DrawHead()
         {
             return false;
-        }
+        }*/
 
         public override void AddRecipes()
         {
