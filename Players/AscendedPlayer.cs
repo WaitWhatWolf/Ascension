@@ -75,21 +75,18 @@ namespace Ascension.Players
         public event Action<bool> OnBeforeDeath;
 
         /// <inheritdoc/>
-        public override TagCompound Save()
+        public override void SaveData(TagCompound tag)
         {
-            return new TagCompound()
-            {
-                [nameof(StandID)] = !in_Stand ? -1 : (int)in_Stand.ID,
-                [nameof(DefeatedBosses)] = DefeatedBosses,
-                [nameof(ConsumedRedHotChiliPepper)] = ConsumedRedHotChiliPepper,
-            };
+            tag.Set(nameof(StandID), !in_Stand ? -1 : (int)in_Stand.ID, true);
+            tag.Set(nameof(DefeatedBosses), DefeatedBosses, true);
+            tag.Set(nameof(ConsumedRedHotChiliPepper), ConsumedRedHotChiliPepper, true);
         }
 
         /// <summary>
         /// Loads the stand.
         /// </summary>
         /// <param name="tag"></param>
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             pv_LoadedStandID = (StandID)tag.GetInt(nameof(StandID));
             DefeatedBosses = new(tag.GetList<string>(nameof(DefeatedBosses)));
