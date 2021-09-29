@@ -271,8 +271,13 @@ namespace Ascension.NPCs
 
         public override bool CheckDead()
         {
-            NPC.NPCLoot();
-            return base.CheckDead();
+            if (base.CheckDead())
+            {
+                NPC.NPCLoot();
+                return true;
+            }
+
+            return false;
         }
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {

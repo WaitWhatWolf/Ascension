@@ -111,15 +111,20 @@ namespace Ascension.NPCs
         }
         public override bool CheckDead()
         {
-            //player2.AddBuff(BuffID.NebulaUpMana1, 240);
-            if(player2 == null)
+            if (base.CheckDead())
             {
-                player2 = Main.player[NPC.target];
+                if (player2 == null)
+                {
+                    player2 = Main.player[NPC.target];
+                }
+                player2.AddBuff(ModContent.BuffType<ManaRegenVoid>(), 240, false);
+                NPC.NPCLoot();
+                return true;
             }
-            player2.AddBuff(ModContent.BuffType<ManaRegenVoid>(), 240, false);
-            NPC.NPCLoot();
-            return base.CheckDead();
+
+            return false;
         }
+
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<VoidFragment>(), 1, 1, 5));
