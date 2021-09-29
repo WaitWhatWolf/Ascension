@@ -34,6 +34,9 @@ namespace Ascension.Players
         protected abstract float StandMoveSpeed { get; }
         protected float StandMoveTargetDist(bool fromProjectile) => StandMoveTargetFound ? StandMoveTarget.Center.Distance(fromProjectile ? Stand.GetStandModProjectile().Front : pr_Owner.Center) : float.PositiveInfinity;
 
+        protected virtual Vector2 TargetPosition => StandMoveTarget?.Center ?? pr_Owner.Center;
+        protected virtual Vector2 IdlePosition => pr_Owner.Center + new Vector2(pr_Owner.direction * 8f, -32f) + StandIdlePosVariant.GetRandom();
+
         private void Event_OnSetTarget(NPC obj)
         {
             StandMoveTarget = obj;
@@ -50,7 +53,7 @@ namespace Ascension.Players
         {
             Projectile projectile = Stand.GetStandProjectile();
 
-            FinalizeAI(StandMoveTargetDist(true), StandMoveTarget?.Center ?? pr_Owner.Center, projectile);
+            FinalizeAI(StandMoveTargetDist(true), TargetPosition, projectile);
         }
 
         private void FinalizeAI(float distanceFromTarget, Vector2 targetCenter, Projectile projectile)
@@ -69,8 +72,8 @@ namespace Ascension.Players
             }
             else
             {
-                finalPos = pr_Owner.Center + new Vector2(pr_Owner.direction * 8f, -32f) + StandIdlePosVariant.GetRandom();
-                float distFromOwner = pr_Owner.Center.Distance(projectile.Center);
+                finalPos = IdlePosition;
+                float distFromOwner = IdlePosition.Distance(projectile.Center);
                 speed = StandMoveSpeed / 2f;
                 inertia = StandMoveSpeed * 2f;
 

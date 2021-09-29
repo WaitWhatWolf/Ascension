@@ -268,7 +268,8 @@ namespace Ascension
             public static readonly StandID[] UsableStands = new StandID[]
             {
                 StandID.STAR_PLATINUM,
-                StandID.KILLER_QUEEN
+                StandID.KILLER_QUEEN,
+                StandID.AEROSMITH
             };
 
             public static readonly Vector2 Stand_KillerQueen_BitesTheDust_MarkOffset = new(0, -36f);
@@ -326,6 +327,7 @@ namespace Ascension
                 ("Muhammad", "Avdol", StandID.MAGICIANS_RED),
                 ("Kira", "Yoshikage", StandID.KILLER_QUEEN),
                 ("Noriaki", "Kakyoin", StandID.HIEROPHANT_GREEN),
+                ("Narancia", "Ghirga",StandID.AEROSMITH)
             };
         }
 
@@ -526,12 +528,16 @@ namespace Ascension
                     if(asset.Name.StartsWith(ASSETS_PATH_BIOMES + "Surface"))
                         BackgroundTextureLoader.AddBackgroundTexture(ascension, asset.Name); //adds background textures to the background loader.
                 }
+
+                Default = ascension.Assets.Request<Texture2D>(ASSETS_PATH_MISC + "DefaultTexture");
             }
 
             public static void Unload()
             {
                 pv_Textures.Clear();
             }
+
+            public static Asset<Texture2D> Default;
 
             public const string STAND_ABILITY_STARPLATINUM_BASIC = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_Punch";
             public const string STAND_ABILITY_STARPLATINUM_ABILITY1 = ASSETS_PATH_UI_ASSETSONLY + "Stand_Ability_StarPlatinum_ORA";
