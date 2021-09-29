@@ -69,6 +69,17 @@ namespace Ascension.Utility
         public static class InGame
         {
             /// <summary>
+            /// Gets the knockback direction based on the attacker and the attacked's position.
+            /// </summary>
+            /// <param name="attacker"></param>
+            /// <param name="attacked"></param>
+            /// <returns></returns>
+            public static int GetKnockbackDirection(Vector2 attacker, Vector2 attacked)
+            {
+                return (int)MathF.Clamp(attacker.X - attacked.X, -1f, 1f);
+            }
+
+            /// <summary>
             /// Returns a damage calculated after applying penetration.
             /// </summary>
             /// <param name="damage"></param>
