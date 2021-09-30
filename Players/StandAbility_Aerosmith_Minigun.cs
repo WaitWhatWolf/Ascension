@@ -24,13 +24,14 @@ namespace Ascension.Players
         }
 
         public override string Name => "Minigunning";
-        public override string Description => "Locates the {{c:Stat=strongest enemy}} on screen and {{c:Effect=deals constant damage}} to it." +
-            "\n{{c:Quote=I'll make you swiss cheese!}}";
+        public override string Description => "Locates the {{c:Stat=strongest enemy}} on screen" +
+            "\nand {{c:Effect=deals constant damage}} to it." +
+            "\n\n{{c:Quote=I'll make you swiss cheese!}}";
         public override Asset<Texture2D> Icon => ASCResources.Textures.Default;
 
         protected override ReturnCountdown Countdown => pv_Countdown;
 
-        protected override bool ActivateCondition() => Countdown && Stand.Owner.Target != null;
+        protected override bool ActivateCondition() => Countdown && !pv_IsIdle;
 
         protected override bool DeactivateCondition() => true;
 
@@ -57,10 +58,45 @@ namespace Ascension.Players
             pv_LineDrawer.active = true;
         }
 
+        protected override void Event_OnNewBossDefeated(string obj)
+        {
+            pv_StandDamage = Stand.GetDamage();
+            pv_StandAttackRange = Stand.GetRange();
+            pv_StandNPCDetectionRange = Stand.GetAIRange();
+            pv_StandMoveSpeed = Stand.GetSpeed();
+            pv_Countdown = 60f / Stand.GetAttackSpeed();
+        }
+
         private void MovementAI()
         {
-            //TODO
+            Projectile standProj = Stand.GetStandProjectile();
+            pv_IsIdle = Stand.Owner.Target == null || Stand.Owner.Target.Center.Distance(standProj.Center) <= pv_StandNPCDetectionRange;
+            Vector2 rawDest = !pv_IsIdle ? Owner.Target.Center : pv_IdleMovesRight ? IdlePosRight : IdlePosLeft;
+            Vector2 velocity = standProj.Center.DirectionTo(rawDest);
+            velocity.Normalize();
+            velocity *= pv_StandMoveSpeed * ASCResources.FLOAT_PER_FRAME;
+            standProj.velocity += velocity;
+            standProj.rotation = standProj.Center.AngleTo(rawDest);
+            standProj.spriteDirection = standProj.Center.X > rawDest.X ? -1 : 1;
+
+            float dist = standProj.Center.Distance(rawDest);
+            if (pv_IsIdle && dist <= 5f)
+                pv_IdleMovesRight = !pv_IdleMovesRight;
+            else if (!pv_IsIdle && dist <= pv_StandAttackRange)
+            {
+                Vector2 toApply = Hooks.MathF.MoveTowards(standProj.velocity, Vector2.Zero, pv_StandMoveSpeed * ASCResources.FLOAT_PER_FRAME * 2f);
+                standProj.velocity = toApply;
+                //^I was too lazy to make better logic here^, so it will just move twice as fast towards immobile position, whatever
+            }
         }
+
+        private AscendedPlayer Owner => Stand.Owner;
+        private Vector2 IdlePosRight => Owner.Player.Center + new Vector2(pv_IdlePositionRoam.X, pv_IdlePositionRoam.Y);
+        private Vector2 IdlePosLeft => Owner.Player.Center + new Vector2(-pv_IdlePositionRoam.X, pv_IdlePositionRoam.Y);
+
+        private Vector2 pv_IdlePositionRoam = new(48f, -72f);
+        private bool pv_IdleMovesRight;
+        private bool pv_IsIdle;
 
         private ReturnCountdown pv_Countdown;
         private int pv_StandDamage;

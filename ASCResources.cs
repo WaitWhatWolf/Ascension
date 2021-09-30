@@ -553,6 +553,8 @@ namespace Ascension
             public const string STAND_MENU_BACKGROUND = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Background";
             public const string STAND_MENU_TOGGLE = ASSETS_PATH_UI_ASSETSONLY + "Stand_Menu_Toggle";
 
+            public const string STAND_PORTRAIT_AEROSMITH = ASSETS_PATH_UI_ASSETSONLY + "Stand_Portrait_Aerosmith";
+            
             private static readonly Dictionary<string, Asset<Texture2D>> pv_Textures = new();
         }
 
