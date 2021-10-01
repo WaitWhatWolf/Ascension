@@ -26,7 +26,7 @@ namespace Ascension.Projectiles
 
 			Main.projPet[Projectile.type] = true;
 			ProjectileID.Sets.CountsAsHoming[Projectile.type] = false; //Some damage reduction shit, nothing to do with AI
-			ProjectileID.Sets.TrailCacheLength[Projectile.type] = 6;
+			ProjectileID.Sets.TrailCacheLength[Projectile.type] = AfterImageLength;
 			ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
 		}
 
@@ -145,6 +145,11 @@ namespace Ascension.Projectiles
 			Projectile.damage = pr_Stand.GetDamage();
 			Projectile.knockBack = pr_Stand.GetKnockback();
 		}
+
+		/// <summary>
+		/// How many after-images are displayed behind the stand.
+		/// </summary>
+		protected abstract int AfterImageLength { get; }
 
 		protected Player pr_Owner;
 		protected Stand pr_Stand;

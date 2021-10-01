@@ -31,5 +31,7 @@ namespace Ascension.Projectiles
         {
             base.OnBossDefeated(name);
         }
+
+        protected override int AfterImageLength => 4;
     }
 }

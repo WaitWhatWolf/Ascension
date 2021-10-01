@@ -1,13 +1,10 @@
 ﻿using Ascension.Attributes;
 using Ascension.Enums;
 using Ascension.Internal;
-using Ascension.Utility;
+using Ascension.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using static Ascension.ASCResources.Stats;
 
@@ -36,9 +33,9 @@ namespace Ascension.Players
 
         public override string Quote { get; } = "There's no way in hell I'm gonna let you escape!";
 
-        protected override int StandProjectileType => throw new NotImplementedException();
+        protected override int StandProjectileType => ModContent.ProjectileType<Projectile_Aerosmith>();
 
-        protected override string StandInvokeSoundPath => throw new NotImplementedException();
+        protected override string StandInvokeSoundPath => "Stand_Invoke_Aerosmith.wav";
 
         protected override StandAbility[] Init_Abilities => new StandAbility[]
         {
