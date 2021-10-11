@@ -69,6 +69,7 @@ namespace Ascension.Players
 
         private void MovementAI()
         {
+
             Projectile standProj = Stand.GetStandProjectile();
             pv_IsIdle = Stand.Owner.Target == null || Stand.Owner.Target.Center.Distance(standProj.Center) <= pv_StandNPCDetectionRange;
             Vector2 rawDest = !pv_IsIdle ? Owner.Target.Center : pv_IdleMovesRight ? IdlePosRight : IdlePosLeft;
@@ -76,15 +77,19 @@ namespace Ascension.Players
             velocity.Normalize();
             velocity *= pv_StandMoveSpeed * ASCResources.FLOAT_PER_FRAME;
             standProj.velocity += velocity;
-            standProj.rotation = standProj.Center.AngleTo(rawDest);
-            standProj.spriteDirection = standProj.Center.X > rawDest.X ? -1 : 1;
+            standProj.velocity = Vector2.Clamp(standProj.velocity, -IdleVelClamp * pv_StandMoveSpeed, IdleVelClamp * pv_StandMoveSpeed);
+            standProj.rotation = standProj.velocity.X * 0.05f;//standProj.Center.AngleTo(rawDest);
+            standProj.spriteDirection = standProj.Center.X > rawDest.X ? 1 : -1;
+
+            ASCResources.Dusts.Dust_Stand_KillerQueen_BitesTheDust_Mark.Create(rawDest);
 
             float dist = standProj.Center.Distance(rawDest);
-            if (pv_IsIdle && dist <= 5f)
+            if (pv_IsIdle && dist <= 75f)
                 pv_IdleMovesRight = !pv_IdleMovesRight;
             else if (!pv_IsIdle && dist <= pv_StandAttackRange)
             {
                 Vector2 toApply = Hooks.MathF.MoveTowards(standProj.velocity, Vector2.Zero, pv_StandMoveSpeed * ASCResources.FLOAT_PER_FRAME * 2f);
+                
                 standProj.velocity = toApply;
                 //^I was too lazy to make better logic here^, so it will just move twice as fast towards immobile position, whatever
             }
@@ -93,8 +98,9 @@ namespace Ascension.Players
         private AscendedPlayer Owner => Stand.Owner;
         private Vector2 IdlePosRight => Owner.Player.Center + new Vector2(pv_IdlePositionRoam.X, pv_IdlePositionRoam.Y);
         private Vector2 IdlePosLeft => Owner.Player.Center + new Vector2(-pv_IdlePositionRoam.X, pv_IdlePositionRoam.Y);
+        private Vector2 IdleVelClamp => new(1f, .1f);
 
-        private Vector2 pv_IdlePositionRoam = new(48f, -72f);
+        private Vector2 pv_IdlePositionRoam = new(128f, -128f);
         private bool pv_IdleMovesRight;
         private bool pv_IsIdle;
 

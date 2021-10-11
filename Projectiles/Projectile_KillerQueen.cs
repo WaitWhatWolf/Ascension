@@ -31,7 +31,7 @@ namespace Ascension.Projectiles
             Projectile.width = 72;
             Projectile.height = 138;
            
-            Projectile.DamageType = pr_Stand.Class;
+            Projectile.DamageType = pr_Stand?.Class ?? DamageClass.Generic;
             base.SetDefaults();
         }
 

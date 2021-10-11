@@ -687,7 +687,7 @@ namespace Ascension
             public static readonly Animator Stand_Aerosmith = new
                 (
                     0,
-                    new Animator.Animation(NAME_IDLE, true, new(0, 0, 0f), new (1, 1, 0.5f), new (1, 1, 1f))
+                    new Animator.Animation(NAME_IDLE, true, new(0, 0, 0f), new (1, 1, 0.05f), new (1, 1, 0.1f))
                 );
         }
 

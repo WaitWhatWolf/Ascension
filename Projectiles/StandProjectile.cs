@@ -67,7 +67,7 @@ namespace Ascension.Projectiles
 		/// <summary>
 		/// Returns the normalized direction the stand is facing.
 		/// </summary>
-		public virtual Vector2 Direction =>  new(Projectile.spriteDirection == -1 ? 1f : -1f, 0f);
+		public virtual Vector2 Direction => new(Projectile.spriteDirection == -1 ? 1f : -1f, 0f);
 
 		/// <summary>
 		/// Whether this stand emits an after-image effect.
